@@ -1,0 +1,36 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE module PUBLIC "-//Google Inc.//DTD Google Web Toolkit 2.6.1//EN"
+        "https://raw.githubusercontent.com/gwtproject/gwt/2.6.1/distro-source/core/src/gwt-module.dtd">
+<module rename-to="SewGui">
+	<!-- Inherit the core Web Toolkit stuff. -->
+	<inherits name='com.google.gwt.user.User' />
+	<inherits name='com.google.gwt.inject.Inject' />
+	<inherits name='com.google.gwt.i18n.I18N' />
+	<extend-property name="locale" values="fr, en" />
+
+	<!-- Default css -->
+	<inherits name='com.google.gwt.user.theme.standard.Standard' />
+	<!-- <inherits name='com.google.gwt.user.theme.chrome.Chrome'/> -->
+	<!-- <inherits name='com.google.gwt.user.theme.dark.Dark'/> -->
+
+	<!-- Other module inherits -->
+	<inherits name='com.gwtplatform.dispatch.Dispatch' />
+	<inherits name='com.gwtplatform.mvp.MvpWithEntryPoint' />
+	<inherits name="de.barop.gwt.PushState" />
+	<!-- GWT-Bootstrap -->
+	<inherits name="org.gwtbootstrap3.GwtBootstrap3" />
+	<!-- Add gwt-log support, default level displayed in browser console OFF / TRACE / FATAL -->
+	<inherits name="com.allen_sauer.gwt.log.gwt-log-OFF" />
+
+	<!-- Add the 'TRACE' and 'DEBUG' compile time log level -->
+	<extend-property name="log_level" values="INFO" />
+
+	<!-- inner HTML debugger DISABLED / ENABLED -->
+	<set-property name="log_DivLogger" value="DISABLED" />
+
+	<source path='client' />
+	<source path='shared' />
+
+	<set-configuration-property name="gin.ginjector.modules"
+		value="com.briceducardonnoy.sewgui.client.gin.ClientModule" />
+</module>
