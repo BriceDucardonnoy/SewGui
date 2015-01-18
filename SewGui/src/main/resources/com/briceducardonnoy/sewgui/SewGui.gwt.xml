@@ -31,6 +31,5 @@
 	<source path='client' />
 	<source path='shared' />
 
-	<set-configuration-property name="gin.ginjector.modules"
-		value="com.briceducardonnoy.sewgui.client.gin.ClientModule" />
+	<set-configuration-property name="gin.ginjector.modules" value="com.briceducardonnoy.sewgui.client.gin.ClientModule" />
 </module>

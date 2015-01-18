@@ -1,4 +1,37 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
-             xmlns:g='urn:import:com.google.gwt.user.client.ui'>
-    <g:SimplePanel ui:field="main"/>
+			xmlns:g='urn:import:com.google.gwt.user.client.ui' 
+			xmlns:b="urn:import:org.gwtbootstrap3.client.ui"
+			xmlns:b.html="urn:import:org.gwtbootstrap3.client.ui.html">
+            
+    <g:HTMLPanel>
+		<!-- Header -->
+		<b:Navbar>
+			<b:NavbarHeader>
+				<b:NavbarBrand ui:field="brand">SEW</b:NavbarBrand>
+				<b:NavbarCollapseButton dataTarget="#navbar-collapse" />
+			</b:NavbarHeader>
+	
+			<b:NavbarCollapse b:id="navbar-collapse">
+				<b:NavbarNav>
+					<b:AnchorListItem ui:field="status" active="true">Status</b:AnchorListItem>
+					<b:AnchorListItem ui:field="network">Network</b:AnchorListItem>
+					<b:AnchorListItem ui:field="stream">Stream</b:AnchorListItem>
+					<!-- Dropdown example -->
+					<!-- <b:ListDropDown>
+						<b:AnchorButton dataToggle="DROPDOWN">Dropdown</b:AnchorButton> 
+						<b:DropDownMenu>
+							<b:AnchorListItem>Dropdown 1</b:AnchorListItem>
+							<b:AnchorListItem>Dropdown 2</b:AnchorListItem>
+							<b:AnchorListItem>Dropdown 3</b:AnchorListItem>
+						</b:DropDownMenu> 
+					</b:ListDropDown> -->
+				</b:NavbarNav>
+				<!-- Right align link example -->
+				<!-- <b:NavbarText pull="RIGHT"> <b.html:Text text="Signed in as" /> <b:NavbarLink>John 
+					Snow</b:NavbarLink> </b:NavbarText> -->
+			</b:NavbarCollapse>
+		</b:Navbar>
+		<!-- Main content -->
+		<g:SimplePanel ui:field="main" />
+    </g:HTMLPanel>
 </ui:UiBinder>
