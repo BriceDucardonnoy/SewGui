@@ -3,7 +3,7 @@
 			xmlns:b="urn:import:org.gwtbootstrap3.client.ui"
 			xmlns:b.html="urn:import:org.gwtbootstrap3.client.ui.html">
             
-    <g:HTMLPanel>
+    <g:HTMLPanel styleName="global">
 		<!-- Header -->
 		<b:Navbar>
 			<b:NavbarHeader>

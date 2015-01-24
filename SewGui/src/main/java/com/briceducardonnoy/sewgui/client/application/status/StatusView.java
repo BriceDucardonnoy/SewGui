@@ -1,12 +1,14 @@
 package com.briceducardonnoy.sewgui.client.application.status;
 
-import javax.inject.Inject;
+import org.gwtbootstrap3.client.ui.Progress;
+import org.gwtbootstrap3.client.ui.ProgressBar;
 
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewImpl;
 
 class StatusView extends ViewImpl implements StatusPresenter.MyView {
@@ -14,6 +16,8 @@ class StatusView extends ViewImpl implements StatusPresenter.MyView {
     }
 
     @UiField HTMLPanel main;
+    @UiField Progress p1;
+    @UiField ProgressBar pb1;
 
     @Inject
     StatusView(Binder uiBinder) {
