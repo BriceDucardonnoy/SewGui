@@ -25,7 +25,7 @@
 	</filter-mapping>
 
 	<!-- Get remote log into console -->
-	<servlet>
+	<!-- <servlet>
 		<servlet-name>gwt-log-remote-logger-servlet</servlet-name>
 		<servlet-class>com.allen_sauer.gwt.log.server.RemoteLoggerServlet</servlet-class>
 		<init-param>
@@ -36,6 +36,14 @@
 	<servlet-mapping>
 		<servlet-name>gwt-log-remote-logger-servlet</servlet-name>
 		<url-pattern>/SewGui/gwt-log</url-pattern>
+	</servlet-mapping> -->
+	<servlet>
+		<servlet-name>phonegapRemoteLogger</servlet-name>
+		<servlet-class>com.googlecode.gwtphonegap.server.log.PhoneGapLogServiceStandardImpl</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>phonegapRemoteLogger</servlet-name>
+		<url-pattern>gwt-log</url-pattern>
 	</servlet-mapping>
-	
+
 </web-app>

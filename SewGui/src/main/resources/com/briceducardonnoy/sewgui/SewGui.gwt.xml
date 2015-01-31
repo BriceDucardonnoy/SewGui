@@ -22,7 +22,14 @@
 	<!-- Add gwt-log support, default level displayed in browser console OFF / TRACE / FATAL -->
 	<inherits name="com.allen_sauer.gwt.log.gwt-log-OFF" />
 	<!-- Enable remote logger -->
-	<inherits name="com.allen_sauer.gwt.log.gwt-log-RemoteLogger" />
+	<!-- <inherits name="com.allen_sauer.gwt.log.gwt-log-RemoteLogger" /> -->
+	<inherits name="com.google.gwt.logging.Logging"/>
+	<set-property name="gwt.logging.simpleRemoteHandler" value="DISABLED" />
+	<set-property name="gwt.logging.enabled" value="TRUE" />
+	<set-property name="gwt.logging.logLevel" value="INFO"/>
+	<set-property name="phonegap.logging.remoteHandler" value="ENABLED" />
+	<set-property name="gwt.logging.consoleHandler" value="DISABLED"/>
+	<set-configuration-property name="phonegap.logging.threshold" value="INFO" /> 
 
 	<!-- Add the 'TRACE' and 'DEBUG' compile time log level -->
 	<extend-property name="log_level" values="INFO" />
