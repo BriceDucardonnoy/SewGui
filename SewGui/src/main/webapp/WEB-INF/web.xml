@@ -40,6 +40,10 @@
 	<servlet>
 		<servlet-name>phonegapRemoteLogger</servlet-name>
 		<servlet-class>com.googlecode.gwtphonegap.server.log.PhoneGapLogServiceStandardImpl</servlet-class>
+		<init-param>
+			<param-name>symbolMapsFileSystem</param-name>
+			<param-value>WEB-INF/deploy/SewGui/symbolMaps/</param-value>
+		</init-param>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>phonegapRemoteLogger</servlet-name>

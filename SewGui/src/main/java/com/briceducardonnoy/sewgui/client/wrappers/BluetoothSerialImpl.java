@@ -36,6 +36,7 @@ public class BluetoothSerialImpl implements BluetoothPlugin {
 	}
 	
 	private native void isEnabledNative(Callback<Boolean, String> callback) /*-{
+//		alert("patate");
 		var success = function() { alert("Success"); };
 		var failure = function() { alert("Failed"); };
 //		var success = function() {
@@ -45,7 +46,7 @@ public class BluetoothSerialImpl implements BluetoothPlugin {
 //    		//callback.@com.google.gwt.core.client.Callback::onSuccess(Ljava/lang/Boolean;)(false);
 //    		callback.@com.google.gwt.core.client.Callback::onFailure(Ljava/lang/String;)("Bluetooth is disabled patate");
 //    	};
-//		cordova.exec($entry(success), $entry(failure), "BluetoothSerial", "isEnabled", []);
+		$wnd.cordova.exec($entry(success), $entry(failure), "BluetoothSerial", "isEnabled", []);
 	}-*/;
 
 }

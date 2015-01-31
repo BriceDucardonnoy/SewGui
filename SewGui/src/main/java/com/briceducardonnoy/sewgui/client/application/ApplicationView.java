@@ -32,6 +32,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -54,6 +55,8 @@ class ApplicationView extends ViewImpl implements ApplicationPresenter.MyView {
 	@UiField AnchorListItem status;
 	@UiField AnchorListItem network;
 	@UiField AnchorListItem stream;
+	
+	@UiField Button isBTEnabled;
 
 	private PlaceRequest statusGo;
 	private PlaceRequest networkGo;
@@ -117,6 +120,11 @@ class ApplicationView extends ViewImpl implements ApplicationPresenter.MyView {
 	@UiHandler("reload")
 	void onReload(ClickEvent event) {
 		Window.Location.reload();
+	}
+
+	@Override
+	public Button getBTBtn() {
+		return isBTEnabled;
 	}
 
 }

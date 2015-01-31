@@ -32,6 +32,7 @@
 			</b:NavbarCollapse>
 		</b:Navbar>
 		<g:Button ui:field="reload">Reload</g:Button>
+		<g:Button ui:field="isBTEnabled">BT is enabled?</g:Button>
 		<!-- Main content -->
 		<g:SimplePanel ui:field="main" />
     </g:HTMLPanel>
