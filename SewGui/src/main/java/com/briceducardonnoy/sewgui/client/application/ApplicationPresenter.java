@@ -29,7 +29,7 @@ public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView,
 		Button getBTBtn();
 	}
 
-	private PhoneGap phoneGap;
+	@Inject PhoneGap phoneGap;
 	private Logger logger;
 	private boolean isPhoneGapAvailable;
 	
@@ -39,12 +39,13 @@ public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView,
 	@ProxyStandard
 	interface MyProxy extends Proxy<ApplicationPresenter> {
 	}
-	// TODO BDY: set phonegap as an injectable object
+	
 	@Inject
-	ApplicationPresenter(EventBus eventBus, MyView view, MyProxy proxy) {
+	ApplicationPresenter(EventBus eventBus, MyView view, MyProxy proxy, PhoneGap pg) {
 		super(eventBus, view, proxy, RevealType.Root);
+		phoneGap = pg;
 		logger = Logger.getLogger("SewGui");
-		phoneGap = GWT.create(PhoneGap.class);
+//		phoneGap = GWT.create(PhoneGap.class);
 		phoneGap.getLog().setRemoteLogServiceUrl("http://192.168.1.46:8080/gwt-log");
 		phoneGap.addHandler(new PhoneGapAvailableHandler() {
 			@Override
@@ -72,6 +73,11 @@ public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView,
 		registerHandler(getView().getBTBtn().addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
+				if(!isPhoneGapAvailable) {
+					logger.warning("PhoneGap isn't available => do nothing");
+					Log.info("PhoneGap isn't available => do nothing");
+					return;
+				}
 				BluetoothSerialImpl btImpl = new BluetoothSerialImpl();
 				btImpl.initialize();
 				phoneGap.loadPlugin("bluetoothSerialImpl", btImpl);
