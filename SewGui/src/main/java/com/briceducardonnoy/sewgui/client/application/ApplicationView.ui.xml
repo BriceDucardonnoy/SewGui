@@ -31,6 +31,7 @@
 					Snow</b:NavbarLink> </b:NavbarText> -->
 			</b:NavbarCollapse>
 		</b:Navbar>
+		<g:Button ui:field="reload">Reload</g:Button>
 		<!-- Main content -->
 		<g:SimplePanel ui:field="main" />
     </g:HTMLPanel>
