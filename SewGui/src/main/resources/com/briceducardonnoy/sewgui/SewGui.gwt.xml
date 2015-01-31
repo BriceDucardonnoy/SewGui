@@ -17,10 +17,12 @@
 	<inherits name='com.gwtplatform.dispatch.Dispatch' />
 	<inherits name='com.gwtplatform.mvp.MvpWithEntryPoint' />
 	<inherits name="de.barop.gwt.PushState" />
-	<!-- GWT-Bootstrap -->
 	<inherits name="org.gwtbootstrap3.GwtBootstrap3" />
+	<inherits name='com.googlecode.gwtphonegap.PhoneGap' />
 	<!-- Add gwt-log support, default level displayed in browser console OFF / TRACE / FATAL -->
 	<inherits name="com.allen_sauer.gwt.log.gwt-log-OFF" />
+	<!-- Enable remote logger -->
+	<inherits name="com.allen_sauer.gwt.log.gwt-log-RemoteLogger" />
 
 	<!-- Add the 'TRACE' and 'DEBUG' compile time log level -->
 	<extend-property name="log_level" values="INFO" />
@@ -32,4 +34,6 @@
 	<source path='shared' />
 
 	<set-configuration-property name="gin.ginjector.modules" value="com.briceducardonnoy.sewgui.client.gin.ClientModule" />
+	<!-- Phonegap is tested only on safari and android -->
+	<!-- <set-property name="user.agent" value="safari" /> -->
 </module>
