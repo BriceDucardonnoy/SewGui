@@ -5,10 +5,10 @@ import java.util.logging.Logger;
 import com.allen_sauer.gwt.log.client.Log;
 import com.briceducardonnoy.sewgui.client.wrappers.BluetoothSerialImpl;
 import com.google.gwt.core.client.Callback;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.shared.GwtEvent.Type;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
@@ -86,15 +86,28 @@ public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView,
 					public void onSuccess(Boolean result) {
 						Log.info("Success result is " + result);
 						logger.info("Success result is " + result);
+						logger.info("Type of result is " + result.getClass().getSimpleName());
+						Window.alert("Success result is " + result);
 					}
 					
 					@Override
 					public void onFailure(String reason) {
 						Log.error("Failure reason is " + reason);
 						logger.severe("Failure reason is " + reason);
+						Window.alert("Failure reason is " + reason);
 					}
 				});
 			}
 		}));
 	}
+	/*
+	 * cordova create sewPhone com.briceducardonnoy.sewPhone SewPhone
+cd sewPhone
+cordova platforms add android
+cordova build
+cordova emulate android
+Le répertoire www contient le index.html utilisé par l'émulateur : 
+	mettre les script avec les meta SDM pour faire du dev, et mettre le index.html du projet GWT pour tester en mode normal
+Pousser l'apk généré par l'émulateur permet aussi de tester soit en mode SDM si le périphérique est relié au réseau et le SDM lancé, soit de tester la version en mode normal.
+	 */
 }

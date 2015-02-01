@@ -36,17 +36,14 @@ public class BluetoothSerialImpl implements BluetoothPlugin {
 	}
 	
 	private native void isEnabledNative(Callback<Boolean, String> callback) /*-{
-//		alert("patate");
-		var success = function() { alert("Success"); };
-		var failure = function() { alert("Failed"); };
-//		var success = function() {
-//	        callback.@com.google.gwt.core.client.Callback::onSuccess(Ljava/lang/Boolean;)(true);
-//    	};
-//    	var failure = function() {
-//    		//callback.@com.google.gwt.core.client.Callback::onSuccess(Ljava/lang/Boolean;)(false);
-//    		callback.@com.google.gwt.core.client.Callback::onFailure(Ljava/lang/String;)("Bluetooth is disabled patate");
-//    	};
-		$wnd.cordova.exec($entry(success), $entry(failure), "BluetoothSerial", "isEnabled", []);
+		var success = $entry(function() {
+	        callback.@com.google.gwt.core.client.Callback::onSuccess(Ljava/lang/Object;)(@java.lang.Boolean::valueOf(Z)(true));
+    	});
+    	var failure = $entry(function() {
+    		//callback.@com.google.gwt.core.client.Callback::onSuccess(Ljava/lang/Object;)(@java.lang.Boolean::valueOf(Z)(false));
+    		callback.@com.google.gwt.core.client.Callback::onFailure(Ljava/lang/Object;)("Bluetooth is disabled patate");
+    	});
+		$wnd.cordova.exec(success, failure, "BluetoothSerial", "isEnabled", []);
 	}-*/;
 
 }
