@@ -30,6 +30,7 @@ public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView,
 	}
 
 	@Inject PhoneGap phoneGap;
+	private BluetoothSerialImpl btImpl;
 	private Logger logger;
 	private boolean isPhoneGapAvailable;
 	
@@ -54,6 +55,9 @@ public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView,
 				Log.info("PhoneGap available");
 				logger.info("PhoneGap is available");
 				isPhoneGapAvailable = true;
+				btImpl = new BluetoothSerialImpl();
+				btImpl.initialize();
+				phoneGap.loadPlugin("bluetoothSerialImpl", btImpl);
 			}
 		});
 		phoneGap.addHandler(new PhoneGapTimeoutHandler() {
@@ -78,9 +82,6 @@ public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView,
 					Log.info("PhoneGap isn't available => do nothing");
 					return;
 				}
-				BluetoothSerialImpl btImpl = new BluetoothSerialImpl();
-				btImpl.initialize();
-				phoneGap.loadPlugin("bluetoothSerialImpl", btImpl);
 				btImpl.isEnabled(new Callback<Boolean, String>() {
 					@Override
 					public void onSuccess(Boolean result) {
