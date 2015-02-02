@@ -21,10 +21,9 @@
 package com.briceducardonnoy.sewgui.client.wrappers;
 
 import com.allen_sauer.gwt.log.client.Log;
+import com.briceducardonnoy.sewgui.client.customCallbacks.ListCallback;
 import com.google.gwt.core.client.Callback;
 import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.json.client.JSONArray;
-import com.google.gwt.user.client.Window;
 
 public class BluetoothSerialImpl implements BluetoothPlugin {
 
@@ -51,25 +50,24 @@ public class BluetoothSerialImpl implements BluetoothPlugin {
 		$wnd.cordova.exec(success, failure, "BluetoothSerial", "isEnabled", []);
 	}-*/;
 	
-	
 	// List
 	@Override
-	public void list(Callback<JSONArray, String> callback) {
-//		listNative(callback);
-		listNative(new Callback<JavaScriptObject, String>() {
-			@Override
-			public void onFailure(String reason) {
-				Window.alert("Failure: " + reason);
-			}
-
-			@Override
-			public void onSuccess(JavaScriptObject result) {
-				Window.alert("Success: " + result.getClass().getSimpleName());
-//				JSONArray array = result.isArray();// ? result.getJavaScriptObject().cast() : null;
-				JSONArray array = new JSONArray(result);
-				Window.alert(array.toString());
-			}
-		});
+	public void list(ListCallback callback) {
+		listNative(callback);
+//		listNative(new Callback<JavaScriptObject, String>() {
+//			@Override
+//			public void onFailure(String reason) {
+//				Window.alert("Failure: " + reason);
+//			}
+//
+//			@Override
+//			public void onSuccess(JavaScriptObject result) {
+//				Window.alert("Success: " + result.getClass().getSimpleName());
+////				JSONArray array = result.isArray();// ? result.getJavaScriptObject().cast() : null;
+//				JSONArray array = new JSONArray(result);
+//				Window.alert(array.toString());
+//			}
+//		});
 	}
 	
 	private native void listNative(Callback<JavaScriptObject, String> callback) /*-{

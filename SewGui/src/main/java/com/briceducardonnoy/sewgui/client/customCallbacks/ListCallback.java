@@ -18,13 +18,39 @@
  * arising from, out of or in connection with the software or the use or other 
  * dealings in the Software.
  */
-package com.briceducardonnoy.sewgui.client.wrappers;
+package com.briceducardonnoy.sewgui.client.customCallbacks;
 
-import com.briceducardonnoy.sewgui.client.customCallbacks.ListCallback;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Logger;
+
+import com.briceducardonnoy.sewgui.client.models.BtEntity;
 import com.google.gwt.core.client.Callback;
-import com.googlecode.gwtphonegap.client.plugins.PhoneGapPlugin;
+import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.json.client.JSONArray;
 
-public interface BluetoothPlugin extends PhoneGapPlugin {
-	public void isEnabled(Callback<Boolean, String> callback);
-	public void list(ListCallback listCallback);
+public abstract class ListCallback implements Callback<JavaScriptObject, String>{
+	
+	private static Logger logger = Logger.getLogger("SewGui");
+	
+	@Override
+	public void onFailure(String reason) {
+		failure(reason);
+	}
+	
+	@Override
+	public void onSuccess(JavaScriptObject result) {
+		List<BtEntity> ents = new ArrayList<>();
+		if(result == null) success(ents);
+		JSONArray array = new JSONArray(result);
+		for(int i = 0 ; i < array.size() ; i++) {
+			ents.add(new BtEntity(array.get(i)));
+			logger.info(ents.get(i).toString());
+		}
+		success(ents);
+	}
+
+	public abstract void success(List<BtEntity> result);
+	public abstract void failure(String reason);
+
 }

@@ -1,16 +1,18 @@
 package com.briceducardonnoy.sewgui.client.application;
 
+import java.util.List;
 import java.util.logging.Logger;
 
 import com.allen_sauer.gwt.log.client.Log;
+import com.briceducardonnoy.sewgui.client.customCallbacks.ListCallback;
 import com.briceducardonnoy.sewgui.client.lang.Translate;
+import com.briceducardonnoy.sewgui.client.models.BtEntity;
 import com.briceducardonnoy.sewgui.client.wrappers.BluetoothSerialImpl;
 import com.google.gwt.core.client.Callback;
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.shared.GwtEvent.Type;
-import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.inject.Inject;
@@ -33,10 +35,11 @@ public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView,
 		Button getListBtn();
 	}
 
+	private static Logger logger = Logger.getLogger("SewGui");
+
 	@Inject PhoneGap phoneGap;
 	private Translate translate = GWT.create(Translate.class);
 	private BluetoothSerialImpl btImpl;
-	private Logger logger;
 	private boolean isPhoneGapAvailable;
 	
 	@ContentSlot
@@ -50,7 +53,6 @@ public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView,
 	ApplicationPresenter(EventBus eventBus, MyView view, MyProxy proxy, PhoneGap pg) {
 		super(eventBus, view, proxy, RevealType.Root);
 		phoneGap = pg;
-		logger = Logger.getLogger("SewGui");
 //		phoneGap = GWT.create(PhoneGap.class);
 		phoneGap.getLog().setRemoteLogServiceUrl("http://192.168.1.46:8080/gwt-log");
 	}
@@ -81,59 +83,68 @@ public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView,
 		}));
 		phoneGap.initializePhoneGap();
 		// Is enabled
-		registerHandler(getView().getBTBtn().addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				if(!isPhoneGapAvailable) {
-					logger.warning("PhoneGap isn't available => do nothing");
-					Log.info("PhoneGap isn't available => do nothing");
-					return;
-				}
-				btImpl.isEnabled(new Callback<Boolean, String>() {
-					@Override
-					public void onSuccess(Boolean result) {
-						Log.info("Success result is " + result);
-						logger.info("Success result is " + result);
-//						logger.info("Type of result is " + result.getClass().getSimpleName());
-						if(result == null) {
-							Window.alert("No response, please reload the application");
-						}
-						else if(result.booleanValue()) {
-							Window.alert("Bluetooth is activated");
-						}
-						else {
-							Window.alert(translate.BTInactiveMsg());
-						}
-					}
-					@Override
-					public void onFailure(String reason) {
-						Log.error("Failure reason is " + reason);
-						logger.severe("Failure reason is " + reason);
-						Window.alert("No response from device: " + reason);
-					}
-				});
-			}
-		}));
+		registerHandler(getView().getBTBtn().addClickHandler(isEnabledH));
 		// List
-		registerHandler(getView().getListBtn().addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				logger.info("List requested");
-				btImpl.list(new Callback<JSONArray, String>() {
-					@Override
-					public void onFailure(String reason) {
-						logger.severe("Failed to list: " + reason);
-						Window.alert("Failed to list: " + reason);
-					}
-					@Override
-					public void onSuccess(JSONArray result) {
-						logger.info("List result is " + result.toString());
-						Window.alert("List result is " + result.toString());
-					}
-				});
-			}
-		}));
+		registerHandler(getView().getListBtn().addClickHandler(listH));
 	}
+	
+	/*
+	 * Handlers and callback
+	 */
+	private ClickHandler isEnabledH = new ClickHandler() {
+		@Override
+		public void onClick(ClickEvent event) {
+			if(!isPhoneGapAvailable) {
+				logger.warning("PhoneGap isn't available => do nothing");
+				Log.info("PhoneGap isn't available => do nothing");
+				return;
+			}
+			btImpl.isEnabled(isEnabledCB);
+		}
+	};
+	private Callback<Boolean, String> isEnabledCB = new Callback<Boolean, String>() {
+		@Override
+		public void onSuccess(Boolean result) {
+			Log.info("Success result is " + result);
+			logger.info("Success result is " + result);
+//			logger.info("Type of result is " + result.getClass().getSimpleName());
+			if(result == null) {
+				Window.alert("No response, please reload the application");
+			}
+			else if(result.booleanValue()) {
+				Window.alert("Bluetooth is activated");
+			}
+			else {
+				Window.alert(translate.BTInactiveMsg());
+			}
+		}
+		@Override
+		public void onFailure(String reason) {
+			Log.error("Failure reason is " + reason);
+			logger.severe("Failure reason is " + reason);
+			Window.alert("No response from device: " + reason);
+		}
+	};
+	
+	private ClickHandler listH = new ClickHandler() {
+		@Override
+		public void onClick(ClickEvent event) {
+			logger.info("List requested");
+			btImpl.list(listCB);
+		}
+	};
+	private ListCallback listCB = new ListCallback() {
+		@Override
+		public void failure(String reason) {
+			logger.severe("Failed to list: " + reason);
+			Window.alert("Failed to list: " + reason);
+		}
+		@Override
+		public void success(List<BtEntity> result) {
+			logger.info("List result is " + result.toString());
+			Window.alert("List result is " + result.toString());
+		}
+	};
 	/*
 	 * cordova create sewPhone com.briceducardonnoy.sewPhone SewPhone
 cd sewPhone
