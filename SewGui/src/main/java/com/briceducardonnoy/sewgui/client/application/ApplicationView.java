@@ -58,6 +58,7 @@ class ApplicationView extends ViewImpl implements ApplicationPresenter.MyView {
 	
 	@UiField Button isBTEnabled;
 	@UiField Button btList;
+	@UiField Button isConnected;
 
 	private PlaceRequest statusGo;
 	private PlaceRequest networkGo;
@@ -131,6 +132,11 @@ class ApplicationView extends ViewImpl implements ApplicationPresenter.MyView {
 	@Override
 	public Button getListBtn() {
 		return btList;
+	}
+	
+	@Override
+	public Button getConnected() {
+		return isConnected;
 	}
 
 }

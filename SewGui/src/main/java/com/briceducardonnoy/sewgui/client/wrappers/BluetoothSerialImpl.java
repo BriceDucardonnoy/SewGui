@@ -54,24 +54,9 @@ public class BluetoothSerialImpl implements BluetoothPlugin {
 	@Override
 	public void list(ListCallback callback) {
 		listNative(callback);
-//		listNative(new Callback<JavaScriptObject, String>() {
-//			@Override
-//			public void onFailure(String reason) {
-//				Window.alert("Failure: " + reason);
-//			}
-//
-//			@Override
-//			public void onSuccess(JavaScriptObject result) {
-//				Window.alert("Success: " + result.getClass().getSimpleName());
-////				JSONArray array = result.isArray();// ? result.getJavaScriptObject().cast() : null;
-//				JSONArray array = new JSONArray(result);
-//				Window.alert(array.toString());
-//			}
-//		});
 	}
 	
 	private native void listNative(Callback<JavaScriptObject, String> callback) /*-{
-		// This method never fails according to android sources
 		var success = $entry(function(a) {
 	        callback.@com.google.gwt.core.client.Callback::onSuccess(Ljava/lang/Object;)(a);
     	});
@@ -79,6 +64,22 @@ public class BluetoothSerialImpl implements BluetoothPlugin {
     		callback.@com.google.gwt.core.client.Callback::onFailure(Ljava/lang/Object;)("An error occured during list request");
     	});
 		$wnd.cordova.exec(success, failure, "BluetoothSerial", "list", []);
+	}-*/;
+
+	@Override
+	public void isConnected(Callback<Boolean, Boolean> callback) {
+		isConnectedImpl(callback);
+	}
+	
+	private native void isConnectedImpl(Callback<Boolean, Boolean> callback) /*-{
+		// CallbackContext return a jsonObject, so we need to cast it to the desired type (boolean or string)
+		var success = $entry(function() {
+	        callback.@com.google.gwt.core.client.Callback::onSuccess(Ljava/lang/Object;)(@java.lang.Boolean::valueOf(Z)(true));
+    	});
+    	var failure = $entry(function() {
+    		callback.@com.google.gwt.core.client.Callback::onFailure(Ljava/lang/Object;)(@java.lang.Boolean::valueOf(Z)(false));
+    	});
+		$wnd.cordova.exec(success, failure, "BluetoothSerial", "isConnected", []);
 	}-*/;
 
 }

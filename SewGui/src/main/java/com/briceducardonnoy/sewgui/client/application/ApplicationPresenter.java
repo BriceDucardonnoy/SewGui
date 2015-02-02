@@ -33,6 +33,7 @@ public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView,
 	interface MyView extends View {
 		Button getBTBtn();
 		Button getListBtn();
+		Button getConnected();
 	}
 
 	private static Logger logger = Logger.getLogger("SewGui");
@@ -86,6 +87,8 @@ public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView,
 		registerHandler(getView().getBTBtn().addClickHandler(isEnabledH));
 		// List
 		registerHandler(getView().getListBtn().addClickHandler(listH));
+		// Is connected
+		registerHandler(getView().getConnected().addClickHandler(connectedH));
 	}
 	
 	/*
@@ -145,6 +148,25 @@ public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView,
 			Window.alert("List result is " + result.toString());
 		}
 	};
+	
+	private ClickHandler connectedH = new ClickHandler() {
+		@Override
+		public void onClick(ClickEvent event) {
+			logger.info("Is connected to a device?");
+			btImpl.isConnected(connectedCB);
+		}
+	};
+	private Callback<Boolean, Boolean> connectedCB = new Callback<Boolean, Boolean>() {
+		@Override
+		public void onFailure(Boolean reason) {
+			Window.alert("Not connected");
+		}
+		@Override
+		public void onSuccess(Boolean result) {
+			Window.alert("Connected");
+		}
+	};
+	
 	/*
 	 * cordova create sewPhone com.briceducardonnoy.sewPhone SewPhone
 cd sewPhone

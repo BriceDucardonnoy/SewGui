@@ -34,6 +34,7 @@
 		<g:Button ui:field="reload">Reload</g:Button>
 		<g:Button ui:field="isBTEnabled">BT is enabled?</g:Button>
 		<g:Button ui:field="btList">List</g:Button>
+		<g:Button ui:field="isConnected">Is Connected</g:Button>
 		<!-- Main content -->
 		<g:SimplePanel ui:field="main" />
     </g:HTMLPanel>

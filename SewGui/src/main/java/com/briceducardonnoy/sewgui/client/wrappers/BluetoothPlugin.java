@@ -27,4 +27,5 @@ import com.googlecode.gwtphonegap.client.plugins.PhoneGapPlugin;
 public interface BluetoothPlugin extends PhoneGapPlugin {
 	public void isEnabled(Callback<Boolean, String> callback);
 	public void list(ListCallback listCallback);
+	public void isConnected(Callback<Boolean, Boolean> callback);
 }
