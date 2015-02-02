@@ -3,11 +3,14 @@ package com.briceducardonnoy.sewgui.client.application;
 import java.util.logging.Logger;
 
 import com.allen_sauer.gwt.log.client.Log;
+import com.briceducardonnoy.sewgui.client.lang.Translate;
 import com.briceducardonnoy.sewgui.client.wrappers.BluetoothSerialImpl;
 import com.google.gwt.core.client.Callback;
+import com.google.gwt.core.shared.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.shared.GwtEvent.Type;
+import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.inject.Inject;
@@ -27,9 +30,11 @@ import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView, ApplicationPresenter.MyProxy> {
 	interface MyView extends View {
 		Button getBTBtn();
+		Button getListBtn();
 	}
 
 	@Inject PhoneGap phoneGap;
+	private Translate translate = GWT.create(Translate.class);
 	private BluetoothSerialImpl btImpl;
 	private Logger logger;
 	private boolean isPhoneGapAvailable;
@@ -48,7 +53,13 @@ public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView,
 		logger = Logger.getLogger("SewGui");
 //		phoneGap = GWT.create(PhoneGap.class);
 		phoneGap.getLog().setRemoteLogServiceUrl("http://192.168.1.46:8080/gwt-log");
-		phoneGap.addHandler(new PhoneGapAvailableHandler() {
+	}
+	
+	@Override
+	protected void onBind() {
+		super.onBind();
+		// PhoneGap init
+		registerHandler(phoneGap.addHandler(new PhoneGapAvailableHandler() {
 			@Override
 			public void onPhoneGapAvailable(PhoneGapAvailableEvent event) {
 				//start your app - phonegap is ready
@@ -59,21 +70,17 @@ public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView,
 				btImpl.initialize();
 				phoneGap.loadPlugin("bluetoothSerialImpl", btImpl);
 			}
-		});
-		phoneGap.addHandler(new PhoneGapTimeoutHandler() {
+		}));
+		registerHandler(phoneGap.addHandler(new PhoneGapTimeoutHandler() {
 			@Override
 			public void onPhoneGapTimeout(PhoneGapTimeoutEvent event) {
 				//can not start phonegap - something is for with your setup
 				Log.error("PhoneGap unavailable");
 				isPhoneGapAvailable = false;
 			}
-		});
+		}));
 		phoneGap.initializePhoneGap();
-	}
-	
-	@Override
-	protected void onBind() {
-		super.onBind();
+		// Is enabled
 		registerHandler(getView().getBTBtn().addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
@@ -87,15 +94,41 @@ public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView,
 					public void onSuccess(Boolean result) {
 						Log.info("Success result is " + result);
 						logger.info("Success result is " + result);
-						logger.info("Type of result is " + result.getClass().getSimpleName());
-						Window.alert("Success result is " + result);
+//						logger.info("Type of result is " + result.getClass().getSimpleName());
+						if(result == null) {
+							Window.alert("No response, please reload the application");
+						}
+						else if(result.booleanValue()) {
+							Window.alert("Bluetooth is activated");
+						}
+						else {
+							Window.alert(translate.BTInactiveMsg());
+						}
 					}
-					
 					@Override
 					public void onFailure(String reason) {
 						Log.error("Failure reason is " + reason);
 						logger.severe("Failure reason is " + reason);
-						Window.alert("Failure reason is " + reason);
+						Window.alert("No response from device: " + reason);
+					}
+				});
+			}
+		}));
+		// List
+		registerHandler(getView().getListBtn().addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				logger.info("List requested");
+				btImpl.list(new Callback<JSONArray, String>() {
+					@Override
+					public void onFailure(String reason) {
+						logger.severe("Failed to list: " + reason);
+						Window.alert("Failed to list: " + reason);
+					}
+					@Override
+					public void onSuccess(JSONArray result) {
+						logger.info("List result is " + result.toString());
+						Window.alert("List result is " + result.toString());
 					}
 				});
 			}

@@ -21,8 +21,10 @@
 package com.briceducardonnoy.sewgui.client.wrappers;
 
 import com.google.gwt.core.client.Callback;
+import com.google.gwt.json.client.JSONArray;
 import com.googlecode.gwtphonegap.client.plugins.PhoneGapPlugin;
 
 public interface BluetoothPlugin extends PhoneGapPlugin {
 	public void isEnabled(Callback<Boolean, String> callback);
+	public void list(Callback<JSONArray, String> callback);
 }

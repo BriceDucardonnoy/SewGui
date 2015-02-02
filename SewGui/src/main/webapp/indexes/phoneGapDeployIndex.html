@@ -1,0 +1,70 @@
+<!doctype html>
+<!-- The DOCTYPE declaration above will set the    -->
+<!-- browser's rendering engine into               -->
+<!-- "Standards Mode". Replacing this declaration  -->
+<!-- with a "Quirks Mode" doctype may lead to some -->
+<!-- differences in layout.                        -->
+
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta name="keywords" content="Stream, streaming, music, musique, radio, live" />
+	<meta name="description" content="Stream from everywhere to everywhere" />
+	<meta name="author" content="brice@ducardonnoy.com" />
+	<meta name="copyright" content="" />
+	<meta HTTP-EQUIV="VW96.OBJECT TYPE" CONTENT="searchEngine">
+	<meta name="ROBOTS" CONTENT="index,follow">
+	<meta name="ROBOTS" CONTENT="ALL">
+
+    <!--                                                               -->
+    <!-- Consider inlining CSS to reduce the number of requested files -->
+    <!--                                                               -->
+    <link type="text/css" rel="stylesheet" href="SEW.css">
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon"/>
+	<link rel="icon" href="favicon.ico" type="ArtistShowcase/image/x-icon"/>
+
+    <!--                                           -->
+    <!-- Any title is fine                         -->
+    <!--                                           -->
+    <title>StreamEveryWhere</title>
+
+    <!--                                           -->
+    <!-- This script loads your compiled module.   -->
+    <!-- If you add any GWT meta tags, they must   -->
+    <!-- be added before this line.                -->
+    <!--                                           -->
+    <!-- SEW GUI -->
+    <meta name="viewport" content="initial-scale=1.0, minimum-scale=0.5, maximum-scale=2">
+	<script type="text/javascript" src="SewGui/SewGui.nocache.js"></script>
+    
+    <!-- We use phonegap -->
+    <script type="text/javascript" src="cordova.js"></script>
+    <script type="text/javascript" src="bluetoothSerial.js"></script>
+	<!-- During development only, then comment following lines and uncomment SewGui/SewGui.nocache.js when testing on webbrowser or compilated version -->
+	<!-- <meta name="sdm_host" value="192.168.1.46">
+	<meta name="sdm_port" value="9876">
+	<meta name="sdm_module" value="SewGui">
+	<script type="text/javascript" src="gwt-phonegap-sdm.js"></script> -->
+	
+</head>
+
+  <!--                                           -->
+  <!-- The body can have arbitrary html, or      -->
+  <!-- you can leave the body empty if you want  -->
+  <!-- to create a completely dynamic UI.        -->
+  <!--                                           -->
+  <body>
+
+    <!-- OPTIONAL: include this if you want history support -->
+    <iframe src="javascript:''" id="__gwt_historyFrame" tabIndex='-1' style="position:absolute;width:0;height:0;border:0"></iframe>
+
+    <!-- RECOMMENDED if your web app will not function without JavaScript enabled -->
+    <noscript>
+      <div style="width: 22em; position: absolute; left: 50%; margin-left: -11em; color: red; background-color: white; border: 1px solid red; padding: 4px; font-family: sans-serif">
+        Your web browser must have JavaScript enabled
+        in order for this application to display correctly.
+      </div>
+    </noscript>
+
+  </body>
+</html>

@@ -22,6 +22,9 @@ package com.briceducardonnoy.sewgui.client.wrappers;
 
 import com.allen_sauer.gwt.log.client.Log;
 import com.google.gwt.core.client.Callback;
+import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.json.client.JSONArray;
+import com.google.gwt.user.client.Window;
 
 public class BluetoothSerialImpl implements BluetoothPlugin {
 
@@ -30,20 +33,54 @@ public class BluetoothSerialImpl implements BluetoothPlugin {
 		Log.info("Initialize BT");
 	}
 
+	// Is enabled
 	@Override
 	public void isEnabled(Callback<Boolean, String> callback) {
 		isEnabledNative(callback);
 	}
 	
 	private native void isEnabledNative(Callback<Boolean, String> callback) /*-{
+		// CallbackContext return a jsonObject, so we need to cast it to the desired type (boolean or string)
 		var success = $entry(function() {
 	        callback.@com.google.gwt.core.client.Callback::onSuccess(Ljava/lang/Object;)(@java.lang.Boolean::valueOf(Z)(true));
     	});
     	var failure = $entry(function() {
-    		//callback.@com.google.gwt.core.client.Callback::onSuccess(Ljava/lang/Object;)(@java.lang.Boolean::valueOf(Z)(false));
-    		callback.@com.google.gwt.core.client.Callback::onFailure(Ljava/lang/Object;)("Bluetooth is disabled patate");
+    		callback.@com.google.gwt.core.client.Callback::onSuccess(Ljava/lang/Object;)(@java.lang.Boolean::valueOf(Z)(false));
+//    		callback.@com.google.gwt.core.client.Callback::onFailure(Ljava/lang/Object;)("Bluetooth is disabled");
     	});
 		$wnd.cordova.exec(success, failure, "BluetoothSerial", "isEnabled", []);
+	}-*/;
+	
+	
+	// List
+	@Override
+	public void list(Callback<JSONArray, String> callback) {
+//		listNative(callback);
+		listNative(new Callback<JavaScriptObject, String>() {
+			@Override
+			public void onFailure(String reason) {
+				Window.alert("Failure: " + reason);
+			}
+
+			@Override
+			public void onSuccess(JavaScriptObject result) {
+				Window.alert("Success: " + result.getClass().getSimpleName());
+//				JSONArray array = result.isArray();// ? result.getJavaScriptObject().cast() : null;
+				JSONArray array = new JSONArray(result);
+				Window.alert(array.toString());
+			}
+		});
+	}
+	
+	private native void listNative(Callback<JavaScriptObject, String> callback) /*-{
+		// This method never fails according to android sources
+		var success = $entry(function(a) {
+	        callback.@com.google.gwt.core.client.Callback::onSuccess(Ljava/lang/Object;)(a);
+    	});
+    	var failure = $entry(function() {
+    		callback.@com.google.gwt.core.client.Callback::onFailure(Ljava/lang/Object;)("An error occured during list request");
+    	});
+		$wnd.cordova.exec(success, failure, "BluetoothSerial", "list", []);
 	}-*/;
 
 }
