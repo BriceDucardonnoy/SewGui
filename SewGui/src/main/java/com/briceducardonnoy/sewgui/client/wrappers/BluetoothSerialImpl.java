@@ -66,6 +66,7 @@ public class BluetoothSerialImpl implements BluetoothPlugin {
 		$wnd.cordova.exec(success, failure, "BluetoothSerial", "list", []);
 	}-*/;
 
+	// Is connected
 	@Override
 	public void isConnected(Callback<Boolean, Boolean> callback) {
 		isConnectedImpl(callback);
@@ -82,4 +83,28 @@ public class BluetoothSerialImpl implements BluetoothPlugin {
 		$wnd.cordova.exec(success, failure, "BluetoothSerial", "isConnected", []);
 	}-*/;
 
+	// Connect
+	@Override
+	public void connect(String mac, boolean secure, Callback<Object, String> callback) {
+		connectImpl(mac, secure, callback);
+	}
+	
+	private native void connectImpl(String mac, boolean secure, Callback<Object, String> callback) /*-{
+		alert("Mac address is " + mac);
+		var success = $entry(function(a) {
+	        callback.@com.google.gwt.core.client.Callback::onSuccess(Ljava/lang/Object;)(a);
+    	});
+    	var failure = $entry(function(a) {
+    		callback.@com.google.gwt.core.client.Callback::onFailure(Ljava/lang/Object;)(a);
+    	});
+		if(secure === true) {
+			alert("Secure");
+			$wnd.cordova.exec(success, failure, "BluetoothSerial", "connect", [mac]);
+		}
+		else if(secure === false) {
+			alert("Insecure");
+			$wnd.cordova.exec(success, failure, "BluetoothSerial", "connectInsecure", [mac]);
+		}
+		else alert("Unknown");
+	}-*/;
 }

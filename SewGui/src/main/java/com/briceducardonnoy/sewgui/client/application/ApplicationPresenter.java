@@ -34,6 +34,7 @@ public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView,
 		Button getBTBtn();
 		Button getListBtn();
 		Button getConnected();
+		Button getConnect();
 	}
 
 	private static Logger logger = Logger.getLogger("SewGui");
@@ -89,6 +90,8 @@ public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView,
 		registerHandler(getView().getListBtn().addClickHandler(listH));
 		// Is connected
 		registerHandler(getView().getConnected().addClickHandler(connectedH));
+		// Connect insecure
+		registerHandler(getView().getConnect().addClickHandler(connectH));
 	}
 	
 	/*
@@ -164,6 +167,25 @@ public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView,
 		@Override
 		public void onSuccess(Boolean result) {
 			Window.alert("Connected");
+		}
+	};
+	
+	private ClickHandler connectH = new ClickHandler() {
+		@Override
+		public void onClick(ClickEvent event) {
+			logger.info("Connect to 00:1A:7D:DA:71:13");
+			btImpl.connect("00:1A:7D:DA:71:13", false, connectCB);
+		}
+	};
+	private Callback<Object, String> connectCB = new Callback<Object, String>() {
+		@Override
+		public void onFailure(String reason) {
+			Window.alert("Connect failed: " + reason);
+		}
+
+		@Override
+		public void onSuccess(Object result) {
+			Window.alert("Connect success: " + result);
 		}
 	};
 	
