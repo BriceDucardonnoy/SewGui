@@ -60,6 +60,7 @@ class ApplicationView extends ViewImpl implements ApplicationPresenter.MyView {
 	@UiField Button btList;
 	@UiField Button isConnected;
 	@UiField Button connect;
+	@UiField Button disconnect;
 
 	private PlaceRequest statusGo;
 	private PlaceRequest networkGo;
@@ -143,6 +144,11 @@ class ApplicationView extends ViewImpl implements ApplicationPresenter.MyView {
 	@Override
 	public Button getConnect() {
 		return connect;
+	}
+	
+	@Override
+	public Button getDisconnect() {
+		return disconnect;
 	}
 
 }

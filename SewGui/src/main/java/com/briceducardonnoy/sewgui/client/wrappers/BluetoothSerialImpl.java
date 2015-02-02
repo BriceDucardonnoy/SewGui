@@ -85,11 +85,11 @@ public class BluetoothSerialImpl implements BluetoothPlugin {
 
 	// Connect
 	@Override
-	public void connect(String mac, boolean secure, Callback<Object, String> callback) {
+	public void connect(String mac, boolean secure, Callback<String, String> callback) {
 		connectImpl(mac, secure, callback);
 	}
 	
-	private native void connectImpl(String mac, boolean secure, Callback<Object, String> callback) /*-{
+	private native void connectImpl(String mac, boolean secure, Callback<String, String> callback) /*-{
 		alert("Mac address is " + mac);
 		var success = $entry(function(a) {
 	        callback.@com.google.gwt.core.client.Callback::onSuccess(Ljava/lang/Object;)(a);
@@ -106,5 +106,21 @@ public class BluetoothSerialImpl implements BluetoothPlugin {
 			$wnd.cordova.exec(success, failure, "BluetoothSerial", "connectInsecure", [mac]);
 		}
 		else alert("Unknown");
+	}-*/;
+
+	// Disconnect
+	@Override
+	public void disconnect(Callback<String, String> callback) {
+		disconnectImpl(callback);// TODO BDY: send EOC to RPi
+	}
+	
+	private native void disconnectImpl(Callback<String, String> callback) /*-{
+		var success = $entry(function(a) {
+	        callback.@com.google.gwt.core.client.Callback::onSuccess(Ljava/lang/Object;)(a);
+    	});
+    	var failure = $entry(function(a) {
+    		callback.@com.google.gwt.core.client.Callback::onFailure(Ljava/lang/Object;)(a);
+    	});
+    	$wnd.cordova.exec(success, failure, "BluetoothSerial", "disconnect", []);
 	}-*/;
 }

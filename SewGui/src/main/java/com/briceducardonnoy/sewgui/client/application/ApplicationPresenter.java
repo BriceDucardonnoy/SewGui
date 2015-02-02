@@ -35,6 +35,7 @@ public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView,
 		Button getListBtn();
 		Button getConnected();
 		Button getConnect();
+		Button getDisconnect();
 	}
 
 	private static Logger logger = Logger.getLogger("SewGui");
@@ -88,10 +89,13 @@ public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView,
 		registerHandler(getView().getBTBtn().addClickHandler(isEnabledH));
 		// List
 		registerHandler(getView().getListBtn().addClickHandler(listH));
+		// TODO BDY: combine connect and disconnect with isConnected
 		// Is connected
 		registerHandler(getView().getConnected().addClickHandler(connectedH));
 		// Connect insecure
 		registerHandler(getView().getConnect().addClickHandler(connectH));
+		// Disonnect insecure
+		registerHandler(getView().getDisconnect().addClickHandler(disconnectH));
 	}
 	
 	/*
@@ -177,15 +181,34 @@ public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView,
 			btImpl.connect("00:1A:7D:DA:71:13", false, connectCB);
 		}
 	};
-	private Callback<Object, String> connectCB = new Callback<Object, String>() {
+	private Callback<String, String> connectCB = new Callback<String, String>() {
 		@Override
 		public void onFailure(String reason) {
 			Window.alert("Connect failed: " + reason);
 		}
-
 		@Override
-		public void onSuccess(Object result) {
+		public void onSuccess(String result) {
+			logger.info("Connect success type is " + result.getClass().getSimpleName());
 			Window.alert("Connect success: " + result);
+		}
+	};
+	
+	private ClickHandler disconnectH = new ClickHandler() {
+		@Override
+		public void onClick(ClickEvent event) {
+			logger.info("Disconnect from 00:1A:7D:DA:71:13");
+			btImpl.disconnect(disconnectCB);
+		}
+	};
+	private Callback<String, String> disconnectCB = new Callback<String, String>() {
+		@Override
+		public void onFailure(String reason) {
+			Window.alert("Disonnect failed: " + reason);
+		}
+		@Override
+		public void onSuccess(String result) {
+			logger.info("Disonnect success type is " + result.getClass().getSimpleName());
+			Window.alert("Disonnect success: " + result);
 		}
 	};
 	

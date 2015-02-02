@@ -28,5 +28,6 @@ public interface BluetoothPlugin extends PhoneGapPlugin {
 	public void isEnabled(Callback<Boolean, String> callback);
 	public void list(ListCallback listCallback);
 	public void isConnected(Callback<Boolean, Boolean> callback);
-	public void connect(String mac, boolean secure, Callback<Object, String> callback);
+	public void connect(String mac, boolean secure, Callback<String, String> callback);
+	public void disconnect(Callback<String, String> callback);
 }
