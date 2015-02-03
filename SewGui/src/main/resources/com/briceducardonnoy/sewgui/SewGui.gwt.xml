@@ -16,7 +16,7 @@
 	<!-- Other module inherits -->
 	<inherits name='com.gwtplatform.dispatch.Dispatch' />
 	<inherits name='com.gwtplatform.mvp.MvpWithEntryPoint' />
-	<inherits name="de.barop.gwt.PushState" />
+	<!-- <inherits name="de.barop.gwt.PushState" /> -->
 	<inherits name="org.gwtbootstrap3.GwtBootstrap3" />
 	<inherits name='com.googlecode.gwtphonegap.PhoneGap' />
 	<!-- Add gwt-log support, default level displayed in browser console OFF / TRACE / FATAL -->

@@ -50,7 +50,7 @@ public interface BluetoothPlugin extends PhoneGapPlugin {
 	 * Removes any data from the receive buffer
 	 * @param callback Invoked when the clear is successful or failed
 	 */
-	public void clear(Callback<String, String> callback);
+	public void clearBuffer(Callback<String, String> callback);
 	/**
 	 * Writes data to the serial port.<br>
 	 * Data can be

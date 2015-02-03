@@ -158,11 +158,11 @@ public class BluetoothSerialImpl implements BluetoothPlugin {
 
 	// Clear
 	@Override
-	public void clear(Callback<String, String> callback) {
-		clearImpl(callback);
+	public void clearBuffer(Callback<String, String> callback) {
+		clearBufferImpl(callback);
 	}
 	
-	private native void clearImpl(Callback<String, String> callback) /*-{
+	private native void clearBufferImpl(Callback<String, String> callback) /*-{
 		var success = $entry(function(a) {
 	        callback.@com.google.gwt.core.client.Callback::onSuccess(Ljava/lang/Object;)(a);
     	});
@@ -170,7 +170,7 @@ public class BluetoothSerialImpl implements BluetoothPlugin {
     		callback.@com.google.gwt.core.client.Callback::onFailure(Ljava/lang/Object;)(a);
     	});
     	$wnd.cordova.exec(success, failure, "BluetoothSerial", "clear", []);
-	-}*/;
+	}-*/;
 
 	// Write
 	@Override
@@ -178,8 +178,8 @@ public class BluetoothSerialImpl implements BluetoothPlugin {
 		writeImpl(data, callback);
 	}
 	
+	// TODO BDY: read in an exemple how it's done. JavaScript source isn't clear
 	private native void writeImpl(Object data, Callback<Object, String> callback) /*-{
-		// TODO BDY: read in an exemple how it's done. JavaScript source isn't clear
 	}-*/;
 	
 }

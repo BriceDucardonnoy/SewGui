@@ -13,7 +13,7 @@
         <gwt.version>2.7.0</gwt.version>
         <gwtp.version>1.4</gwtp.version>
         <gin.version>2.1.2</gin.version>
-        <gwt-pushstate.version>1.1.4</gwt-pushstate.version>
+        <!-- <gwt-pushstate.version>1.1.4</gwt-pushstate.version> -->
         <gwt.compiler.localWorkers>6</gwt.compiler.localWorkers>
 		<gwt.logLevel>INFO</gwt.logLevel>
         <!-- server -->
@@ -98,6 +98,7 @@
                     <copyWebapp>true</copyWebapp>
                     <hostedWebapp>${webappDirectory}</hostedWebapp>
                     <bindAddress>0.0.0.0</bindAddress>
+                    <!-- <logLevel>TRACE</logLevel> -->
 					<!-- <noServer>true</noServer> -->
 					<port>8080</port>
 					<debugPort>5050</debugPort>
@@ -151,7 +152,6 @@
             <artifactId>gwt-user</artifactId>
             <version>${gwt.version}</version>
         </dependency>
-
         <!-- GWT-Platform -->
         <dependency>
             <groupId>com.gwtplatform</groupId>
@@ -214,11 +214,11 @@
             <version>${gin.version}</version>
         </dependency>
         
-        <dependency>
+        <!-- <dependency>
             <groupId>com.wallissoftware</groupId>
             <artifactId>gwt-pushstate</artifactId>
             <version>${gwt-pushstate.version}</version>
-        </dependency>
+        </dependency> -->
         
         
         <!-- Test -->
