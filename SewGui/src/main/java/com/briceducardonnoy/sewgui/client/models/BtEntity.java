@@ -39,8 +39,8 @@ public class BtEntity implements Serializable {
 		JSONObject jso = value.isObject();
 		if(jso == null) return;
 		id = jso.get("id").toString();
-		clazz = Integer.parseInt(jso.get("class").toString(), 10);
-		address = jso.get("address").toString();
+		clazz = jso.containsKey("class") ? Integer.parseInt(jso.get("class").toString(), 10) : Integer.parseInt(jso.get("rssi").toString(), 10);
+		address = jso.containsKey("address") ? jso.get("address").toString() : jso.get("uuid").toString();
 		name = jso.get("name").toString();
 	}
 

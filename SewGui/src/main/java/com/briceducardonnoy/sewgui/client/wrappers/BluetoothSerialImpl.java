@@ -123,4 +123,63 @@ public class BluetoothSerialImpl implements BluetoothPlugin {
     	});
     	$wnd.cordova.exec(success, failure, "BluetoothSerial", "disconnect", []);
 	}-*/;
+
+	// Subscribe
+	@Override
+	public void subscribe(String delimiter, Callback<String, String> callback) {
+		subscribeImpl(delimiter, callback);
+	}
+	
+	private native void subscribeImpl(String delimiter, Callback<String, String> callback) /*-{
+		var success = $entry(function(a) {
+	        callback.@com.google.gwt.core.client.Callback::onSuccess(Ljava/lang/Object;)(a);
+    	});
+    	var failure = $entry(function(a) {
+    		callback.@com.google.gwt.core.client.Callback::onFailure(Ljava/lang/Object;)(a);
+    	});
+    	$wnd.cordova.exec(success, failure, "BluetoothSerial", "subscribe", [delimiter]);
+	}-*/;
+
+	// Unsubscribe
+	@Override
+	public void unsubscribe(Callback<Object, String> callback) {
+		unsubscribeImpl(callback);
+	}
+	
+	private native void unsubscribeImpl(Callback<Object, String> callback) /*-{
+		var success = $entry(function(a) {
+	        callback.@com.google.gwt.core.client.Callback::onSuccess(Ljava/lang/Object;)(a);
+    	});
+    	var failure = $entry(function(a) {
+    		callback.@com.google.gwt.core.client.Callback::onFailure(Ljava/lang/Object;)(a);
+    	});
+    	$wnd.cordova.exec(success, failure, "BluetoothSerial", "unsubscribe", []);
+	}-*/;
+
+	// Clear
+	@Override
+	public void clear(Callback<String, String> callback) {
+		clearImpl(callback);
+	}
+	
+	private native void clearImpl(Callback<String, String> callback) /*-{
+		var success = $entry(function(a) {
+	        callback.@com.google.gwt.core.client.Callback::onSuccess(Ljava/lang/Object;)(a);
+    	});
+    	var failure = $entry(function(a) {
+    		callback.@com.google.gwt.core.client.Callback::onFailure(Ljava/lang/Object;)(a);
+    	});
+    	$wnd.cordova.exec(success, failure, "BluetoothSerial", "clear", []);
+	-}*/;
+
+	// Write
+	@Override
+	public void write(Object data, Callback<Object, String> callback) {
+		writeImpl(data, callback);
+	}
+	
+	private native void writeImpl(Object data, Callback<Object, String> callback) /*-{
+		// TODO BDY: read in an exemple how it's done. JavaScript source isn't clear
+	}-*/;
+	
 }
