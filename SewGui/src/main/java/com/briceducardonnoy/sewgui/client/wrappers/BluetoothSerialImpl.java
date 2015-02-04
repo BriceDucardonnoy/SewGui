@@ -180,6 +180,27 @@ public class BluetoothSerialImpl implements BluetoothPlugin {
 	
 	// TODO BDY: read in an exemple how it's done. JavaScript source isn't clear
 	private native void writeImpl(Object data, Callback<Object, String> callback) /*-{
+		// Callback
+		var success = $entry(function(a) {
+	        callback.@com.google.gwt.core.client.Callback::onSuccess(Ljava/lang/Object;)(a);
+    	});
+    	var failure = $entry(function(a) {
+    		callback.@com.google.gwt.core.client.Callback::onFailure(Ljava/lang/Object;)(a);
+    	});
+		// convert to ArrayBuffer
+        if (typeof data === 'string') {
+        	var ret = new Uint8Array(data.length);
+		    for (var i = 0; i < data.length; i++) {
+		        ret[i] = data.charCodeAt(i);
+		    }
+            data = ret.buffer;
+        } else if (data instanceof Array) {
+            // assuming array of interger
+            data = new Uint8Array(data).buffer;
+        } else if (data instanceof Uint8Array) {
+            data = data.buffer;
+        }
+        $wnd.cordova.exec(success, failure, "BluetoothSerial", "write", [data]);
 	}-*/;
 	
 }

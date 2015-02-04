@@ -36,6 +36,9 @@ public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView,
 		Button getConnected();
 		Button getConnect();
 		Button getDisconnect();
+		Button getSubscribe();
+		Button getUnsubscribe();
+		Button getWrite();
 	}
 
 	private static Logger logger = Logger.getLogger("SewGui");
@@ -96,11 +99,18 @@ public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView,
 		registerHandler(getView().getConnect().addClickHandler(connectH));
 		// Disonnect insecure
 		registerHandler(getView().getDisconnect().addClickHandler(disconnectH));
+		// Subscribe
+		registerHandler(getView().getSubscribe().addClickHandler(subscribeH));
+		// Unsubscribe
+		registerHandler(getView().getUnsubscribe().addClickHandler(unsubscribeH));
+		// Write
+		registerHandler(getView().getWrite().addClickHandler(writeH));
 	}
 	
 	/*
 	 * Handlers and callback
 	 */
+	// Is enabled
 	private ClickHandler isEnabledH = new ClickHandler() {
 		@Override
 		public void onClick(ClickEvent event) {
@@ -135,7 +145,7 @@ public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView,
 			Window.alert("No response from device: " + reason);
 		}
 	};
-	
+	// List
 	private ClickHandler listH = new ClickHandler() {
 		@Override
 		public void onClick(ClickEvent event) {
@@ -155,7 +165,7 @@ public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView,
 			Window.alert("List result is " + result.toString());
 		}
 	};
-	
+	// Is connected
 	private ClickHandler connectedH = new ClickHandler() {
 		@Override
 		public void onClick(ClickEvent event) {
@@ -173,7 +183,7 @@ public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView,
 			Window.alert("Connected");
 		}
 	};
-	
+	// Connect
 	private ClickHandler connectH = new ClickHandler() {
 		@Override
 		public void onClick(ClickEvent event) {
@@ -192,7 +202,7 @@ public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView,
 			Window.alert("Connect success: " + result);
 		}
 	};
-	
+	// Disconnect
 	private ClickHandler disconnectH = new ClickHandler() {
 		@Override
 		public void onClick(ClickEvent event) {
@@ -211,7 +221,70 @@ public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView,
 			Window.alert("Disonnect success: " + result);
 		}
 	};
-	
+	// Subscribe
+	private ClickHandler subscribeH = new ClickHandler() {
+		@Override
+		public void onClick(ClickEvent event) {
+			logger.info("Subscribe");
+			btImpl.subscribe("\r\n", subscribeCB);
+		}
+	};
+	private Callback<String, String> subscribeCB = new Callback<String, String>() {
+		@Override
+		public void onFailure(String reason) {
+			logger.info("Subscribe failed " + reason);
+			Window.alert("Subscribe failed " + reason);
+		}
+
+		@Override
+		public void onSuccess(String result) {
+			logger.info("Subscribe success: " + result);
+			Window.alert("Subscribe success: " + result);
+		}
+	};
+	// Unsubscribe
+	private ClickHandler unsubscribeH = new ClickHandler() {
+		@Override
+		public void onClick(ClickEvent event) {
+			logger.info("Unsubscribe");
+			btImpl.unsubscribe(unsubscribeCB);
+		}
+	};
+	private Callback<Object, String> unsubscribeCB = new Callback<Object, String>() {
+		@Override
+		public void onFailure(String reason) {
+			logger.info("Unsubscribe failed " + reason);
+			Window.alert("Unsubscribe failed " + reason);
+		}
+
+		@Override
+		public void onSuccess(Object result) {
+			logger.info("Unsubscribe success: " + result);
+			Window.alert("Unsubscribe success: " + result);
+		}
+	};
+	// Write
+	private ClickHandler writeH = new ClickHandler() {
+		@Override
+		public void onClick(ClickEvent event) {
+			String datas = "patate\r\nEOC\r\n";
+			logger.info("Write " + datas);
+			btImpl.write(datas, writeCB);
+		}
+	};
+	private Callback<Object, String> writeCB = new Callback<Object, String>() {
+		@Override
+		public void onFailure(String reason) {
+			logger.info("Write failed " + reason);
+			Window.alert("Write failed " + reason);
+		}
+
+		@Override
+		public void onSuccess(Object result) {
+			logger.info("Write success: " + result);
+			Window.alert("Write success: " + result);
+		}
+	};
 	/*
 	 * cordova create sewPhone com.briceducardonnoy.sewPhone SewPhone
 cd sewPhone

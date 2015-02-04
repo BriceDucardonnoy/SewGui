@@ -37,6 +37,9 @@
 		<g:Button ui:field="isConnected">Is Connected</g:Button>
 		<g:Button ui:field="connect">Connect</g:Button>
 		<g:Button ui:field="disconnect">Disonnect</g:Button>
+		<g:Button ui:field="subscribe">Subscribe</g:Button>
+		<g:Button ui:field="unsubscribe">Unubscribe</g:Button>
+		<g:Button ui:field="write">Write</g:Button>
 		<!-- Main content -->
 		<g:SimplePanel ui:field="main" />
     </g:HTMLPanel>
