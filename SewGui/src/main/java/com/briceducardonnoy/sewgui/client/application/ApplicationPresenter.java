@@ -47,6 +47,7 @@ public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView,
 	private Translate translate = GWT.create(Translate.class);
 	private BluetoothSerialImpl btImpl;
 	private boolean isPhoneGapAvailable;
+	private int count = 2;
 	
 	@ContentSlot
 	public static final Type<RevealContentHandler<?>> SLOT_SetMainContent = new Type<>();
@@ -267,7 +268,7 @@ public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView,
 	private ClickHandler writeH = new ClickHandler() {
 		@Override
 		public void onClick(ClickEvent event) {
-			String datas = "patate\r\nEOC\r\n";
+			String datas = count <= 0 ? "EOC\r\n" : "Il reste " + (count--) + " écritures\r\n";
 			logger.info("Write " + datas);
 			btImpl.write(datas, writeCB);
 		}
