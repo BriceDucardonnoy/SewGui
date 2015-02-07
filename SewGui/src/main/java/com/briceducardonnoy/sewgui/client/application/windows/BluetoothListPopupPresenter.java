@@ -33,7 +33,7 @@ public class BluetoothListPopupPresenter extends
 		PresenterWidget<BluetoothListPopupPresenter.MyView> {
 
 	public interface MyView extends PopupView {
-		// TODO Put your view methods here
+		void setItems(List<BtEntity> items);
 	}
 	
 	private static Logger logger = Logger.getLogger("SewGuiList");

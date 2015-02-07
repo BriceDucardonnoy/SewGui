@@ -61,8 +61,6 @@ class ApplicationView extends ViewImpl implements ApplicationPresenter.MyView {
 	@UiField AnchorListItem network;
 	@UiField AnchorListItem stream;
 	
-	@UiField Button isBTEnabled;
-	@UiField Button btList;
 	@UiField Button isConnected;
 	@UiField Button connect;
 	@UiField Button disconnect;
@@ -136,16 +134,6 @@ class ApplicationView extends ViewImpl implements ApplicationPresenter.MyView {
 		Window.Location.reload();
 	}
 
-	@Override
-	public Button getBTBtn() {
-		return isBTEnabled;
-	}
-	
-	@Override
-	public Button getListBtn() {
-		return btList;
-	}
-	
 	@Override
 	public Button getConnected() {
 		return isConnected;

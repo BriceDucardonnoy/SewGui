@@ -20,11 +20,15 @@
  */
 package com.briceducardonnoy.sewgui.client.application.windows;
 
+import java.util.List;
+
+import org.gwtbootstrap3.client.ui.html.Strong;
+
 import com.briceducardonnoy.sewgui.client.lang.Translate;
+import com.briceducardonnoy.sewgui.client.wrappers.models.BtEntity;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
@@ -35,7 +39,7 @@ public class BluetoothListPopupView extends PopupViewImpl implements BluetoothLi
 	private Translate translate = GWT.create(Translate.class);
 	private final Widget widget;
 	
-	@UiField Label title;
+	@UiField Strong title;
 
 	public interface Binder extends UiBinder<Widget, BluetoothListPopupView> {
 	}
@@ -50,5 +54,11 @@ public class BluetoothListPopupView extends PopupViewImpl implements BluetoothLi
 	@Override
 	public Widget asWidget() {
 		return widget;
+	}
+
+	@Override
+	public void setItems(List<BtEntity> items) {
+		// TODO Auto-generated method stub
+		
 	}
 }

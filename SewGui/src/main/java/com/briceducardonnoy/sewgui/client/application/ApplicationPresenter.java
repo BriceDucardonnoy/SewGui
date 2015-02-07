@@ -53,8 +53,6 @@ import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 
 public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView, ApplicationPresenter.MyProxy> {
 	interface MyView extends View {
-		Button getBTBtn();
-		Button getListBtn();
 		Button getConnected();
 		Button getConnect();
 		Button getDisconnect();
