@@ -40,6 +40,7 @@ public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView,
 		Button getSubscribe();
 		Button getUnsubscribe();
 		Button getWrite();
+		Button getConnect2device();
 	}
 
 	private static Logger logger = Logger.getLogger("SewGui");
@@ -91,7 +92,7 @@ public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView,
 		}));
 		phoneGap.initializePhoneGap();
 		// Is enabled
-//		registerHandler(getView().getBTBtn().addClickHandler(isEnabledH));
+		registerHandler(getView().getBTBtn().addClickHandler(isEnabledH));
 		// List
 		registerHandler(getView().getListBtn().addClickHandler(listH));
 		// TODO BDY: combine connect and disconnect with isConnected
@@ -107,11 +108,26 @@ public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView,
 		registerHandler(getView().getUnsubscribe().addClickHandler(unsubscribeH));
 		// Write
 		registerHandler(getView().getWrite().addClickHandler(writeH));
+		// Connect to device
+		registerHandler(getView().getConnect2device().addClickHandler(connect2H));
 	}
 	
 	/*
 	 * Handlers and callback
 	 */
+	// Connect 2 device
+		private ClickHandler connect2H = new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				if(!context.isPhoneGapAvailable()) {
+					logger.warning("PhoneGap isn't available => do nothing");
+					Log.info("PhoneGap isn't available => do nothing");
+					Window.alert(translate.PGUnavailable());
+					return;
+				}
+				context.getBluetoothPlugin().isEnabled(isEnabledCB);
+			}
+		};
 	// Is enabled
 	private ClickHandler isEnabledH = new ClickHandler() {
 		@Override

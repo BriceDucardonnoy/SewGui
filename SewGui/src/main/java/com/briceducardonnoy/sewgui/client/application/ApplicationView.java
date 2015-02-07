@@ -29,7 +29,6 @@ import com.allen_sauer.gwt.log.client.Log;
 import com.briceducardonnoy.sewgui.client.application.context.ApplicationContext;
 import com.briceducardonnoy.sewgui.client.lang.Translate;
 import com.briceducardonnoy.sewgui.client.place.NameTokens;
-import com.google.gwt.core.client.Callback;
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -70,6 +69,7 @@ class ApplicationView extends ViewImpl implements ApplicationPresenter.MyView {
 	@UiField Button subscribe;
 	@UiField Button unsubscribe;
 	@UiField Button write;
+	@UiField Button connect2device;
 
 	private PlaceRequest statusGo;
 	private PlaceRequest networkGo;
@@ -132,6 +132,7 @@ class ApplicationView extends ViewImpl implements ApplicationPresenter.MyView {
 
 	@UiHandler("reload")
 	void onReload(ClickEvent event) {
+		logger.info("Reload page");
 		Window.Location.reload();
 	}
 
@@ -139,39 +140,6 @@ class ApplicationView extends ViewImpl implements ApplicationPresenter.MyView {
 	public Button getBTBtn() {
 		return isBTEnabled;
 	}
-	
-	@UiHandler("isBTEnabled")
-	void onIsBTOnClick(ClickEvent event) {
-		if(!context.isPhoneGapAvailable()) {
-			logger.warning("PhoneGap isn't available => do nothing");
-			Log.info("PhoneGap isn't available => do nothing");
-			return;
-		}
-		context.getBluetoothPlugin().isEnabled(isEnabledCB);
-	}
-	private Callback<Boolean, String> isEnabledCB = new Callback<Boolean, String>() {
-		@Override
-		public void onSuccess(Boolean result) {
-			Log.info("Success result is " + result);
-			logger.info("Success result is " + result);
-//			logger.info("Type of result is " + result.getClass().getSimpleName());
-			if(result == null) {
-				Window.alert("No response, please reload the application");
-			}
-			else if(result.booleanValue()) {
-				Window.alert("Bluetooth is activated");
-			}
-			else {
-				Window.alert(translate.BTInactiveMsg());
-			}
-		}
-		@Override
-		public void onFailure(String reason) {
-			Log.error("Failure reason is " + reason);
-			logger.severe("Failure reason is " + reason);
-			Window.alert("No response from device: " + reason);
-		}
-	};
 	
 	@Override
 	public Button getListBtn() {
@@ -206,6 +174,11 @@ class ApplicationView extends ViewImpl implements ApplicationPresenter.MyView {
 	@Override
 	public Button getWrite() {
 		return write;
+	}
+	
+	@Override
+	public Button getConnect2device() {
+		return connect2device;
 	}
 	
 }

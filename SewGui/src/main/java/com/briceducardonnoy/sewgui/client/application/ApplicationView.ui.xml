@@ -40,6 +40,7 @@
 		<g:Button ui:field="subscribe">Subscribe</g:Button>
 		<g:Button ui:field="unsubscribe">Unubscribe</g:Button>
 		<g:Button ui:field="write">Write</g:Button>
+		<g:Button ui:field="connect2device">Connect to a device</g:Button>
 		<!-- Main content -->
 		<g:SimplePanel ui:field="main" />
     </g:HTMLPanel>
