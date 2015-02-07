@@ -23,6 +23,7 @@ package com.briceducardonnoy.sewgui.client.application;
 import java.util.logging.Logger;
 
 import org.gwtbootstrap3.client.ui.AnchorListItem;
+import org.gwtbootstrap3.client.ui.Button;
 import org.gwtbootstrap3.client.ui.NavbarBrand;
 
 import com.allen_sauer.gwt.log.client.Log;
@@ -35,7 +36,6 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -67,7 +67,7 @@ class ApplicationView extends ViewImpl implements ApplicationPresenter.MyView {
 	@UiField Button subscribe;
 	@UiField Button unsubscribe;
 	@UiField Button write;
-	@UiField org.gwtbootstrap3.client.ui.Button connect2device;
+	@UiField Button connect2device;
 
 	private PlaceRequest statusGo;
 	private PlaceRequest networkGo;
@@ -165,7 +165,7 @@ class ApplicationView extends ViewImpl implements ApplicationPresenter.MyView {
 	}
 	
 	@Override
-	public org.gwtbootstrap3.client.ui.Button getConnect2device() {
+	public Button getConnect2device() {
 		return connect2device;
 	}
 	

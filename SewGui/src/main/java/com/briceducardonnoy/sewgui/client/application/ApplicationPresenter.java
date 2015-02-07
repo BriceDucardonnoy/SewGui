@@ -23,6 +23,8 @@ package com.briceducardonnoy.sewgui.client.application;
 import java.util.List;
 import java.util.logging.Logger;
 
+import org.gwtbootstrap3.client.ui.Button;
+
 import com.allen_sauer.gwt.log.client.Log;
 import com.briceducardonnoy.sewgui.client.application.context.ApplicationContext;
 import com.briceducardonnoy.sewgui.client.application.windows.BluetoothListPopupPresenter;
@@ -36,7 +38,6 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.Button;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.googlecode.gwtphonegap.client.PhoneGap;

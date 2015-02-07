@@ -38,10 +38,10 @@ public class BtEntity implements Serializable {
 	public BtEntity(JSONValue value) {
 		JSONObject jso = value.isObject();
 		if(jso == null) return;
-		id = jso.get("id").toString();
+		id = jso.get("id").toString().replaceAll("\"", "");
 		clazz = jso.containsKey("class") ? Integer.parseInt(jso.get("class").toString(), 10) : Integer.parseInt(jso.get("rssi").toString(), 10);
-		address = jso.containsKey("address") ? jso.get("address").toString() : jso.get("uuid").toString();
-		name = jso.get("name").toString();
+		address = jso.containsKey("address") ? jso.get("address").toString().replaceAll("\"", "") : jso.get("uuid").toString().replaceAll("\"", "");
+		name = jso.get("name").toString().replaceAll("\"", "");
 	}
 
 	public String getId() {

@@ -8,12 +8,14 @@
 	ui:generateKeys='com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator'
 	ui:generateLocales='default'>
 
-	<g:PopupPanel>
+	<g:PopupPanel ui:field="main" modal="true" glassEnabled="true" autoHideEnabled="true">
 		<!-- <g:Label ui:field="title"/> -->
-		<b:Alert type="INFO">
-			<b.html:Strong ui:field="title" text="..."/>
+		<b:Alert type="INFO" ui:field="alert">
+			<b.html:Strong ui:field="title" text="List of recorded devices"/>
 			<b.html:Br />
-			<b.html:Text text="..."/>
+			<!-- <b.html:Text text="..."/> -->
+			<!-- <g:Label>Patate</g:Label> -->
+			<b:Button type="PRIMARY" width="100%">Hello</b:Button>
 		</b:Alert>
 	</g:PopupPanel>
 </ui:UiBinder>

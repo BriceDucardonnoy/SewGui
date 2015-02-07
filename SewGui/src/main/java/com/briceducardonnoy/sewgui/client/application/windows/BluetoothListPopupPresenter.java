@@ -54,12 +54,14 @@ public class BluetoothListPopupPresenter extends
 		super.onReveal();
 		if(devices == null) {
 			logger.warning("No devices specified");
+			getView().hide();
 		}
 		else if(devices.size() == 0) {
 			logger.warning("No devices recorded");
+			getView().hide();
 		}
 		else {
-			
+			getView().setItems(devices);
 		}
 	}
 	

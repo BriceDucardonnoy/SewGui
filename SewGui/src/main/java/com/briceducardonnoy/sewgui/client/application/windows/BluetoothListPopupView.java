@@ -22,6 +22,10 @@ package com.briceducardonnoy.sewgui.client.application.windows;
 
 import java.util.List;
 
+import org.gwtbootstrap3.client.ui.Alert;
+import org.gwtbootstrap3.client.ui.Button;
+import org.gwtbootstrap3.client.ui.constants.ButtonType;
+import org.gwtbootstrap3.client.ui.html.Br;
 import org.gwtbootstrap3.client.ui.html.Strong;
 
 import com.briceducardonnoy.sewgui.client.lang.Translate;
@@ -29,6 +33,7 @@ import com.briceducardonnoy.sewgui.client.wrappers.models.BtEntity;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
@@ -38,7 +43,9 @@ public class BluetoothListPopupView extends PopupViewImpl implements BluetoothLi
 
 	private Translate translate = GWT.create(Translate.class);
 	private final Widget widget;
-	
+
+	@UiField PopupPanel main;
+	@UiField Alert alert;
 	@UiField Strong title;
 
 	public interface Binder extends UiBinder<Widget, BluetoothListPopupView> {
@@ -48,6 +55,7 @@ public class BluetoothListPopupView extends PopupViewImpl implements BluetoothLi
 	public BluetoothListPopupView(final EventBus eventBus, final Binder binder) {
 		super(eventBus);
 		widget = binder.createAndBindUi(this);
+//		main.setWidth("50%");
 		title.setText(translate.ListOfRecorededDevices());
 	}
 
@@ -58,7 +66,15 @@ public class BluetoothListPopupView extends PopupViewImpl implements BluetoothLi
 
 	@Override
 	public void setItems(List<BtEntity> items) {
-		// TODO Auto-generated method stub
-		
+		alert.clear();
+		alert.add(title);
+		alert.add(new Br());
+		for(BtEntity item : items) {
+			Button bt = new Button(item.toString());
+			bt.setWidth("100%");
+			bt.setType(ButtonType.PRIMARY);
+			alert.add(bt);
+			alert.add(new Br());
+		}
 	}
 }
