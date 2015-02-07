@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
-import com.briceducardonnoy.sewgui.client.models.BtEntity;
+import com.briceducardonnoy.sewgui.client.wrappers.models.BtEntity;
 import com.google.gwt.core.client.Callback;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.json.client.JSONArray;

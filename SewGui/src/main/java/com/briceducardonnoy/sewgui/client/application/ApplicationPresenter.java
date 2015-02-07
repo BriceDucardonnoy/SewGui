@@ -4,10 +4,11 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import com.allen_sauer.gwt.log.client.Log;
+import com.briceducardonnoy.sewgui.client.application.context.ApplicationContext;
 import com.briceducardonnoy.sewgui.client.customCallbacks.ListCallback;
 import com.briceducardonnoy.sewgui.client.lang.Translate;
-import com.briceducardonnoy.sewgui.client.models.BtEntity;
 import com.briceducardonnoy.sewgui.client.wrappers.BluetoothSerialImpl;
+import com.briceducardonnoy.sewgui.client.wrappers.models.BtEntity;
 import com.google.gwt.core.client.Callback;
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -43,10 +44,10 @@ public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView,
 
 	private static Logger logger = Logger.getLogger("SewGui");
 
-	@Inject PhoneGap phoneGap;
+//	@Inject PhoneGap phoneGap;
+	@Inject ApplicationContext context;
+	private PhoneGap phoneGap;
 	private Translate translate = GWT.create(Translate.class);
-	private BluetoothSerialImpl btImpl;
-	private boolean isPhoneGapAvailable;
 	private int count = 2;
 	
 	@ContentSlot
@@ -57,26 +58,26 @@ public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView,
 	}
 	
 	@Inject
-	ApplicationPresenter(EventBus eventBus, MyView view, MyProxy proxy, PhoneGap pg) {
+	ApplicationPresenter(EventBus eventBus, MyView view, MyProxy proxy, ApplicationContext ctx) {
 		super(eventBus, view, proxy, RevealType.Root);
-		phoneGap = pg;
-//		phoneGap = GWT.create(PhoneGap.class);
-		phoneGap.getLog().setRemoteLogServiceUrl("http://192.168.1.46:8080/gwt-log");
+		context = ctx;
+		phoneGap = context.getPhoneGap();
 	}
 	
 	@Override
 	protected void onBind() {
 		super.onBind();
-		// PhoneGap init
+		// PhoneGap initialization
 		registerHandler(phoneGap.addHandler(new PhoneGapAvailableHandler() {
 			@Override
 			public void onPhoneGapAvailable(PhoneGapAvailableEvent event) {
 				//start your app - phonegap is ready
 				Log.info("PhoneGap available");
 				logger.info("PhoneGap is available");
-				isPhoneGapAvailable = true;
-				btImpl = new BluetoothSerialImpl();
+				context.setPhoneGapAvailable(true);
+				BluetoothSerialImpl btImpl = new BluetoothSerialImpl();
 				btImpl.initialize();
+				context.setBlutoothPlugin(btImpl);
 				phoneGap.loadPlugin("bluetoothSerialImpl", btImpl);
 			}
 		}));
@@ -85,12 +86,12 @@ public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView,
 			public void onPhoneGapTimeout(PhoneGapTimeoutEvent event) {
 				//can not start phonegap - something is for with your setup
 				Log.error("PhoneGap unavailable");
-				isPhoneGapAvailable = false;
+				context.setPhoneGapAvailable(false);
 			}
 		}));
 		phoneGap.initializePhoneGap();
 		// Is enabled
-		registerHandler(getView().getBTBtn().addClickHandler(isEnabledH));
+//		registerHandler(getView().getBTBtn().addClickHandler(isEnabledH));
 		// List
 		registerHandler(getView().getListBtn().addClickHandler(listH));
 		// TODO BDY: combine connect and disconnect with isConnected
@@ -115,12 +116,12 @@ public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView,
 	private ClickHandler isEnabledH = new ClickHandler() {
 		@Override
 		public void onClick(ClickEvent event) {
-			if(!isPhoneGapAvailable) {
+			if(!context.isPhoneGapAvailable()) {
 				logger.warning("PhoneGap isn't available => do nothing");
 				Log.info("PhoneGap isn't available => do nothing");
 				return;
 			}
-			btImpl.isEnabled(isEnabledCB);
+			context.getBluetoothPlugin().isEnabled(isEnabledCB);
 		}
 	};
 	private Callback<Boolean, String> isEnabledCB = new Callback<Boolean, String>() {
@@ -151,7 +152,7 @@ public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView,
 		@Override
 		public void onClick(ClickEvent event) {
 			logger.info("List requested");
-			btImpl.list(listCB);
+			context.getBluetoothPlugin().list(listCB);
 		}
 	};
 	private ListCallback listCB = new ListCallback() {
@@ -171,7 +172,7 @@ public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView,
 		@Override
 		public void onClick(ClickEvent event) {
 			logger.info("Is connected to a device?");
-			btImpl.isConnected(connectedCB);
+			context.getBluetoothPlugin().isConnected(connectedCB);
 		}
 	};
 	private Callback<Boolean, Boolean> connectedCB = new Callback<Boolean, Boolean>() {
@@ -189,7 +190,7 @@ public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView,
 		@Override
 		public void onClick(ClickEvent event) {
 			logger.info("Connect to 00:1A:7D:DA:71:13");
-			btImpl.connect("00:1A:7D:DA:71:13", false, connectCB);
+			context.getBluetoothPlugin().connect("00:1A:7D:DA:71:13", false, connectCB);
 		}
 	};
 	private Callback<String, String> connectCB = new Callback<String, String>() {
@@ -208,7 +209,7 @@ public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView,
 		@Override
 		public void onClick(ClickEvent event) {
 			logger.info("Disconnect from 00:1A:7D:DA:71:13");
-			btImpl.disconnect(disconnectCB);
+			context.getBluetoothPlugin().disconnect(disconnectCB);
 		}
 	};
 	private Callback<String, String> disconnectCB = new Callback<String, String>() {
@@ -227,7 +228,7 @@ public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView,
 		@Override
 		public void onClick(ClickEvent event) {
 			logger.info("Subscribe");
-			btImpl.subscribe("\r\n", subscribeCB);
+			context.getBluetoothPlugin().subscribe("\r\n", subscribeCB);
 		}
 	};
 	private Callback<String, String> subscribeCB = new Callback<String, String>() {
@@ -248,7 +249,7 @@ public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView,
 		@Override
 		public void onClick(ClickEvent event) {
 			logger.info("Unsubscribe");
-			btImpl.unsubscribe(unsubscribeCB);
+			context.getBluetoothPlugin().unsubscribe(unsubscribeCB);
 		}
 	};
 	private Callback<Object, String> unsubscribeCB = new Callback<Object, String>() {
@@ -270,7 +271,7 @@ public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView,
 		public void onClick(ClickEvent event) {
 			String datas = count <= 0 ? "EOC\r\n" : "Il reste " + (count--) + " écritures\r\n";
 			logger.info("Write " + datas);
-			btImpl.write(datas, writeCB);
+			context.getBluetoothPlugin().write(datas, writeCB);
 		}
 	};
 	private Callback<Object, String> writeCB = new Callback<Object, String>() {
