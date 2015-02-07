@@ -69,7 +69,7 @@ class ApplicationView extends ViewImpl implements ApplicationPresenter.MyView {
 	@UiField Button subscribe;
 	@UiField Button unsubscribe;
 	@UiField Button write;
-	@UiField Button connect2device;
+	@UiField org.gwtbootstrap3.client.ui.Button connect2device;
 
 	private PlaceRequest statusGo;
 	private PlaceRequest networkGo;
@@ -177,7 +177,7 @@ class ApplicationView extends ViewImpl implements ApplicationPresenter.MyView {
 	}
 	
 	@Override
-	public Button getConnect2device() {
+	public org.gwtbootstrap3.client.ui.Button getConnect2device() {
 		return connect2device;
 	}
 	

@@ -178,7 +178,6 @@ public class BluetoothSerialImpl implements BluetoothPlugin {
 		writeImpl(data, callback);
 	}
 	
-	// TODO BDY: read in an exemple how it's done. JavaScript source isn't clear
 	private native void writeImpl(Object data, Callback<Object, String> callback) /*-{
 		// Callback
 		var success = $entry(function(a) {

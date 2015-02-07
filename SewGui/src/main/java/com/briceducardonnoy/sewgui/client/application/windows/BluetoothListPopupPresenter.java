@@ -18,38 +18,52 @@
  * arising from, out of or in connection with the software or the use or other 
  * dealings in the Software.
  */
-package com.briceducardonnoy.sewgui.client.customCallbacks;
+package com.briceducardonnoy.sewgui.client.application.windows;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 import com.briceducardonnoy.sewgui.client.wrappers.models.BtEntity;
-import com.google.gwt.core.client.Callback;
-import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.json.client.JSONArray;
+import com.google.inject.Inject;
+import com.google.web.bindery.event.shared.EventBus;
+import com.gwtplatform.mvp.client.PopupView;
+import com.gwtplatform.mvp.client.PresenterWidget;
 
-public abstract class ListCallback implements Callback<JavaScriptObject, String>{
-	
-//	private static Logger logger = Logger.getLogger("SewGui");
-	
-	@Override
-	public void onFailure(String reason) {
-		failure(reason);
+public class BluetoothListPopupPresenter extends
+		PresenterWidget<BluetoothListPopupPresenter.MyView> {
+
+	public interface MyView extends PopupView {
+		// TODO Put your view methods here
 	}
 	
+	private static Logger logger = Logger.getLogger("SewGuiList");
+	private List<BtEntity> devices = null;
+
+	@Inject
+	public BluetoothListPopupPresenter(final EventBus eventBus, final MyView view) {
+		super(eventBus, view);
+	}
+
 	@Override
-	public void onSuccess(JavaScriptObject result) {
-		List<BtEntity> ents = new ArrayList<>();
-		if(result == null) success(ents);
-		JSONArray array = new JSONArray(result);
-		for(int i = 0 ; i < array.size() ; i++) {
-			ents.add(new BtEntity(array.get(i)));
-//			logger.info(ents.get(i).toString());
+	protected void onBind() {
+		super.onBind();
+	}
+
+	@Override
+	protected void onReveal() {
+		super.onReveal();
+		if(devices == null) {
+			logger.warning("No devices specified");
 		}
-		success(ents);
+		else if(devices.size() == 0) {
+			logger.warning("No devices recorded");
+		}
+		else {
+			
+		}
 	}
-
-	public abstract void success(List<BtEntity> result);
-	public abstract void failure(String reason);
-
+	
+	public void setDevices(final List<BtEntity> devices) {
+		this.devices = devices;
+	}
 }

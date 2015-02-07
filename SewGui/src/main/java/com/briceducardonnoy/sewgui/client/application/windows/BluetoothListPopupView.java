@@ -18,27 +18,37 @@
  * arising from, out of or in connection with the software or the use or other 
  * dealings in the Software.
  */
-package com.briceducardonnoy.sewgui.client.application;
+package com.briceducardonnoy.sewgui.client.application.windows;
 
-import com.briceducardonnoy.sewgui.client.application.status.StatusModule;
-import com.gwtplatform.mvp.client.gin.AbstractPresenterModule;
-import com.briceducardonnoy.sewgui.client.application.network.NetworkModule;
-import com.briceducardonnoy.sewgui.client.application.stream.StreamModule;
-import com.briceducardonnoy.sewgui.client.application.windows.BluetoothListPopupPresenter;
-import com.briceducardonnoy.sewgui.client.application.windows.BluetoothListPopupView;
+import com.briceducardonnoy.sewgui.client.lang.Translate;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.uibinder.client.UiBinder;
+import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.Widget;
+import com.google.inject.Inject;
+import com.google.web.bindery.event.shared.EventBus;
+import com.gwtplatform.mvp.client.PopupViewImpl;
 
-public class ApplicationModule extends AbstractPresenterModule {
-    @Override
-    protected void configure() {
-        install(new StreamModule());
-		install(new NetworkModule());
-		install(new StatusModule());
+public class BluetoothListPopupView extends PopupViewImpl implements BluetoothListPopupPresenter.MyView {
 
-        bindPresenter(ApplicationPresenter.class, ApplicationPresenter.MyView.class, ApplicationView.class,
-                ApplicationPresenter.MyProxy.class);
+	private Translate translate = GWT.create(Translate.class);
+	private final Widget widget;
+	
+	@UiField Label title;
 
-		bindPresenterWidget(BluetoothListPopupPresenter.class,
-				BluetoothListPopupPresenter.MyView.class,
-				BluetoothListPopupView.class);
-    }
+	public interface Binder extends UiBinder<Widget, BluetoothListPopupView> {
+	}
+
+	@Inject
+	public BluetoothListPopupView(final EventBus eventBus, final Binder binder) {
+		super(eventBus);
+		widget = binder.createAndBindUi(this);
+		title.setText(translate.ListOfRecorededDevices());
+	}
+
+	@Override
+	public Widget asWidget() {
+		return widget;
+	}
 }

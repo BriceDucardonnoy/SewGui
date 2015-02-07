@@ -1,3 +1,23 @@
+/**
+ * Copyright 2015 © Brice DUCARDONNOY
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining 
+ * a copy of this software and associated documentation files (the "Software"), 
+ * to deal in the Software without restriction, including without limitation 
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense, 
+ * and/or sell copies of the Software, and to permit persons to whom the 
+ * Software is furnished to do so, subject to the following conditions:
+ * - The above copyright notice and this permission notice shall be included 
+ * 	in all copies or substantial portions of the Software.
+ * - The Software is provided "as is", without warranty of any kind, express 
+ * 	or implied, including but not limited to the warranties of merchantability, 
+ * 	fitness for a particular purpose and noninfringement.
+ * 
+ * In no event shall the authors or copyright holders be liable for any claim, 
+ * damages or other liability, whether in an action of contract, tort or otherwise, 
+ * arising from, out of or in connection with the software or the use or other 
+ * dealings in the Software.
+ */
 package com.briceducardonnoy.sewgui.client.application;
 
 import java.util.List;
@@ -5,6 +25,7 @@ import java.util.logging.Logger;
 
 import com.allen_sauer.gwt.log.client.Log;
 import com.briceducardonnoy.sewgui.client.application.context.ApplicationContext;
+import com.briceducardonnoy.sewgui.client.application.windows.BluetoothListPopupPresenter;
 import com.briceducardonnoy.sewgui.client.customCallbacks.ListCallback;
 import com.briceducardonnoy.sewgui.client.lang.Translate;
 import com.briceducardonnoy.sewgui.client.wrappers.BluetoothSerialImpl;
@@ -40,13 +61,13 @@ public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView,
 		Button getSubscribe();
 		Button getUnsubscribe();
 		Button getWrite();
-		Button getConnect2device();
+		org.gwtbootstrap3.client.ui.Button getConnect2device();
 	}
 
 	private static Logger logger = Logger.getLogger("SewGui");
 
-//	@Inject PhoneGap phoneGap;
 	@Inject ApplicationContext context;
+	@Inject BluetoothListPopupPresenter btListPres;
 	private PhoneGap phoneGap;
 	private Translate translate = GWT.create(Translate.class);
 	private int count = 2;
@@ -91,10 +112,6 @@ public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView,
 			}
 		}));
 		phoneGap.initializePhoneGap();
-		// Is enabled
-		registerHandler(getView().getBTBtn().addClickHandler(isEnabledH));
-		// List
-		registerHandler(getView().getListBtn().addClickHandler(listH));
 		// TODO BDY: combine connect and disconnect with isConnected
 		// Is connected
 		registerHandler(getView().getConnected().addClickHandler(connectedH));
@@ -129,31 +146,21 @@ public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView,
 			}
 		};
 	// Is enabled
-	private ClickHandler isEnabledH = new ClickHandler() {
-		@Override
-		public void onClick(ClickEvent event) {
-			if(!context.isPhoneGapAvailable()) {
-				logger.warning("PhoneGap isn't available => do nothing");
-				Log.info("PhoneGap isn't available => do nothing");
-				return;
-			}
-			context.getBluetoothPlugin().isEnabled(isEnabledCB);
-		}
-	};
 	private Callback<Boolean, String> isEnabledCB = new Callback<Boolean, String>() {
 		@Override
 		public void onSuccess(Boolean result) {
-			Log.info("Success result is " + result);
-			logger.info("Success result is " + result);
 //			logger.info("Type of result is " + result.getClass().getSimpleName());
 			if(result == null) {
-				Window.alert("No response, please reload the application");
+				logger.info(translate.BTNullMsg());
+				Window.alert(translate.BTNullMsg());
 			}
 			else if(result.booleanValue()) {
-				Window.alert("Bluetooth is activated");
+				logger.info("Bluetooth is activated");
+				context.getBluetoothPlugin().list(listCB);
 			}
 			else {
 				Window.alert(translate.BTInactiveMsg());
+				logger.info(translate.BTInactiveMsg());
 			}
 		}
 		@Override
@@ -164,13 +171,6 @@ public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView,
 		}
 	};
 	// List
-	private ClickHandler listH = new ClickHandler() {
-		@Override
-		public void onClick(ClickEvent event) {
-			logger.info("List requested");
-			context.getBluetoothPlugin().list(listCB);
-		}
-	};
 	private ListCallback listCB = new ListCallback() {
 		@Override
 		public void failure(String reason) {
@@ -179,8 +179,10 @@ public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView,
 		}
 		@Override
 		public void success(List<BtEntity> result) {
-			logger.info("List result is " + result.toString());
-			Window.alert("List result is " + result.toString());
+			logger.info(translate.ListOfRecorededDevices() + ": " + result.toString());
+//			Window.alert(translate.ListOfRecorededDevices() + ": " + result.toString());
+			btListPres.setDevices(result);
+			addToPopupSlot(btListPres, true);
 		}
 	};
 	// Is connected
