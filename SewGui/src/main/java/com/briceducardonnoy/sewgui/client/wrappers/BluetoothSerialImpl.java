@@ -90,7 +90,7 @@ public class BluetoothSerialImpl implements BluetoothPlugin {
 	}
 	
 	private native void connectImpl(String mac, boolean secure, Callback<String, String> callback) /*-{
-		alert("Mac address is " + mac);
+//		alert("Mac address is " + mac);
 		var success = $entry(function(a) {
 	        callback.@com.google.gwt.core.client.Callback::onSuccess(Ljava/lang/Object;)(a);
     	});
@@ -98,11 +98,11 @@ public class BluetoothSerialImpl implements BluetoothPlugin {
     		callback.@com.google.gwt.core.client.Callback::onFailure(Ljava/lang/Object;)(a);
     	});
 		if(secure === true) {
-			alert("Secure");
+//			alert("Secure");
 			$wnd.cordova.exec(success, failure, "BluetoothSerial", "connect", [mac]);
 		}
 		else if(secure === false) {
-			alert("Insecure");
+//			alert("Insecure");
 			$wnd.cordova.exec(success, failure, "BluetoothSerial", "connectInsecure", [mac]);
 		}
 		else alert("Unknown");

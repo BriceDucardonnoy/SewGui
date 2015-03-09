@@ -31,14 +31,12 @@
 					Snow</b:NavbarLink> </b:NavbarText> -->
 			</b:NavbarCollapse>
 		</b:Navbar>
-		<b:Button ui:field="reload">Reload</b:Button>
-		<b:Button ui:field="isConnected">Is Connected</b:Button>
-		<b:Button ui:field="connect">Connect</b:Button>
-		<b:Button ui:field="disconnect">Disonnect</b:Button>
-		<b:Button ui:field="subscribe">Subscribe</b:Button>
-		<b:Button ui:field="unsubscribe">Unubscribe</b:Button>
-		<b:Button ui:field="write">Write</b:Button>
+		<b:Button ui:field="reload" size="LARGE" type="INFO">Reload</b:Button>
 		<b:Button ui:field="connect2device" type="PRIMARY" size="LARGE">Connect to a device</b:Button>
+		<b:Button ui:field="disconnect" size="LARGE" type="WARNING">Disonnect</b:Button>
+		<b:Button ui:field="subscribe" visible="false">Subscribe</b:Button>
+		<b:Button ui:field="unsubscribe" visible="false">Unubscribe</b:Button>
+		<b:Button ui:field="write">Write</b:Button>
 		<!-- Main content -->
 		<g:SimplePanel ui:field="main" />
     </g:HTMLPanel>

@@ -61,8 +61,6 @@ class ApplicationView extends ViewImpl implements ApplicationPresenter.MyView {
 	@UiField AnchorListItem network;
 	@UiField AnchorListItem stream;
 	
-	@UiField Button isConnected;
-	@UiField Button connect;
 	@UiField Button disconnect;
 	@UiField Button subscribe;
 	@UiField Button unsubscribe;
@@ -134,16 +132,6 @@ class ApplicationView extends ViewImpl implements ApplicationPresenter.MyView {
 		Window.Location.reload();
 	}
 
-	@Override
-	public Button getConnected() {
-		return isConnected;
-	}
-	
-	@Override
-	public Button getConnect() {
-		return connect;
-	}
-	
 	@Override
 	public Button getDisconnect() {
 		return disconnect;

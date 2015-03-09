@@ -56,8 +56,6 @@ import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 
 public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView, ApplicationPresenter.MyProxy> {
 	interface MyView extends View {
-		Button getConnected();
-		Button getConnect();
 		Button getDisconnect();
 		Button getSubscribe();
 		Button getUnsubscribe();
@@ -72,6 +70,7 @@ public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView,
 	private PhoneGap phoneGap;
 	private Translate translate = GWT.create(Translate.class);
 	private int count = 2;
+	private String deviceId;
 	
 	@ContentSlot
 	public static final Type<RevealContentHandler<?>> SLOT_SetMainContent = new Type<>();
@@ -114,10 +113,6 @@ public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView,
 		}));
 		phoneGap.initializePhoneGap();
 		// TODO BDY: combine connect and disconnect with isConnected
-		// Is connected
-		registerHandler(getView().getConnected().addClickHandler(connectedH));
-		// Connect insecure
-		registerHandler(getView().getConnect().addClickHandler(connectH));
 		// Disonnect insecure
 		registerHandler(getView().getDisconnect().addClickHandler(disconnectH));
 		// Subscribe
@@ -192,36 +187,63 @@ public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView,
 	private BTDeviceSelectedHandler deviceSelectedHandler = new BTDeviceSelectedHandler() {
 		@Override
 		public void onBTDeviceSelected(BTDeviceSelectedEvent event) {
-			logger.info("Event id received: " + event.getDeviceId());
-			
-		}
-	};
-	// Is connected
-	private ClickHandler connectedH = new ClickHandler() {
-		@Override
-		public void onClick(ClickEvent event) {
-			logger.info("Is connected to a device?");
+			deviceId = event.getDeviceId();
+			logger.info("Event id received: " + deviceId);
+			if(deviceId == null || deviceId.isEmpty()) {
+				deviceId = "";
+				return;
+			}
+			// Test if phone is already connected and close connection if yes
+			// TESTME BDY: maybe too extreme if phone is connected to another device
 			context.getBluetoothPlugin().isConnected(connectedCB);
 		}
 	};
+	// Is connected
 	private Callback<Boolean, Boolean> connectedCB = new Callback<Boolean, Boolean>() {
 		@Override
 		public void onFailure(Boolean reason) {
-			Window.alert("Not connected");
+			// Connect
+			context.getBluetoothPlugin().connect(deviceId, false, connectCB);
 		}
 		@Override
 		public void onSuccess(Boolean result) {
-			Window.alert("Connected");
+			// Disconnect and connect
+			disconnectAndConnect();
+		}
+	};
+	
+	private void disconnectAndConnect() {
+		logger.info("Disconnect");
+		context.getBluetoothPlugin().write("EOC\r\n", writeDisconnectCB);
+	}
+	
+	private Callback<Object, String> writeDisconnectCB = new Callback<Object, String>() {
+		@Override
+		public void onFailure(String reason) {
+			logger.info("Write failed " + reason);
+			Window.alert("Write disconnection instruction failed: " + reason);
+		}
+
+		@Override
+		public void onSuccess(Object result) {
+			logger.info("Write disconnection success: " + result);
+			context.getBluetoothPlugin().disconnect(disconnectBeforeConnectCB);
+		}
+	};
+	
+	private Callback<String, String> disconnectBeforeConnectCB = new Callback<String, String>() {
+		@Override
+		public void onFailure(String reason) {
+			Window.alert("Disonnect failed: " + reason);
+		}
+		@Override
+		public void onSuccess(String result) {
+			logger.info("Disonnect success type is " + result.getClass().getSimpleName());
+			logger.info("Disonnect success: " + result + ". Now connect to " + deviceId);
+			context.getBluetoothPlugin().connect(deviceId, false, connectCB);
 		}
 	};
 	// Connect
-	private ClickHandler connectH = new ClickHandler() {
-		@Override
-		public void onClick(ClickEvent event) {
-			logger.info("Connect to 00:1A:7D:DA:71:13");
-			context.getBluetoothPlugin().connect("00:1A:7D:DA:71:13", false, connectCB);
-		}
-	};
 	private Callback<String, String> connectCB = new Callback<String, String>() {
 		@Override
 		public void onFailure(String reason) {
@@ -229,7 +251,7 @@ public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView,
 		}
 		@Override
 		public void onSuccess(String result) {
-			logger.info("Connect success type is " + result.getClass().getSimpleName());
+//			logger.info("Connect success type is " + result.getClass().getSimpleName());
 			Window.alert("Connect success: " + result);
 		}
 	};
@@ -237,7 +259,7 @@ public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView,
 	private ClickHandler disconnectH = new ClickHandler() {
 		@Override
 		public void onClick(ClickEvent event) {
-			logger.info("Disconnect from 00:1A:7D:DA:71:13");
+			logger.info("Disconnect from " + deviceId);
 			context.getBluetoothPlugin().disconnect(disconnectCB);
 		}
 	};
