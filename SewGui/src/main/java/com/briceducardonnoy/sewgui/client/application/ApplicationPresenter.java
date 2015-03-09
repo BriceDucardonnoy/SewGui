@@ -71,6 +71,7 @@ public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView,
 	private Translate translate = GWT.create(Translate.class);
 	private int count = 2;
 	private String deviceId;
+	private boolean need2connect = false;
 	
 	@ContentSlot
 	public static final Type<RevealContentHandler<?>> SLOT_SetMainContent = new Type<>();
@@ -112,7 +113,10 @@ public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView,
 			}
 		}));
 		phoneGap.initializePhoneGap();
-		// TODO BDY: combine connect and disconnect with isConnected
+		// Connect to device
+		registerHandler(getView().getConnect2device().addClickHandler(connect2H));
+		// Device selected
+		registerHandler(getEventBus().addHandler(BTDeviceSelectedEvent.getType(), deviceSelectedHandler));
 		// Disonnect insecure
 		registerHandler(getView().getDisconnect().addClickHandler(disconnectH));
 		// Subscribe
@@ -121,10 +125,6 @@ public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView,
 		registerHandler(getView().getUnsubscribe().addClickHandler(unsubscribeH));
 		// Write
 		registerHandler(getView().getWrite().addClickHandler(writeH));
-		// Connect to device
-		registerHandler(getView().getConnect2device().addClickHandler(connect2H));
-		// Device selected
-		registerHandler(getEventBus().addHandler(BTDeviceSelectedEvent.getType(), deviceSelectedHandler));
 	}
 	
 	/*
@@ -208,6 +208,7 @@ public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView,
 		@Override
 		public void onSuccess(Boolean result) {
 			// Disconnect and connect
+			need2connect = true;
 			disconnectAndConnect();
 		}
 	};
@@ -240,7 +241,13 @@ public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView,
 		public void onSuccess(String result) {
 			logger.info("Disonnect success type is " + result.getClass().getSimpleName());
 			logger.info("Disonnect success: " + result + ". Now connect to " + deviceId);
-			context.getBluetoothPlugin().connect(deviceId, false, connectCB);
+			if(need2connect) {
+				context.getBluetoothPlugin().connect(deviceId, false, connectCB);
+				need2connect = false;
+			}
+			else {
+				Window.alert("Disconnect success: " + result);
+			}
 		}
 	};
 	// Connect
@@ -260,18 +267,7 @@ public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView,
 		@Override
 		public void onClick(ClickEvent event) {
 			logger.info("Disconnect from " + deviceId);
-			context.getBluetoothPlugin().disconnect(disconnectCB);
-		}
-	};
-	private Callback<String, String> disconnectCB = new Callback<String, String>() {
-		@Override
-		public void onFailure(String reason) {
-			Window.alert("Disonnect failed: " + reason);
-		}
-		@Override
-		public void onSuccess(String result) {
-			logger.info("Disonnect success type is " + result.getClass().getSimpleName());
-			Window.alert("Disonnect success: " + result);
+			context.getBluetoothPlugin().write("EOC\r\n", writeDisconnectCB);
 		}
 	};
 	// Subscribe

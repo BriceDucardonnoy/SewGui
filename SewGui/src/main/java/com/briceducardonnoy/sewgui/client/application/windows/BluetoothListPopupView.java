@@ -98,7 +98,7 @@ public class BluetoothListPopupView extends PopupViewImpl implements BluetoothLi
 			bt.setType(ButtonType.PRIMARY);
 			handlers.add(bt.addClickHandler(deviceH));
 			alert.add(bt);
-			alert.add(new Br());
+			alert.add(new Br());alert.add(new Br());
 		}
 	}
 	

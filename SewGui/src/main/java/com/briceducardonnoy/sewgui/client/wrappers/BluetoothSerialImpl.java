@@ -111,7 +111,7 @@ public class BluetoothSerialImpl implements BluetoothPlugin {
 	// Disconnect
 	@Override
 	public void disconnect(Callback<String, String> callback) {
-		disconnectImpl(callback);// TODO BDY: send EOC to RPi
+		disconnectImpl(callback);
 	}
 	
 	private native void disconnectImpl(Callback<String, String> callback) /*-{
