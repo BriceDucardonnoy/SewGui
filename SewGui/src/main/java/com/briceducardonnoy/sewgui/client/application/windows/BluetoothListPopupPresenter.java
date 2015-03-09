@@ -23,7 +23,9 @@ package com.briceducardonnoy.sewgui.client.application.windows;
 import java.util.List;
 import java.util.logging.Logger;
 
+import com.briceducardonnoy.sewgui.client.events.BTDeviceSelectedEvent;
 import com.briceducardonnoy.sewgui.client.wrappers.models.BtEntity;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.PopupView;
@@ -34,6 +36,8 @@ public class BluetoothListPopupPresenter extends
 
 	public interface MyView extends PopupView {
 		void setItems(List<BtEntity> items);
+		List<HandlerRegistration> getHandlers();
+		String getSelectedDeviceId();
 	}
 	
 	private static Logger logger = Logger.getLogger("SewGuiList");
@@ -48,7 +52,7 @@ public class BluetoothListPopupPresenter extends
 	protected void onBind() {
 		super.onBind();
 	}
-
+	
 	@Override
 	protected void onReveal() {
 		super.onReveal();
@@ -62,6 +66,21 @@ public class BluetoothListPopupPresenter extends
 		}
 		else {
 			getView().setItems(devices);
+		}
+	}
+	
+	@Override
+	protected void onHide() {
+		super.onUnbind();
+		List<HandlerRegistration> hs = getView().getHandlers();
+		if(hs != null) {
+			for(HandlerRegistration h : hs) {
+				h.removeHandler();
+			}
+			hs.clear();
+		}
+		if(getView().getSelectedDeviceId() != null && !getView().getSelectedDeviceId().isEmpty()) {
+			getEventBus().fireEvent(new BTDeviceSelectedEvent(getView().getSelectedDeviceId()));
 		}
 	}
 	

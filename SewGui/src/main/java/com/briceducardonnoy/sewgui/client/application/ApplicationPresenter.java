@@ -29,6 +29,8 @@ import com.allen_sauer.gwt.log.client.Log;
 import com.briceducardonnoy.sewgui.client.application.context.ApplicationContext;
 import com.briceducardonnoy.sewgui.client.application.windows.BluetoothListPopupPresenter;
 import com.briceducardonnoy.sewgui.client.customCallbacks.ListCallback;
+import com.briceducardonnoy.sewgui.client.events.BTDeviceSelectedEvent;
+import com.briceducardonnoy.sewgui.client.events.BTDeviceSelectedEvent.BTDeviceSelectedHandler;
 import com.briceducardonnoy.sewgui.client.lang.Translate;
 import com.briceducardonnoy.sewgui.client.wrappers.BluetoothSerialImpl;
 import com.briceducardonnoy.sewgui.client.wrappers.models.BtEntity;
@@ -60,7 +62,7 @@ public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView,
 		Button getSubscribe();
 		Button getUnsubscribe();
 		Button getWrite();
-		org.gwtbootstrap3.client.ui.Button getConnect2device();
+		Button getConnect2device();
 	}
 
 	private static Logger logger = Logger.getLogger("SewGui");
@@ -126,24 +128,26 @@ public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView,
 		registerHandler(getView().getWrite().addClickHandler(writeH));
 		// Connect to device
 		registerHandler(getView().getConnect2device().addClickHandler(connect2H));
+		// Device selected
+		registerHandler(getEventBus().addHandler(BTDeviceSelectedEvent.getType(), deviceSelectedHandler));
 	}
 	
 	/*
 	 * Handlers and callback
 	 */
 	// Connect 2 device
-		private ClickHandler connect2H = new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				if(!context.isPhoneGapAvailable()) {
-					logger.warning("PhoneGap isn't available => do nothing");
-					Log.info("PhoneGap isn't available => do nothing");
-					Window.alert(translate.PGUnavailable());
-					return;
-				}
-				context.getBluetoothPlugin().isEnabled(isEnabledCB);
+	private ClickHandler connect2H = new ClickHandler() {
+		@Override
+		public void onClick(ClickEvent event) {
+			if(!context.isPhoneGapAvailable()) {
+				logger.warning("PhoneGap isn't available => do nothing");
+				Log.info("PhoneGap isn't available => do nothing");
+				Window.alert(translate.PGUnavailable());
+				return;
 			}
-		};
+			context.getBluetoothPlugin().isEnabled(isEnabledCB);
+		}
+	};
 	// Is enabled
 	private Callback<Boolean, String> isEnabledCB = new Callback<Boolean, String>() {
 		@Override
@@ -182,6 +186,14 @@ public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView,
 //			Window.alert(translate.ListOfRecorededDevices() + ": " + result.toString());
 			btListPres.setDevices(result);
 			addToPopupSlot(btListPres, true);
+		}
+	};
+	// BlueTooth device selected
+	private BTDeviceSelectedHandler deviceSelectedHandler = new BTDeviceSelectedHandler() {
+		@Override
+		public void onBTDeviceSelected(BTDeviceSelectedEvent event) {
+			logger.info("Event id received: " + event.getDeviceId());
+			
 		}
 	};
 	// Is connected
