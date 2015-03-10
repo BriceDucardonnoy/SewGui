@@ -62,8 +62,6 @@ class ApplicationView extends ViewImpl implements ApplicationPresenter.MyView {
 	@UiField AnchorListItem stream;
 	
 	@UiField Button disconnect;
-	@UiField Button subscribe;
-	@UiField Button unsubscribe;
 	@UiField Button write;
 	@UiField Button connect2device;
 
@@ -135,16 +133,6 @@ class ApplicationView extends ViewImpl implements ApplicationPresenter.MyView {
 	@Override
 	public Button getDisconnect() {
 		return disconnect;
-	}
-	
-	@Override
-	public Button getSubscribe() {
-		return subscribe;
-	}
-	
-	@Override
-	public Button getUnsubscribe() {
-		return unsubscribe;
 	}
 	
 	@Override

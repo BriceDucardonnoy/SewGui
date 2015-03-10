@@ -57,8 +57,6 @@ import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView, ApplicationPresenter.MyProxy> {
 	interface MyView extends View {
 		Button getDisconnect();
-		Button getSubscribe();
-		Button getUnsubscribe();
 		Button getWrite();
 		Button getConnect2device();
 	}
@@ -119,10 +117,6 @@ public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView,
 		registerHandler(getEventBus().addHandler(BTDeviceSelectedEvent.getType(), deviceSelectedHandler));
 		// Disonnect insecure
 		registerHandler(getView().getDisconnect().addClickHandler(disconnectH));
-		// Subscribe
-		registerHandler(getView().getSubscribe().addClickHandler(subscribeH));
-		// Unsubscribe
-		registerHandler(getView().getUnsubscribe().addClickHandler(unsubscribeH));
 		// Write
 		registerHandler(getView().getWrite().addClickHandler(writeH));
 	}
@@ -241,13 +235,7 @@ public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView,
 		public void onSuccess(String result) {
 			logger.info("Disonnect success type is " + result.getClass().getSimpleName());
 			logger.info("Disonnect success: " + result + ". Now connect to " + deviceId);
-			if(need2connect) {
-				context.getBluetoothPlugin().connect(deviceId, false, connectCB);
-				need2connect = false;
-			}
-			else {
-				Window.alert("Disconnect success: " + result);
-			}
+			context.getBluetoothPlugin().unsubscribe(unsubscribeCB);
 		}
 	};
 	// Connect
@@ -259,7 +247,9 @@ public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView,
 		@Override
 		public void onSuccess(String result) {
 //			logger.info("Connect success type is " + result.getClass().getSimpleName());
-			Window.alert("Connect success: " + result);
+			logger.info("Connect success: " + result);
+			Window.alert("Connection established: " + result);
+			context.getBluetoothPlugin().subscribe("\r\n", subscribeCB);
 		}
 	};
 	// Disconnect
@@ -271,13 +261,6 @@ public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView,
 		}
 	};
 	// Subscribe
-	private ClickHandler subscribeH = new ClickHandler() {
-		@Override
-		public void onClick(ClickEvent event) {
-			logger.info("Subscribe");
-			context.getBluetoothPlugin().subscribe("\r\n", subscribeCB);
-		}
-	};
 	private Callback<String, String> subscribeCB = new Callback<String, String>() {
 		@Override
 		public void onFailure(String reason) {
@@ -288,17 +271,9 @@ public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView,
 		@Override
 		public void onSuccess(String result) {
 			logger.info("Subscribe success: " + result);
-			Window.alert("Subscribe success: " + result);
 		}
 	};
 	// Unsubscribe
-	private ClickHandler unsubscribeH = new ClickHandler() {
-		@Override
-		public void onClick(ClickEvent event) {
-			logger.info("Unsubscribe");
-			context.getBluetoothPlugin().unsubscribe(unsubscribeCB);
-		}
-	};
 	private Callback<Object, String> unsubscribeCB = new Callback<Object, String>() {
 		@Override
 		public void onFailure(String reason) {
@@ -309,7 +284,13 @@ public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView,
 		@Override
 		public void onSuccess(Object result) {
 			logger.info("Unsubscribe success: " + result);
-			Window.alert("Unsubscribe success: " + result);
+			if(need2connect) {
+				context.getBluetoothPlugin().connect(deviceId, false, connectCB);
+				need2connect = false;
+			}
+			else {
+				Window.alert("Disconnect success: " + result);
+			}
 		}
 	};
 	// Write
