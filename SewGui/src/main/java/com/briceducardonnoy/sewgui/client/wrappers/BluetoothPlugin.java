@@ -22,6 +22,7 @@ package com.briceducardonnoy.sewgui.client.wrappers;
 
 import com.briceducardonnoy.sewgui.client.customCallbacks.ListCallback;
 import com.google.gwt.core.client.Callback;
+import com.google.gwt.core.client.JavaScriptObject;
 import com.googlecode.gwtphonegap.client.plugins.PhoneGapPlugin;
 
 public interface BluetoothPlugin extends PhoneGapPlugin {
@@ -46,6 +47,8 @@ public interface BluetoothPlugin extends PhoneGapPlugin {
 	 * @param callback Invoked when the connection is successful or failed
 	 */
 	public void unsubscribe(Callback<Object, String> callback);
+	public void subscribeRawData(Callback<JavaScriptObject, String> callback);
+	public void unsubscribeRawData(Callback<Object, String> callback);
 	/**
 	 * Removes any data from the receive buffer
 	 * @param callback Invoked when the clear is successful or failed

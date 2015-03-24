@@ -20,6 +20,7 @@
  */
 package com.briceducardonnoy.sewgui.client.application.context;
 
+import com.briceducardonnoy.sewgui.client.application.protocol.RequestHelper;
 import com.briceducardonnoy.sewgui.client.wrappers.BluetoothSerialImpl;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -32,6 +33,7 @@ public class ApplicationContext {
 	
 	private boolean isPhoneGapAvailable;
 	private BluetoothSerialImpl bluetoothSerial;
+	private int deviceProtocol = 0;
 	
 	@Inject
 	ApplicationContext(final PhoneGap pg) {
@@ -65,6 +67,18 @@ public class ApplicationContext {
 
 	public void setBlutoothPlugin(final BluetoothSerialImpl btImpl) {
 		this.bluetoothSerial = btImpl;
+	}
+	
+	public int getCurrentProtocol() {
+		return RequestHelper.VERSION;
+	}
+
+	public final int getDeviceProtocol() {
+		return deviceProtocol;
+	}
+
+	public final void setDeviceProtocol(int deviceProtocol) {
+		this.deviceProtocol = deviceProtocol;
 	}
 	
 }

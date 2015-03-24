@@ -92,6 +92,7 @@ public class RequestHelper {
 	public final static byte DISCOVER = 0;
 	
 	private static Logger logger = Logger.getLogger("SewGui");
+	private static final byte []version = {(byte) 0xFE, 0, 0, 0, 0, (byte) 0xFF};// Special request to ask for version number (version is 0). No CRC needed.
 	private static final byte []discover = {(byte) 0xFE, VERSION, 1, DISCOVER, 0, 0, (byte) 0xFF};
 	
 	static {
@@ -120,8 +121,13 @@ public class RequestHelper {
 		logger.info(output);
 	}
 	
-	public static byte[] wifiDiscover() {
-		return discover;
+	public static byte[] getVersion() {
+		return version;
+	}
+	
+	public static byte[] wifiDiscover(int protocol) {
+		if(protocol == 1) return discover;
+		return new byte[0];
 	}
 	
 	public static void main(String[] args) {

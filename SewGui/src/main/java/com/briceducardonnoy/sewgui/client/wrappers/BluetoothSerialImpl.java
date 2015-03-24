@@ -155,6 +155,37 @@ public class BluetoothSerialImpl implements BluetoothPlugin {
     	});
     	$wnd.cordova.exec(success, failure, "BluetoothSerial", "unsubscribe", []);
 	}-*/;
+	
+	// Subscribe Raw Data
+	public void subscribeRawData(Callback<JavaScriptObject, String> callback) {
+		subscribeRawDataImpl(callback);
+	}
+	
+	private native void subscribeRawDataImpl(Callback<JavaScriptObject, String> callback) /*-{
+		var success = $entry(function(a) {
+	        callback.@com.google.gwt.core.client.Callback::onSuccess(Ljava/lang/Object;)(a);
+		});
+		var failure = $entry(function(a) {
+			callback.@com.google.gwt.core.client.Callback::onFailure(Ljava/lang/Object;)(a);
+		});
+		$wnd.cordova.exec(success, failure, "BluetoothSerial", "subscribeRaw", []);
+	}-*/;
+	
+	// Unsubscribe Raw Data
+	@Override
+	public void unsubscribeRawData(Callback<Object, String> callback) {
+		unsubscribeRawDataImpl(callback);
+	}
+
+	private native void unsubscribeRawDataImpl(Callback<Object, String> callback) /*-{
+		var success = $entry(function(a) {
+	        callback.@com.google.gwt.core.client.Callback::onSuccess(Ljava/lang/Object;)(a);
+		});
+		var failure = $entry(function(a) {
+			callback.@com.google.gwt.core.client.Callback::onFailure(Ljava/lang/Object;)(a);
+		});
+		$wnd.cordova.exec(success, failure, "BluetoothSerial", "unsubscribeRaw", []);
+	}-*/;
 
 	// Clear
 	@Override

@@ -36,10 +36,13 @@ import com.briceducardonnoy.sewgui.client.lang.Translate;
 import com.briceducardonnoy.sewgui.client.wrappers.BluetoothSerialImpl;
 import com.briceducardonnoy.sewgui.client.wrappers.models.BtEntity;
 import com.google.gwt.core.client.Callback;
+import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.shared.GwtEvent.Type;
+import com.google.gwt.typedarrays.client.Int8ArrayNative;
+import com.google.gwt.typedarrays.shared.ArrayBuffer;
 import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
@@ -236,7 +239,7 @@ public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView,
 		public void onSuccess(String result) {
 			logger.info("Disonnect success type is " + result.getClass().getSimpleName());
 			logger.info("Disonnect success: " + result + ". Now connect to " + deviceId);
-			context.getBluetoothPlugin().unsubscribe(unsubscribeCB);
+			context.getBluetoothPlugin().unsubscribe(unsubscribeRawCB);
 		}
 	};
 	// Connect
@@ -249,9 +252,27 @@ public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView,
 		public void onSuccess(String result) {
 //			logger.info("Connect success type is " + result.getClass().getSimpleName());
 			logger.info("Connect success: " + result);
-			Window.alert("Connection established: " + result);
-			context.getBluetoothPlugin().subscribe("\r\n", subscribeCB);
+			// TODO BDY: update a led to notify the user he is connected
+//			Window.alert("Connection established: " + result);
+//			context.getBluetoothPlugin().subscribe("\r\n", subscribeCB);
 //			context.getBluetoothPlugin().subscribe(String.valueOf(Character.toChars(255)), subscribeCB);// 0xFF
+			context.getBluetoothPlugin().subscribeRawData(subscribeRawCB);
+			// Ask for protocol
+			byte []request = RequestHelper.getVersion();
+			context.getBluetoothPlugin().write(request, versionCB);
+		}
+	};
+	private Callback<Object, String> versionCB = new Callback<Object, String>() {
+		@Override
+		public void onFailure(String reason) {
+			logger.info("Version failed " + reason);
+			Window.alert("Version failed " + reason);
+		}
+
+		@Override
+		public void onSuccess(Object result) {
+			logger.info("Version success: " + result);
+//			Window.alert("Version success: " + result);
 		}
 	};
 	// Disconnect
@@ -263,7 +284,7 @@ public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView,
 		}
 	};
 	// Subscribe
-	private Callback<String, String> subscribeCB = new Callback<String, String>() {
+	private Callback<JavaScriptObject, String> subscribeRawCB = new Callback<JavaScriptObject, String>() {
 		@Override
 		public void onFailure(String reason) {
 			logger.info("Subscribe failed " + reason);
@@ -271,12 +292,29 @@ public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView,
 		}
 
 		@Override
-		public void onSuccess(String result) {
-			logger.info("Subscribe success: " + result);
+		public void onSuccess(JavaScriptObject result) {
+			logger.info("Subscribe success type is " + result.getClass().getSimpleName() + "::" + result.toString());
+			Int8ArrayNative answer = Int8ArrayNative.create((ArrayBuffer)result.cast());
+			logger.info("Subscribe success (sz=" + answer.length() + "bytes): ");
+			// Debug info
+			String ans = "";
+			for(int i = 0 ; i < answer.byteLength() ; i++) {
+				ans += "0x" + Integer.toHexString(answer.get(i) & 0xFF) + " ";
+			}
+			logger.info(ans);
+			//
+			if(answer.length() >= 4 && (answer.get(0)&0xFF) == 0xFE && answer.get(1) == 0 && (answer.get(3)&0xFF) == 0xFF) {
+				// 4 is the size of the smallest command (protocol ask)
+				// This is the special request to get protocol version
+				context.setDeviceProtocol(answer.get(2) & 0xFF);
+				logger.info("Device protocol version is " + context.getDeviceProtocol());
+				return;
+			}
+			// TODO BDY: manage the answer to redirect to the good function depending of function code
 		}
 	};
 	// Unsubscribe
-	private Callback<Object, String> unsubscribeCB = new Callback<Object, String>() {
+	private Callback<Object, String> unsubscribeRawCB = new Callback<Object, String>() {
 		@Override
 		public void onFailure(String reason) {
 			logger.info("Unsubscribe failed " + reason);
@@ -299,9 +337,9 @@ public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView,
 	private ClickHandler discoverH = new ClickHandler() {
 		@Override
 		public void onClick(ClickEvent event) {
-			byte []datas = RequestHelper.wifiDiscover();
+			byte []request = RequestHelper.wifiDiscover(context.getCurrentProtocol());
 //			logger.info("Write " + datas);
-			context.getBluetoothPlugin().write(datas, writeCB);
+			context.getBluetoothPlugin().write(request, writeCB);
 		}
 	};
 	private Callback<Object, String> writeCB = new Callback<Object, String>() {
@@ -314,7 +352,7 @@ public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView,
 		@Override
 		public void onSuccess(Object result) {
 			logger.info("Write success: " + result);
-			Window.alert("Write success: " + result);
+//			Window.alert("Write success: " + result);
 		}
 	};
 	/*
