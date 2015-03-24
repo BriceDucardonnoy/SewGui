@@ -27,6 +27,7 @@ import org.gwtbootstrap3.client.ui.Button;
 
 import com.allen_sauer.gwt.log.client.Log;
 import com.briceducardonnoy.sewgui.client.application.context.ApplicationContext;
+import com.briceducardonnoy.sewgui.client.application.protocol.RequestHelper;
 import com.briceducardonnoy.sewgui.client.application.windows.BluetoothListPopupPresenter;
 import com.briceducardonnoy.sewgui.client.customCallbacks.ListCallback;
 import com.briceducardonnoy.sewgui.client.events.BTDeviceSelectedEvent;
@@ -57,7 +58,7 @@ import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView, ApplicationPresenter.MyProxy> {
 	interface MyView extends View {
 		Button getDisconnect();
-		Button getWrite();
+		Button getDiscoverWiFi();
 		Button getConnect2device();
 	}
 
@@ -67,7 +68,7 @@ public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView,
 	@Inject BluetoothListPopupPresenter btListPres;
 	private PhoneGap phoneGap;
 	private Translate translate = GWT.create(Translate.class);
-	private int count = 2;
+//	private int count = 2;
 	private String deviceId;
 	private boolean need2connect = false;
 	
@@ -118,7 +119,7 @@ public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView,
 		// Disonnect insecure
 		registerHandler(getView().getDisconnect().addClickHandler(disconnectH));
 		// Write
-		registerHandler(getView().getWrite().addClickHandler(writeH));
+		registerHandler(getView().getDiscoverWiFi().addClickHandler(discoverH));
 	}
 	
 	/*
@@ -294,10 +295,11 @@ public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView,
 		}
 	};
 	// Write
-	private ClickHandler writeH = new ClickHandler() {
+	private ClickHandler discoverH = new ClickHandler() {
 		@Override
 		public void onClick(ClickEvent event) {
-			String datas = count <= 0 ? "EOC\r\n" : "Il reste " + (count--) + " écritures\r\n";
+//			String datas = count <= 0 ? "EOC\r\n" : "Il reste " + (count--) + " écritures\r\n";
+			byte []datas = RequestHelper.wifiDiscover();
 			logger.info("Write " + datas);
 			context.getBluetoothPlugin().write(datas, writeCB);
 		}

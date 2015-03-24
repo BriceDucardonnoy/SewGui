@@ -62,7 +62,7 @@ class ApplicationView extends ViewImpl implements ApplicationPresenter.MyView {
 	@UiField AnchorListItem stream;
 	
 	@UiField Button disconnect;
-	@UiField Button write;
+	@UiField Button discoverWifi;
 	@UiField Button connect2device;
 
 	private PlaceRequest statusGo;
@@ -136,8 +136,8 @@ class ApplicationView extends ViewImpl implements ApplicationPresenter.MyView {
 	}
 	
 	@Override
-	public Button getWrite() {
-		return write;
+	public Button getDiscoverWiFi() {
+		return discoverWifi;
 	}
 	
 	@Override

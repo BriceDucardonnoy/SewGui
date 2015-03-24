@@ -34,7 +34,7 @@
 		<b:Button ui:field="reload" size="LARGE" type="INFO">Reload</b:Button>
 		<b:Button ui:field="connect2device" type="PRIMARY" size="LARGE">Connect to a device</b:Button>
 		<b:Button ui:field="disconnect" size="LARGE" type="WARNING">Disonnect</b:Button>
-		<b:Button ui:field="write">Write</b:Button>
+		<b:Button ui:field="discoverWifi">Discover WiFi</b:Button>
 		<!-- Main content -->
 		<g:SimplePanel ui:field="main" />
     </g:HTMLPanel>
