@@ -251,6 +251,7 @@ public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView,
 			logger.info("Connect success: " + result);
 			Window.alert("Connection established: " + result);
 			context.getBluetoothPlugin().subscribe("\r\n", subscribeCB);
+//			context.getBluetoothPlugin().subscribe(String.valueOf(Character.toChars(255)), subscribeCB);// 0xFF
 		}
 	};
 	// Disconnect
@@ -258,7 +259,7 @@ public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView,
 		@Override
 		public void onClick(ClickEvent event) {
 			logger.info("Disconnect from " + deviceId);
-			context.getBluetoothPlugin().write("EOC\r\n", writeDisconnectCB);
+			context.getBluetoothPlugin().write("EOC\r\n", writeDisconnectCB);// TODO BDY: update it
 		}
 	};
 	// Subscribe
@@ -298,9 +299,8 @@ public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView,
 	private ClickHandler discoverH = new ClickHandler() {
 		@Override
 		public void onClick(ClickEvent event) {
-//			String datas = count <= 0 ? "EOC\r\n" : "Il reste " + (count--) + " écritures\r\n";
 			byte []datas = RequestHelper.wifiDiscover();
-			logger.info("Write " + datas);
+//			logger.info("Write " + datas);
 			context.getBluetoothPlugin().write(datas, writeCB);
 		}
 	};

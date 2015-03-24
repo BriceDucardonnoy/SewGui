@@ -20,6 +20,8 @@
  */
 package com.briceducardonnoy.sewgui.client.application.protocol;
 
+import java.util.logging.Logger;
+
 /**
  * Protocol V1<br/>
  * FE-header-cmd[-parameters]-CRC16-FF<br/>
@@ -89,6 +91,7 @@ public class RequestHelper {
 	public final static byte VERSION = 1;
 	public final static byte DISCOVER = 0;
 	
+	private static Logger logger = Logger.getLogger("SewGui");
 	private static final byte []discover = {(byte) 0xFE, VERSION, 1, DISCOVER, 0, 0, (byte) 0xFF};
 	
 	static {
@@ -102,7 +105,7 @@ public class RequestHelper {
         	crc = (crc >>> 8) ^ crcTable[(crc ^ datas[i]) & 0xff];
         }
 
-        System.out.println("CRC16 = " + Integer.toHexString(crc) + ": " + crc);
+        logger.info("CRC16 = " + Integer.toHexString(crc) + ": " + crc);
         return crc;
 	}
 	
@@ -110,11 +113,11 @@ public class RequestHelper {
 		datas[datas.length - 3] = (byte) (crc >> 8);
 		datas[datas.length - 2] = (byte) (crc & 0x000000FF);
 		
-		System.out.print("Frame = ");
+		String output = "Frame = ";
 		for(byte b : datas) {
-			System.out.print(Integer.toHexString(b) + " ");
+			output += Integer.toHexString(b) + " ";
 		}
-		System.out.println("Done");
+		logger.info(output);
 	}
 	
 	public static byte[] wifiDiscover() {
@@ -123,6 +126,7 @@ public class RequestHelper {
 	
 	public static void main(String[] args) {
 		setCrcIntoByteArray(discover, getCrc16(discover));
+		System.out.println("FF = " + String.valueOf(Character.toChars(255)));
 	}
 
 }
