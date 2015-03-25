@@ -21,14 +21,33 @@
 package com.briceducardonnoy.sewgui.client.wrappers;
 
 import com.briceducardonnoy.sewgui.client.customCallbacks.ListCallback;
+import com.briceducardonnoy.sewgui.client.wrappers.models.BtEntity;
 import com.google.gwt.core.client.Callback;
 import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.typedarrays.client.Int8ArrayNative;
 import com.googlecode.gwtphonegap.client.plugins.PhoneGapPlugin;
 
+/**
+ * Interface for Bluetooth communication
+ * @see https://github.com/don/BluetoothSerial
+ */
 public interface BluetoothPlugin extends PhoneGapPlugin {
-	// TODO BDY: write javadoc inspired from https://github.com/don/BluetoothSerial
+	/**
+	 * Check if Bluetooth is enabled on device
+	 * @param callback Invoked when the request is successfull (boolean) or failed (string reason)
+	 */
 	public void isEnabled(Callback<Boolean, String> callback);
+	/**
+	 * Lists bonded devices
+	 * @param listCallback The callback listing the devices into <code>BtEntity</code> list.
+	 */
 	public void list(ListCallback listCallback);
+	/**
+	 * Check weather or not the device is connected by Bluetooth to another device
+	 * Calls the success callback when connected to a peer and the failure callback when not connected.
+	 * @param callback Success invoked when device connected. Failure invoked when device is NOT connected.
+	 * @see BtEntity
+	 */
 	public void isConnected(Callback<Boolean, Boolean> callback);
 	/**
 	 * Connects to a Bluetooth device. The callback is long running.<br>
@@ -40,14 +59,39 @@ public interface BluetoothPlugin extends PhoneGapPlugin {
 	 * @param callback Invoked when the connection succeed, failed, or is closed after a connection
 	 */
 	public void connect(String mac, boolean secure, Callback<String, String> callback);
+	/**
+	 * Disconnect the current connection
+	 * @param callback Invoked when disconnect success/failed
+	 */
 	public void disconnect(Callback<String, String> callback);
+	/**
+	 * Registers a callback that is called when data is received. 
+	 * A delimiter must be specified.<br/>
+	 * The callback is called with the data as soon as the delimiter string is read.<br/>
+	 * The callback is a long running callback and will exist until unsubscribe is called.
+	 * @param delimiter A string delimiter ("\r\n")
+	 * @param callback Invoked when data is received AND <code>delimiter</code> is found.
+	 */
 	public void subscribe(String delimiter, Callback<String, String> callback);
 	/**
 	 * Removes any notification added by <code>subscribe</code> and kills the callback
 	 * @param callback Invoked when the connection is successful or failed
 	 */
 	public void unsubscribe(Callback<Object, String> callback);
+	/**
+	 * Registers a callback that is called when data is received.
+	 * The callback is called immediately when data is received.<br/> 
+	 * The data is sent to callback as an ArrayBuffer.<br/>
+	 * The callback is a long running callback and will exist until unsubscribeRawData is called.
+	 * @param callback Invoked when data is received. JavaScriptObject is an ArrayBuffer object.
+	 * @see Int8ArrayNative
+	 */
 	public void subscribeRawData(Callback<JavaScriptObject, String> callback);
+	/**
+	 * Unsubscribe from a subscription.
+	 * Function unsubscribeRawData removes any notification added by subscribeRawData and kills the callback.
+	 * @param callback
+	 */
 	public void unsubscribeRawData(Callback<Object, String> callback);
 	/**
 	 * Removes any data from the receive buffer

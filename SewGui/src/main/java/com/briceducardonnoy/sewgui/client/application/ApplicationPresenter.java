@@ -27,6 +27,7 @@ import org.gwtbootstrap3.client.ui.Button;
 
 import com.allen_sauer.gwt.log.client.Log;
 import com.briceducardonnoy.sewgui.client.application.context.ApplicationContext;
+import com.briceducardonnoy.sewgui.client.application.exceptions.IncorrectFrameException;
 import com.briceducardonnoy.sewgui.client.application.protocol.RequestHelper;
 import com.briceducardonnoy.sewgui.client.application.windows.BluetoothListPopupPresenter;
 import com.briceducardonnoy.sewgui.client.customCallbacks.ListCallback;
@@ -310,7 +311,13 @@ public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView,
 				logger.info("Device protocol version is " + context.getDeviceProtocol());
 				return;
 			}
-			// TODO BDY: manage the answer to redirect to the good function depending of function code
+			try {
+				RequestHelper.parseResponse(answer);
+			} catch (IncorrectFrameException e) {
+				logger.severe("Answer can't be proccessed: " + e.getMessage());
+				Window.alert("An error occured in the communication with the device: " + e.getMessage());
+				e.printStackTrace();
+			}
 		}
 	};
 	// Unsubscribe
