@@ -23,7 +23,9 @@ package com.briceducardonnoy.sewgui.client.application.protocol;
 import java.util.logging.Logger;
 
 import com.briceducardonnoy.sewgui.client.application.exceptions.IncorrectFrameException;
+import com.briceducardonnoy.sewgui.client.events.WiFiDiscoverEvent;
 import com.google.gwt.typedarrays.client.Int8ArrayNative;
+import com.google.web.bindery.event.shared.EventBus;
 
 /**
  * Protocol V1<br/>
@@ -34,12 +36,13 @@ import com.google.gwt.typedarrays.client.Int8ArrayNative;
  * <p>
  * Max size is 255 bytes<br/>
  * Command ID can't be 0xFE or 0xFF (not managed yet because of optimistic code in serializeAndAnswer function)<br/>
- * <ul>Header: 2 bytes
- * 			<ul>Version number: 1 byte</ul>
- * 			<ul>Byte count of <cmd> and <parameters>: 1 byte</ul>
- * 	</ul>
- * <ul>Command: ID of the command to execute. Depending of this one, parameters are present.</ul>
- * <ul>CRC: 2 bytes from frame without FE and FF</ul>
+ * <li>Header: 2 bytes: <p>
+ * 			Version number: 1 byte<br/>
+ * 			Byte count of <cmd> and <parameters>: 1 byte
+ * 		</p>
+ * 	</li>
+ * <li>Command: ID of the command to execute. Depending of this one, parameters are present.</li>
+ * <li>CRC: 2 bytes from frame without FE and FF</li>
  * <br/>
  * Example in hexa of DISCOVER_WIFI request in protocol V1:<br/>
  * <code>FE-Version-SZ-CMD-CRC_MSB-CRC_LSB-FF</code><br/>
@@ -94,7 +97,7 @@ public class RequestHelper {
 	public final static byte VERSION = 1;
 	// Function codes <=> CMD
 	public final static byte DISCOVER = 0;
-
+	
 	private static Logger logger = Logger.getLogger("SewGui");
 	private static final byte []version = {(byte) 0xFE, 0, 0, 0, 0, (byte) 0xFF};// Special request to ask for version number (version is 0). No CRC needed.
 	private static final byte []discover = {(byte) 0xFE, VERSION, 1, DISCOVER, 0, 0, (byte) 0xFF};
@@ -102,7 +105,7 @@ public class RequestHelper {
 	static {
 		setCrcIntoByteArray(discover, getCrc16(discover));
 	}
-
+	
 	private static int getCrc16(byte []datas) {
 		int crc = 0x0000;
 
@@ -158,10 +161,10 @@ public class RequestHelper {
 	 * adapted processing.
 	 * @param response The byte array responded by the remote unit. Type is Int8ArrayNative 
 	 * which is a byte array type from JavaScriptObject.
+	 * @param eventBus The eventBus of the caller to be able to fire an event to notify about the command to process
 	 * @throws IncorrectFrameException When <code>response</code> has an incorrect format 
 	 */
-	public static void parseResponse(Int8ArrayNative response) throws IncorrectFrameException {
-		// TODO BDY: create new event depending of function code
+	public static void parseResponse(Int8ArrayNative response, EventBus eventBus) throws IncorrectFrameException {
 		int length = response.byteLength();
 		if(!isEqualTo(response.get(0), 0xFE)) throw new IncorrectFrameException("Packet start flag not found. Found " + Integer.toHexString(response.get(0) & 0xFF));
 		if(!isEqualTo(response.get(length - 1), 0xFF)) {
@@ -174,6 +177,16 @@ public class RequestHelper {
 				Integer.toHexString(crcCalculated & 0xFFFF));
 		}
 		// All is fine
+		int cmd = -1;
+		if(response.get(1) == 1) {// Version
+			cmd = response.get(3);
+		}
+		switch(cmd) {
+		case DISCOVER:
+			eventBus.fireEvent(new WiFiDiscoverEvent(response.get(1), response));			
+			break;
+		default: logger.warning("Code function unrecognized: " + cmd + " => do nothing");
+		}
 	}
 
 	public static void main(String[] args) {

@@ -312,7 +312,7 @@ public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView,
 				return;
 			}
 			try {
-				RequestHelper.parseResponse(answer);
+				RequestHelper.parseResponse(answer, getEventBus());
 			} catch (IncorrectFrameException e) {
 				logger.severe("Answer can't be proccessed: " + e.getMessage());
 				Window.alert("An error occured in the communication with the device: " + e.getMessage());
