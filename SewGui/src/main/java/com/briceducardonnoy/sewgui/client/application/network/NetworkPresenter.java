@@ -20,18 +20,22 @@
  */
 package com.briceducardonnoy.sewgui.client.application.network;
 
+import java.util.logging.Logger;
+
+import com.briceducardonnoy.sewgui.client.application.ApplicationPresenter;
+import com.briceducardonnoy.sewgui.client.events.WiFiDiscoverEvent;
+import com.briceducardonnoy.sewgui.client.events.WiFiDiscoverEvent.WiFiDiscoverHandler;
+import com.briceducardonnoy.sewgui.client.place.NameTokens;
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
-    import com.gwtplatform.mvp.client.Presenter;
+import com.gwtplatform.mvp.client.Presenter;
 import com.gwtplatform.mvp.client.View;
 import com.gwtplatform.mvp.client.annotations.ContentSlot;
+import com.gwtplatform.mvp.client.annotations.NameToken;
 import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
-import com.gwtplatform.mvp.client.annotations.NameToken;
 import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
-import com.briceducardonnoy.sewgui.client.application.ApplicationPresenter;
-import com.briceducardonnoy.sewgui.client.place.NameTokens;
 public class NetworkPresenter extends Presenter<NetworkPresenter.MyView, NetworkPresenter.MyProxy>  {
     interface MyView extends View  {
     }
@@ -42,18 +46,22 @@ public class NetworkPresenter extends Presenter<NetworkPresenter.MyView, Network
     @ProxyCodeSplit
     interface MyProxy extends ProxyPlace<NetworkPresenter> {
     }
+    
+    private static Logger logger = Logger.getLogger("SewGui");
 
     @Inject
-    NetworkPresenter(
-            EventBus eventBus,
-            MyView view, 
-            MyProxy proxy) {
+    NetworkPresenter(EventBus eventBus, MyView view, MyProxy proxy) {
         super(eventBus, view, proxy, ApplicationPresenter.SLOT_SetMainContent);
-        
     }
     
     protected void onBind() {
         super.onBind();
+        registerHandler(getEventBus().addHandler(WiFiDiscoverEvent.getType(), new WiFiDiscoverHandler() {
+			@Override
+			public void onWiFiDiscover(WiFiDiscoverEvent event) {
+				logger.info("Wifi discover event received");
+			}
+		}));
     }
     
     protected void onReveal() {
