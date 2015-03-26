@@ -20,6 +20,8 @@
  */
 package com.briceducardonnoy.sewgui.client.application.protocol;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 
 import com.briceducardonnoy.sewgui.client.application.exceptions.IncorrectFrameException;
@@ -149,6 +151,14 @@ public class RequestHelper {
 	public static byte[] getVersion() {
 		return version;
 	}
+	
+	public static int getIndexOf1stDataInArray(int protocol) {
+		switch(protocol) {
+		case 1: return 4;
+		case 0:
+		default: return -1;
+		}
+	}
 
 	public static byte[] wifiDiscover(int protocol) {
 		if(protocol == 1) return discover;
@@ -176,14 +186,19 @@ public class RequestHelper {
 			throw new IncorrectFrameException("CRC error. Received : 0x" + Integer.toHexString(crcGot & 0xFFFF) + " and calculated " +
 				Integer.toHexString(crcCalculated & 0xFFFF));
 		}
-		// All is fine
+		// All is fine, get an array of byte.
+		List<Byte> message = new ArrayList<>(response.length());
+		for(int i = 0 ; i < response.length() ; i++) {
+			message.add(response.get(i));
+		}
+		
 		int cmd = -1;
 		if(response.get(1) == 1) {// Version
 			cmd = response.get(3);
 		}
 		switch(cmd) {
 		case DISCOVER:
-			eventBus.fireEvent(new WiFiDiscoverEvent(response.get(1), response));			
+			eventBus.fireEvent(new WiFiDiscoverEvent(response.get(1), message));			
 			break;
 		default: logger.warning("Code function unrecognized: " + cmd + " => do nothing");
 		}

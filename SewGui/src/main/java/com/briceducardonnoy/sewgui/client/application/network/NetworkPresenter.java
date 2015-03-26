@@ -20,9 +20,11 @@
  */
 package com.briceducardonnoy.sewgui.client.application.network;
 
+import java.util.List;
 import java.util.logging.Logger;
 
 import com.briceducardonnoy.sewgui.client.application.ApplicationPresenter;
+import com.briceducardonnoy.sewgui.client.application.protocol.models.WifiNetwork;
 import com.briceducardonnoy.sewgui.client.events.WiFiDiscoverEvent;
 import com.briceducardonnoy.sewgui.client.events.WiFiDiscoverEvent.WiFiDiscoverHandler;
 import com.briceducardonnoy.sewgui.client.place.NameTokens;
@@ -60,6 +62,8 @@ public class NetworkPresenter extends Presenter<NetworkPresenter.MyView, Network
 			@Override
 			public void onWiFiDiscover(WiFiDiscoverEvent event) {
 				logger.info("Wifi discover event received");
+				List<WifiNetwork> wifis = WifiNetwork.toWifiNetwork(event.getMessage(), event.getProtocolVersion());
+				logger.info(wifis.toString());
 			}
 		}));
     }
