@@ -31,8 +31,7 @@ import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.PopupView;
 import com.gwtplatform.mvp.client.PresenterWidget;
 
-public class BluetoothListPopupPresenter extends
-		PresenterWidget<BluetoothListPopupPresenter.MyView> {
+public class BluetoothListPopupPresenter extends PresenterWidget<BluetoothListPopupPresenter.MyView> {
 
 	public interface MyView extends PopupView {
 		void setItems(List<BtEntity> items);
