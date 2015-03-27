@@ -21,7 +21,6 @@
 package com.briceducardonnoy.sewgui.client.application.protocol.models;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,8 +30,6 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import com.google.gwt.dev.jjs.impl.AssertionNormalizer;
 
 public class WifiNetworkTest {
 	
@@ -72,6 +69,9 @@ public class WifiNetworkTest {
 	};
 	private static String []essid = {"SFR WiFi Mobile", "Routeur_f", "SFR WiFi FON", "TNCAP61EDB5", "NUMERICABLE-A6B3", "FreeWifi_secure"};
 	private static long []level = {100, 100, 100, 90, 43, 26};
+	private static long []noise = {0, 0, 0, 0, 0, 0};
+	private static long []quality = {100, 100, 100, 20, 44, 63};
+	private static boolean []enc = {true, true, false, true, true, true};
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -106,7 +106,9 @@ public class WifiNetworkTest {
 		for(int i = 0 ; i < wifis.size() ; i++) {
 			assertEquals("Name of network " + (i+1) + " is invalid", essid[i], wifis.get(i).getEssid());
 			assertEquals("Level of wifi deserialized is invalid", level[i], (long) wifis.get(i).getLevel());
-			// TODO BDY: test noise, quality and encryption
+			assertEquals("Noise of wifi deserialized is invalid", noise[i], (long) wifis.get(i).getNoise());
+			assertEquals("Quality of wifi deserialized is invalid", quality[i], (long) wifis.get(i).getQuality());
+			assertEquals("Encryption of wifi deserialized is invalid", enc[i], (boolean) wifis.get(i).isSecurised());
 		}
 	}
 
