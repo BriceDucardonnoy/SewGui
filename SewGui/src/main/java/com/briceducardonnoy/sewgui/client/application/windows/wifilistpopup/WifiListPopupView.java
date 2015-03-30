@@ -1,5 +1,6 @@
 package com.briceducardonnoy.sewgui.client.application.windows.wifilistpopup;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -54,6 +55,7 @@ class WifiListPopupView extends PopupViewImpl implements WifiListPopupPresenter.
     
         initWidget(uiBinder.createAndBindUi(this));
         title.setText(translate.ListOfDetectedDevices());
+        handlers = new ArrayList<>();
     }
     
 	@Override
@@ -62,6 +64,7 @@ class WifiListPopupView extends PopupViewImpl implements WifiListPopupPresenter.
 		selectedDeviceId = "";
 		alert.add(title);
 		alert.add(new Br());
+		
 		for(WifiNetwork item : items) {
 			Button bt = new Button(item.toString());// TODO BDY: make button nicer with icon for encryption and quality
 			bt.setId(item.getEssid());

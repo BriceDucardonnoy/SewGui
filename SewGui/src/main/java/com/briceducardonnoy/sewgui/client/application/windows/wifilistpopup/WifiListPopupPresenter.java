@@ -25,12 +25,7 @@ public class WifiListPopupPresenter extends PresenterWidget<WifiListPopupPresent
         super(eventBus, view);
     }
     
-    protected void onBind() {
-        super.onBind();
-    }
-    
     protected void onReveal() {
-        super.onReveal();
         super.onReveal();
 		if(devices == null) {
 			logger.warning("No devices specified");

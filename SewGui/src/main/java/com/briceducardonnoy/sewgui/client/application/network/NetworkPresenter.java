@@ -25,6 +25,7 @@ import java.util.logging.Logger;
 
 import com.briceducardonnoy.sewgui.client.application.ApplicationPresenter;
 import com.briceducardonnoy.sewgui.client.application.protocol.models.WifiNetwork;
+import com.briceducardonnoy.sewgui.client.application.windows.wifilistpopup.WifiListPopupPresenter;
 import com.briceducardonnoy.sewgui.client.events.WiFiDiscoverEvent;
 import com.briceducardonnoy.sewgui.client.events.WiFiDiscoverEvent.WiFiDiscoverHandler;
 import com.briceducardonnoy.sewgui.client.place.NameTokens;
@@ -38,6 +39,7 @@ import com.gwtplatform.mvp.client.annotations.NameToken;
 import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
+
 public class NetworkPresenter extends Presenter<NetworkPresenter.MyView, NetworkPresenter.MyProxy>  {
     interface MyView extends View  {
     }
@@ -50,6 +52,7 @@ public class NetworkPresenter extends Presenter<NetworkPresenter.MyView, Network
     }
     
     private static Logger logger = Logger.getLogger("SewGui");
+    @Inject WifiListPopupPresenter wifiListPopup;
 
     @Inject
     NetworkPresenter(EventBus eventBus, MyView view, MyProxy proxy) {
@@ -64,6 +67,8 @@ public class NetworkPresenter extends Presenter<NetworkPresenter.MyView, Network
 				logger.info("Wifi discover event received");
 				List<WifiNetwork> wifis = WifiNetwork.toWifiNetwork(event.getMessage(), event.getProtocolVersion());
 				logger.info(wifis.toString());
+				wifiListPopup.setDevices(wifis);
+				addToPopupSlot(wifiListPopup, true);
 			}
 		}));
     }

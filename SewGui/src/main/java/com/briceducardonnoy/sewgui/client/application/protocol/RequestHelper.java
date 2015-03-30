@@ -196,6 +196,8 @@ public class RequestHelper {
 		if(response.get(1) == 1) {// Version
 			cmd = response.get(3);
 		}
+		logger.info("Deal command " + cmd);
+		
 		switch(cmd) {
 		case DISCOVER:
 			eventBus.fireEvent(new WiFiDiscoverEvent(response.get(1), message));			
