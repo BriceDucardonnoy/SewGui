@@ -24,18 +24,24 @@ import java.util.logging.Logger;
 
 import org.gwtbootstrap3.client.ui.AnchorListItem;
 import org.gwtbootstrap3.client.ui.Button;
+import org.gwtbootstrap3.client.ui.Navbar;
 import org.gwtbootstrap3.client.ui.NavbarBrand;
+import org.gwtbootstrap3.client.ui.constants.IconSize;
+import org.gwtbootstrap3.client.ui.constants.IconType;
 
 import com.allen_sauer.gwt.log.client.Log;
 import com.briceducardonnoy.sewgui.client.application.context.ApplicationContext;
+import com.briceducardonnoy.sewgui.client.images.SewImagesResources;
 import com.briceducardonnoy.sewgui.client.lang.Translate;
 import com.briceducardonnoy.sewgui.client.place.NameTokens;
+import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -56,14 +62,16 @@ class ApplicationView extends ViewImpl implements ApplicationPresenter.MyView {
 	@Inject ApplicationContext context;
 
 	@UiField SimplePanel main;
+	@UiField Navbar navbar;
 	@UiField NavbarBrand brand;
 	@UiField AnchorListItem status;
 	@UiField AnchorListItem network;
-	@UiField AnchorListItem stream;
+	@UiField AnchorListItem stream;	
 	
 	@UiField Button disconnect;
 	@UiField Button discoverWifi;
 	@UiField Button connect2device;
+	@UiField JavaScriptObject bonjour;
 
 	private PlaceRequest statusGo;
 	private PlaceRequest networkGo;
@@ -73,10 +81,23 @@ class ApplicationView extends ViewImpl implements ApplicationPresenter.MyView {
 	ApplicationView(Binder uiBinder, ApplicationContext ctx) {
 		initWidget(uiBinder.createAndBindUi(this));
 		Log.info(translate.Bonjour() + " from appsView");
-
+		
 		statusGo = new PlaceRequest.Builder().nameToken(NameTokens.getStatus()).build();
 		networkGo = new PlaceRequest.Builder().nameToken(NameTokens.getNetwork()).build();
 		streamGo = new PlaceRequest.Builder().nameToken(NameTokens.getStream()).build();
+		
+		logger.info("bonjour is a " + bonjour.getClass().getSimpleName());
+		
+		connect2device.setText("");
+		connect2device.setIcon(IconType.HOME);
+		connect2device.setIconSize(IconSize.LARGE);
+		connect2device.getElement().setInnerHTML("<br/>Connect");
+		Log.info("1st child: " + connect2device.getElement().getInnerHTML());
+		
+		discoverWifi.setIcon(IconType.LOCK);
+		discoverWifi.setIconSize(IconSize.LARGE);
+		discoverWifi.getElement().insertFirst(new Image(SewImagesResources.INSTANCE.signal75()).getElement());
+		discoverWifi.getElement().appendChild(new Image(SewImagesResources.INSTANCE.signal100()).getElement());
 	}
 
 	@Override

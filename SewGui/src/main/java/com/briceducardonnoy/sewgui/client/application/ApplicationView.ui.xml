@@ -2,10 +2,17 @@
 			xmlns:g='urn:import:com.google.gwt.user.client.ui' 
 			xmlns:b="urn:import:org.gwtbootstrap3.client.ui"
 			xmlns:b.html="urn:import:org.gwtbootstrap3.client.ui.html">
+			
+	<!-- <ui:style>
+		.mainContent {
+			position: absolute;
+			margin-top: 60px;/* Navbar is 50px */
+		}
+	</ui:style> -->
             
     <g:HTMLPanel styleName="global">
 		<!-- Header -->
-		<b:Navbar>
+		<b:Navbar ui:field="navbar" addStyleNames="navbar-fixed-top navbar-inverse">
 			<b:NavbarHeader>
 				<b:NavbarBrand ui:field="brand">SEW</b:NavbarBrand>
 				<b:NavbarCollapseButton dataTarget="#navbar-collapse" />
@@ -31,11 +38,15 @@
 					Snow</b:NavbarLink> </b:NavbarText> -->
 			</b:NavbarCollapse>
 		</b:Navbar>
-		<b:Button ui:field="reload" size="LARGE" type="INFO">Reload</b:Button>
-		<b:Button ui:field="connect2device" type="PRIMARY" size="LARGE">Connect to a device</b:Button>
-		<b:Button ui:field="disconnect" size="LARGE" type="WARNING">Disonnect</b:Button>
-		<b:Button ui:field="discoverWifi">Discover WiFi</b:Button>
-		<!-- Main content -->
-		<g:SimplePanel ui:field="main" />
+		
+		<g:HTMLPanel styleName="mainContent">
+			<b:Button ui:field="reload" size="LARGE" type="INFO">Reload</b:Button>
+			<b:Button ui:field="connect2device" size="LARGE" type="PRIMARY">Connect to a device</b:Button>
+			<b:Button ui:field="disconnect" size="LARGE" icon="STAR" type="WARNING">Disonnect</b:Button>
+			<button class="btn btn-default btn-inverse"><i class="glyphicon glyphicon-home" ui:field="bonjour"></i><br/>Bonjour</button>
+			<b:Button ui:field="discoverWifi" addStyleNames="btn-inverse">Discover WiFi</b:Button>
+			<!-- Main content -->
+			<g:SimplePanel ui:field="main" />
+		</g:HTMLPanel>
     </g:HTMLPanel>
 </ui:UiBinder>

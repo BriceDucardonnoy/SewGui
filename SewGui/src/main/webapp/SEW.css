@@ -10,6 +10,10 @@ h1 {
   text-align: center;
 }
 
+body {
+	background-color: gray !important;
+}
+
 .sendButton {
   display: block;
   font-size: 16pt;
@@ -35,6 +39,11 @@ h1 {
 
 .global {
 	background: gray;
+}
+
+.mainContent {
+	position: absolute;
+	margin-top: 60px;/* Navbar is 50px */
 }
 
 .vertical-progress-bar {

@@ -20,7 +20,7 @@
         <guice.version>3.0</guice.version>
         <!-- Dependencies -->
         <gwtphonegap.version>3.5.0.1</gwtphonegap.version>
-		<gwtbootstrap.version>0.8.1</gwtbootstrap.version>
+		<gwtbootstrap.version>0.9</gwtbootstrap.version>
         
         <!-- testing -->
         <junit.version>4.11</junit.version>
