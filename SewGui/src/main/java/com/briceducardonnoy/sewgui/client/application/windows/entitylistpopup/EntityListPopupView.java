@@ -67,9 +67,7 @@ private static Logger logger = Logger.getLogger("SewGuiList");
 		alert.add(new Br());
 		for(SewEntity item : items) {
 			Button bt = new Button(item.toString());
-//			bt.setId(item.getId());
-			// TODO BDY: NYI
-			bt.setId(item.toString());
+			bt.setId(item.getId());
 			bt.setWidth("100%");
 			bt.setType(ButtonType.PRIMARY);
 			handlers.add(bt.addClickHandler(deviceH));

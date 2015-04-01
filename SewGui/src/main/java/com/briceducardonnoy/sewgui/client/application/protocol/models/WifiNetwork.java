@@ -96,6 +96,11 @@ public class WifiNetwork implements SewEntity, Serializable {
 	public final String getEssid() {
 		return essid;
 	}
+	
+	@Override
+	public final String getId() {
+		return getEssid();
+	}
 
 	public final void setEssid(String essid) {
 		this.essid = essid;

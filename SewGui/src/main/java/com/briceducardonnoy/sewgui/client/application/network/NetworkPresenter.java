@@ -25,7 +25,7 @@ import java.util.logging.Logger;
 
 import com.briceducardonnoy.sewgui.client.application.ApplicationPresenter;
 import com.briceducardonnoy.sewgui.client.application.protocol.models.WifiNetwork;
-import com.briceducardonnoy.sewgui.client.application.windows.wifilistpopup.WifiListPopupPresenter;
+import com.briceducardonnoy.sewgui.client.application.windows.entitylistpopup.EntityListPopupPresenter;
 import com.briceducardonnoy.sewgui.client.events.WiFiDiscoverEvent;
 import com.briceducardonnoy.sewgui.client.events.WiFiDiscoverEvent.WiFiDiscoverHandler;
 import com.briceducardonnoy.sewgui.client.place.NameTokens;
@@ -52,8 +52,7 @@ public class NetworkPresenter extends Presenter<NetworkPresenter.MyView, Network
 	}
 
 	private static Logger logger = Logger.getLogger("SewGui");
-	@Inject WifiListPopupPresenter wifiListPopup;
-//  @Inject EntityListPopupPresenter<WifiNetwork> list;
+	@Inject EntityListPopupPresenter<WifiNetwork> wifiListPopup;
 
 	@Inject
 	NetworkPresenter(EventBus eventBus, MyView view, MyProxy proxy) {

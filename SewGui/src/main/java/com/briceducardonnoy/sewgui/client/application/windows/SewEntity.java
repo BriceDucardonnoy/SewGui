@@ -25,4 +25,5 @@ import com.google.gwt.event.shared.GwtEvent.Type;
 
 public interface SewEntity {
 	public Type<SewEntitySelectedHandler> getType();
+	public String getId();
 }
