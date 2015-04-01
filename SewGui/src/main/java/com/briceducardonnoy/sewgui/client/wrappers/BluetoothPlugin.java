@@ -26,7 +26,7 @@ import com.google.gwt.core.client.Callback;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.typedarrays.client.Int8ArrayNative;
 import com.googlecode.gwtphonegap.client.plugins.PhoneGapPlugin;
-
+//TODO BDY: update bluetooth js
 /**
  * Interface for Bluetooth communication
  * @see https://github.com/don/BluetoothSerial

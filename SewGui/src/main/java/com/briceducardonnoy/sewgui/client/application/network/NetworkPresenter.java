@@ -41,27 +41,28 @@ import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 
 public class NetworkPresenter extends Presenter<NetworkPresenter.MyView, NetworkPresenter.MyProxy>  {
-    interface MyView extends View  {
-    }
-    @ContentSlot
-    public static final Type<RevealContentHandler<?>> SLOT_Network = new Type<RevealContentHandler<?>>();
+	interface MyView extends View  {
+	}
+	@ContentSlot
+	public static final Type<RevealContentHandler<?>> SLOT_Network = new Type<RevealContentHandler<?>>();
 
-    @NameToken(NameTokens.network)
-    @ProxyCodeSplit
-    interface MyProxy extends ProxyPlace<NetworkPresenter> {
-    }
-    
-    private static Logger logger = Logger.getLogger("SewGui");
-    @Inject WifiListPopupPresenter wifiListPopup;
+	@NameToken(NameTokens.network)
+	@ProxyCodeSplit
+	interface MyProxy extends ProxyPlace<NetworkPresenter> {
+	}
 
-    @Inject
-    NetworkPresenter(EventBus eventBus, MyView view, MyProxy proxy) {
-        super(eventBus, view, proxy, ApplicationPresenter.SLOT_SetMainContent);
-    }
-    
-    protected void onBind() {
-        super.onBind();
-        registerHandler(getEventBus().addHandler(WiFiDiscoverEvent.getType(), new WiFiDiscoverHandler() {
+	private static Logger logger = Logger.getLogger("SewGui");
+	@Inject WifiListPopupPresenter wifiListPopup;
+//  @Inject EntityListPopupPresenter<WifiNetwork> list;
+
+	@Inject
+	NetworkPresenter(EventBus eventBus, MyView view, MyProxy proxy) {
+		super(eventBus, view, proxy, ApplicationPresenter.SLOT_SetMainContent);
+	}
+
+	protected void onBind() {
+		super.onBind();
+		registerHandler(getEventBus().addHandler(WiFiDiscoverEvent.getType(), new WiFiDiscoverHandler() {
 			@Override
 			public void onWiFiDiscover(WiFiDiscoverEvent event) {
 				logger.info("Wifi discover event received");
@@ -71,13 +72,13 @@ public class NetworkPresenter extends Presenter<NetworkPresenter.MyView, Network
 				addToPopupSlot(wifiListPopup, true);
 			}
 		}));
-    }
-    
-    protected void onReveal() {
-        super.onReveal();
-    }
-    
-    protected void onReset() {
-        super.onReset();
-    }
+	}
+
+	protected void onReveal() {
+		super.onReveal();
+	}
+
+	protected void onReset() {
+		super.onReset();
+	}
 }

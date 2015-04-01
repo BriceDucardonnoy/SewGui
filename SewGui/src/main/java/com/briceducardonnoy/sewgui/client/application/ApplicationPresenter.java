@@ -29,10 +29,10 @@ import com.allen_sauer.gwt.log.client.Log;
 import com.briceducardonnoy.sewgui.client.application.context.ApplicationContext;
 import com.briceducardonnoy.sewgui.client.application.exceptions.IncorrectFrameException;
 import com.briceducardonnoy.sewgui.client.application.protocol.RequestHelper;
-import com.briceducardonnoy.sewgui.client.application.windows.BluetoothListPopupPresenter;
+import com.briceducardonnoy.sewgui.client.application.windows.entitylistpopup.EntityListPopupPresenter;
 import com.briceducardonnoy.sewgui.client.customCallbacks.ListCallback;
-import com.briceducardonnoy.sewgui.client.events.BTDeviceSelectedEvent;
-import com.briceducardonnoy.sewgui.client.events.BTDeviceSelectedEvent.BTDeviceSelectedHandler;
+import com.briceducardonnoy.sewgui.client.events.SewEntitySelectedEvent;
+import com.briceducardonnoy.sewgui.client.events.SewEntitySelectedEvent.BTDeviceSelectedHandler;
 import com.briceducardonnoy.sewgui.client.lang.Translate;
 import com.briceducardonnoy.sewgui.client.wrappers.BluetoothSerialImpl;
 import com.briceducardonnoy.sewgui.client.wrappers.models.BtEntity;
@@ -69,7 +69,8 @@ public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView,
 	private static Logger logger = Logger.getLogger("SewGui");
 
 	@Inject ApplicationContext context;
-	@Inject BluetoothListPopupPresenter btListPres;
+//	@Inject BluetoothListPopupPresenter btListPres;
+	@Inject EntityListPopupPresenter<BtEntity> btListPres;
 	private PhoneGap phoneGap;
 	private Translate translate = GWT.create(Translate.class);
 //	private int count = 2;
@@ -119,7 +120,7 @@ public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView,
 		// Connect to device
 		registerHandler(getView().getConnect2device().addClickHandler(connect2H));
 		// Device selected
-		registerHandler(getEventBus().addHandler(BTDeviceSelectedEvent.getType(), deviceSelectedHandler));
+		registerHandler(getEventBus().addHandler(SewEntitySelectedEvent.getBT_Type(), deviceSelectedHandler));
 		// Disonnect insecure
 		registerHandler(getView().getDisconnect().addClickHandler(disconnectH));
 		// Write
@@ -185,8 +186,8 @@ public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView,
 	// BlueTooth device selected
 	private BTDeviceSelectedHandler deviceSelectedHandler = new BTDeviceSelectedHandler() {
 		@Override
-		public void onBTDeviceSelected(BTDeviceSelectedEvent event) {
-			deviceId = event.getDeviceId();
+		public void onSewEntitySelected(SewEntitySelectedEvent event) {
+			deviceId = event.getDevice();
 			logger.info("Event id received: " + deviceId);
 			if(deviceId == null || deviceId.isEmpty()) {
 				deviceId = "";

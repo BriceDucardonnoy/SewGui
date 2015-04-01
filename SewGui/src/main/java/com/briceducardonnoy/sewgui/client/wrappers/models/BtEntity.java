@@ -22,10 +22,14 @@ package com.briceducardonnoy.sewgui.client.wrappers.models;
 
 import java.io.Serializable;
 
+import com.briceducardonnoy.sewgui.client.application.windows.SewEntity;
+import com.briceducardonnoy.sewgui.client.events.SewEntitySelectedEvent;
+import com.briceducardonnoy.sewgui.client.events.SewEntitySelectedEvent.SewEntitySelectedHandler;
+import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONValue;
 
-public class BtEntity implements Serializable {
+public class BtEntity implements SewEntity, Serializable {
 
 	private static final long serialVersionUID = -5264010259511190321L;
 	
@@ -80,6 +84,11 @@ public class BtEntity implements Serializable {
 	public String toString() {
 //		return "id: " + id + ", class: " + clazz + ", @: " + address + ", name: " + name;
 		return name + " (" + id + ")";
+	}
+
+	@Override
+	public Type<SewEntitySelectedHandler> getType() {
+		return SewEntitySelectedEvent.getBT_Type();
 	}
 
 }

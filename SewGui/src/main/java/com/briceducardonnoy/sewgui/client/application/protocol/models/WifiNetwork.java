@@ -26,8 +26,11 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import com.briceducardonnoy.sewgui.client.application.protocol.RequestHelper;
+import com.briceducardonnoy.sewgui.client.application.windows.SewEntity;
+import com.briceducardonnoy.sewgui.client.events.SewEntitySelectedEvent.SewEntitySelectedHandler;
+import com.google.gwt.event.shared.GwtEvent.Type;
 
-public class WifiNetwork implements Serializable {
+public class WifiNetwork implements SewEntity, Serializable {
 
 	private static final long serialVersionUID = 4898020342523479392L;
 	private static Logger logger = Logger.getLogger("SewGui");
@@ -128,6 +131,12 @@ public class WifiNetwork implements Serializable {
 
 	public final void setSecurised(boolean isSecurised) {
 		this.isSecurised = isSecurised;
+	}
+
+	@Override
+	public Type<SewEntitySelectedHandler> getType() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

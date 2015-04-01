@@ -27,11 +27,13 @@ import com.briceducardonnoy.sewgui.client.application.stream.StreamModule;
 import com.briceducardonnoy.sewgui.client.application.windows.BluetoothListPopupPresenter;
 import com.briceducardonnoy.sewgui.client.application.windows.BluetoothListPopupView;
 import com.briceducardonnoy.sewgui.client.application.windows.wifilistpopup.WifiListPopupModule;
+import com.briceducardonnoy.sewgui.client.application.windows.entitylistpopup.EntityListPopupModule;
 
 public class ApplicationModule extends AbstractPresenterModule {
     @Override
     protected void configure() {
-        install(new WifiListPopupModule());
+        install(new EntityListPopupModule());
+		install(new WifiListPopupModule());
 		install(new StreamModule());
 		install(new NetworkModule());
 		install(new StatusModule());
