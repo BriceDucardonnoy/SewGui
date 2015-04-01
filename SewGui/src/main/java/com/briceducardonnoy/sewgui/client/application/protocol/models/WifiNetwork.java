@@ -61,6 +61,16 @@ public class WifiNetwork implements SewEntity, Serializable {
 		}
 	}
 	
+	public WifiNetwork(String essid, short level, short noise, short quality,
+			boolean isSecurised) {
+		super();
+		this.essid = essid;
+		this.level = level;
+		this.noise = noise;
+		this.quality = quality;
+		this.isSecurised = isSecurised;
+	}
+
 	private static int getSizeOfFrame(int protocolVersion) {
 		switch(protocolVersion) {
 		case 1: return 40;
@@ -80,6 +90,11 @@ public class WifiNetwork implements SewEntity, Serializable {
 	@Override
 	public String toString() {
 		return essid + " (level = " + level + ", noise = " + noise + ", quality = " + quality + " and is " + (isSecurised ? "" : "not ") + "encrypted)";
+	}
+
+	@Override
+	public String toHtml() {
+		return toString();// TODO BDY: format with icons etc.
 	}
 	
 	public static List<WifiNetwork> toWifiNetwork(List<Byte> array, int protocolVersion) {
@@ -137,7 +152,7 @@ public class WifiNetwork implements SewEntity, Serializable {
 	public final void setSecurised(boolean isSecurised) {
 		this.isSecurised = isSecurised;
 	}
-
+	
 	@Override
 	public Type<SewEntitySelectedHandler> getType() {
 		// TODO Auto-generated method stub

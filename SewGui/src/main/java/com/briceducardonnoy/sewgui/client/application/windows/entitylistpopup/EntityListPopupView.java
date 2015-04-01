@@ -66,7 +66,7 @@ private static Logger logger = Logger.getLogger("SewGuiList");
 		alert.add(title);
 		alert.add(new Br());
 		for(SewEntity item : items) {
-			Button bt = new Button(item.toString());
+			Button bt = new Button(item.toHtml());
 			bt.setId(item.getId());
 			bt.setWidth("100%");
 			bt.setType(ButtonType.PRIMARY);

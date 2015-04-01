@@ -47,6 +47,14 @@ public class BtEntity implements SewEntity, Serializable {
 		address = jso.containsKey("address") ? jso.get("address").toString().replaceAll("\"", "") : jso.get("uuid").toString().replaceAll("\"", "");
 		name = jso.get("name").toString().replaceAll("\"", "");
 	}
+	
+	public BtEntity(String id, Integer clazz, String address, String name) {
+		super();
+		this.id = id;
+		this.clazz = clazz;
+		this.address = address;
+		this.name = name;
+	}
 
 	public String getId() {
 		return id;
@@ -78,6 +86,11 @@ public class BtEntity implements SewEntity, Serializable {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+	
+	@Override
+	public String toHtml() {
+		return toString();
 	}
 
 	@Override

@@ -20,6 +20,7 @@
  */
 package com.briceducardonnoy.sewgui.client.application;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -29,6 +30,7 @@ import com.allen_sauer.gwt.log.client.Log;
 import com.briceducardonnoy.sewgui.client.application.context.ApplicationContext;
 import com.briceducardonnoy.sewgui.client.application.exceptions.IncorrectFrameException;
 import com.briceducardonnoy.sewgui.client.application.protocol.RequestHelper;
+import com.briceducardonnoy.sewgui.client.application.protocol.models.WifiNetwork;
 import com.briceducardonnoy.sewgui.client.application.windows.entitylistpopup.EntityListPopupPresenter;
 import com.briceducardonnoy.sewgui.client.customCallbacks.ListCallback;
 import com.briceducardonnoy.sewgui.client.events.SewEntitySelectedEvent;
@@ -64,12 +66,12 @@ public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView,
 		Button getDisconnect();
 		Button getDiscoverWiFi();
 		Button getConnect2device();
+		Button getTestBtn();
 	}
 
 	private static Logger logger = Logger.getLogger("SewGui");
 
 	@Inject ApplicationContext context;
-//	@Inject BluetoothListPopupPresenter btListPres;
 	@Inject EntityListPopupPresenter<BtEntity> btListPres;
 	private PhoneGap phoneGap;
 	private Translate translate = GWT.create(Translate.class);
@@ -125,8 +127,26 @@ public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView,
 		registerHandler(getView().getDisconnect().addClickHandler(disconnectH));
 		// Write
 		registerHandler(getView().getDiscoverWiFi().addClickHandler(discoverH));
+		// Test
+		registerHandler(getView().getTestBtn().addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+//				List<BtEntity> bts = new ArrayList<>();
+//				bts.add(new BtEntity("Dev1", 42, "00:11:22:33:44:55", "BDY1"));
+//				bts.add(new BtEntity("Dev2", 43, "00:11:22:33:44:56", "BDY2"));
+//				bts.add(new BtEntity("Dev3", 44, "00:11:22:33:44:57", "BDY3"));
+//				bts.add(new BtEntity("Dev4", 45, "00:11:22:33:44:58", "BDY4"));
+				List<WifiNetwork> wns = new ArrayList<>();
+				wns.add(new WifiNetwork("Wifi A", (short)100, (short)0, (short)90, true));
+				wns.add(new WifiNetwork("Wifi B", (short)80, (short)20, (short)30, true));
+				wns.add(new WifiNetwork("Wifi C", (short)60, (short)40, (short)70, true));
+				wns.add(new WifiNetwork("Wifi D", (short)40, (short)50, (short)40, false));
+				wifiListPres.setDevices(wns);
+				addToPopupSlot(wifiListPres, true);
+			}
+		}));
 	}
-	
+	@Inject EntityListPopupPresenter<WifiNetwork> wifiListPres;
 	/*
 	 * Handlers and callback
 	 */

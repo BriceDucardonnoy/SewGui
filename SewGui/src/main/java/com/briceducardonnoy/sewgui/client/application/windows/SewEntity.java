@@ -26,4 +26,10 @@ import com.google.gwt.event.shared.GwtEvent.Type;
 public interface SewEntity {
 	public Type<SewEntitySelectedHandler> getType();
 	public String getId();
+	/**
+	 * Get a HTML string for the representation. Can be a simple redirection of <code>toString()</code> or 
+	 * something more sophisticated with link with images.
+	 * @return A HTML view
+	 */
+	public String toHtml();
 }

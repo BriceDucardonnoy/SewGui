@@ -71,6 +71,7 @@ class ApplicationView extends ViewImpl implements ApplicationPresenter.MyView {
 	@UiField Button disconnect;
 	@UiField Button discoverWifi;
 	@UiField Button connect2device;
+	@UiField Button testWnd;
 	@UiField JavaScriptObject bonjour;
 
 	private PlaceRequest statusGo;
@@ -112,7 +113,8 @@ class ApplicationView extends ViewImpl implements ApplicationPresenter.MyView {
 	@UiHandler("brand")
 	void onBrandSelected(ClickEvent event) {
 		Log.info("Brand clicked");
-		placeManager.revealDefaultPlace();
+//		placeManager.revealDefaultPlace();
+		placeManager.revealPlace(statusGo);
 		status.setActive(true);// TODO BDY: optimise it
 		network.setActive(false);
 		stream.setActive(false);
@@ -164,6 +166,11 @@ class ApplicationView extends ViewImpl implements ApplicationPresenter.MyView {
 	@Override
 	public Button getConnect2device() {
 		return connect2device;
+	}
+
+	@Override
+	public Button getTestBtn() {
+		return testWnd;
 	}
 	
 }

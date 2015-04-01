@@ -45,6 +45,7 @@
 			<b:Button ui:field="disconnect" size="LARGE" icon="STAR" type="WARNING">Disonnect</b:Button>
 			<button class="btn btn-default btn-inverse"><i class="glyphicon glyphicon-home" ui:field="bonjour"></i><br/>Bonjour</button>
 			<b:Button ui:field="discoverWifi" addStyleNames="btn-inverse">Discover WiFi</b:Button>
+			<b:Button ui:field="testWnd" size="LARGE" icon="LINUX">Test window</b:Button>
 			<!-- Main content -->
 			<g:SimplePanel ui:field="main" />
 		</g:HTMLPanel>
