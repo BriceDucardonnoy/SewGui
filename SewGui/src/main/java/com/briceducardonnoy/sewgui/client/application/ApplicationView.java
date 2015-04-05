@@ -34,6 +34,8 @@ import com.briceducardonnoy.sewgui.client.application.context.ApplicationContext
 import com.briceducardonnoy.sewgui.client.images.SewImagesResources;
 import com.briceducardonnoy.sewgui.client.lang.Translate;
 import com.briceducardonnoy.sewgui.client.place.NameTokens;
+import com.briceducardonnoy.sewgui.client.widgets.ImageButton;
+import com.briceducardonnoy.sewgui.client.widgets.ImageButton.Position;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -71,6 +73,8 @@ class ApplicationView extends ViewImpl implements ApplicationPresenter.MyView {
 	@UiField Button disconnect;
 	@UiField Button discoverWifi;
 	@UiField Button connect2device;
+	
+	@UiField ImageButton testBtn;
 	@UiField Button testWnd;
 	@UiField JavaScriptObject bonjour;
 
@@ -99,6 +103,11 @@ class ApplicationView extends ViewImpl implements ApplicationPresenter.MyView {
 		discoverWifi.setIconSize(IconSize.LARGE);
 		discoverWifi.getElement().insertFirst(new Image(SewImagesResources.INSTANCE.signal75()).getElement());
 		discoverWifi.getElement().appendChild(new Image(SewImagesResources.INSTANCE.signal100()).getElement());
+		
+		testBtn.addImage(SewImagesResources.INSTANCE.signal75(), Position.LEFT, "signalStrength");
+		testBtn.addIcon(IconType.LOCK, Position.LEFT, "iconTest");
+		testBtn.addImage(SewImagesResources.INSTANCE.signal100(), Position.RIGHT, "signalStrength2");
+		testBtn.addIcon(IconType.LOCK, Position.RIGHT, "iconTest2", IconSize.LARGE);
 	}
 
 	@Override

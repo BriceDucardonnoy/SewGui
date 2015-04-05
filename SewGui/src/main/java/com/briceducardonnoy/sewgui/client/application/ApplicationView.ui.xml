@@ -47,7 +47,7 @@
 			<button class="btn btn-default btn-inverse"><i class="glyphicon glyphicon-home" ui:field="bonjour"></i><br/>Bonjour</button>
 			<b:Button ui:field="discoverWifi" addStyleNames="btn-inverse">Discover WiFi</b:Button>
 			<b:Button ui:field="testWnd" size="LARGE" icon="LINUX">Test window</b:Button>
-			<sew:ImageButton size="LARGE" type="WARNING">MONDE</sew:ImageButton>
+			<sew:ImageButton ui:field="testBtn" size="LARGE" type="WARNING">MONDE</sew:ImageButton>
 			<!-- Main content -->
 			<g:SimplePanel ui:field="main" />
 		</g:HTMLPanel>

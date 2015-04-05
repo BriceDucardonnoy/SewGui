@@ -94,7 +94,7 @@ public class WifiNetwork implements SewEntity, Serializable {
 
 	@Override
 	public String toHtml() {
-		return toString();// TODO BDY: format with icons etc.
+		return toString();
 	}
 	
 	public static List<WifiNetwork> toWifiNetwork(List<Byte> array, int protocolVersion) {

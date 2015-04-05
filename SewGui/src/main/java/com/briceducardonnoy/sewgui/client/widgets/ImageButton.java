@@ -22,16 +22,25 @@ package com.briceducardonnoy.sewgui.client.widgets;
 
 import org.gwtbootstrap3.client.ui.constants.ButtonSize;
 import org.gwtbootstrap3.client.ui.constants.ButtonType;
+import org.gwtbootstrap3.client.ui.constants.IconSize;
+import org.gwtbootstrap3.client.ui.constants.IconType;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.HasText;
-import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
 
+/**
+ * Button Bootstrap-like with the possibility to add images either at left and right from the text,
+ * or at top and bottom from the text.
+ * @author Brice DUCARDONNOY
+ *
+ */
 public class ImageButton extends Composite implements HasText {
 
 	private static ImageButtonUiBinder uiBinder = GWT.create(ImageButtonUiBinder.class);
@@ -42,38 +51,116 @@ public class ImageButton extends Composite implements HasText {
 	public ImageButton() {
 		initWidget(uiBinder.createAndBindUi(this));
 	}
+	
+	private static final String LABELID = "imgBtnText";
 
 	@UiField HTMLPanel main;
-	@UiField Label text;
+//	@UiField Label btnText;
 	
 	private ButtonType type;
 	private ButtonSize size;
 	
+	protected String originalText = "";
+	protected String preIcon = "";
+	protected String postIcon = "";
+	protected String preImg = "";
+	protected String postImg = "";
+	
 	public enum Position {// One position per image/icon
-		NORTH,
-		SOUTH,
-		WEST,
-		EAST
+		LEFT,
+		RIGHT,
+		TOP,
+		BOTTOM
 	}
 
-	public ImageButton(String firstName) {
+	public ImageButton(String text) {
 		initWidget(uiBinder.createAndBindUi(this));
-		text.setText(firstName);
+//		btnText.setText(text);
+		originalText = text;
+		main.getElement().setInnerHTML(text);
 //		setStyleName("btn btn-primary");
 //		main.setStyleName("btn-warning");
+	}
+	
+	public static String getLabelid() {
+		return LABELID;
 	}
 
 //	@UiHandler("button")
 //	void onClick(ClickEvent e) {
 //		Window.alert("Hello!");
 //	}
+	
+// TODO BDY: add setIcon and setImage and setPosition for insertion of a single widget 	
+	public void addImage(ImageResource imgRes, Position position, String id) {
+		Image img = new Image(imgRes);
+		img.setAltText(id);
+		img.getElement().setId(id);
+		
+		switch(position) {
+		case TOP:// The setHTML in setText remove the insertFirst/appendChild
+			preImg = "<br/>";
+		default:
+		case LEFT:
+//			getElement().insertFirst(img.getElement());
+			preImg += img.getElement().toString();
+			setText(getText());
+			break;
+		case BOTTOM:
+			postImg = "<br/>";
+		case RIGHT:
+//			getElement().appendChild(img.getElement());
+			postImg += img.getElement().toString();
+			setText(getText());
+			break;
+		};
+	}
+	
+	public void addIcon(IconType icon, Position position, String id) {
+		addIcon(icon, position, id, IconSize.NONE);
+	}
+	
+	public void addIcon(IconType icon, Position position, String id, IconSize size) {
+//		<i class="glyphicon glyphicon-home" ui:field="bonjour"></i>
+		String content = "<i class=\"fa " + icon.getCssName() + " " + size.getCssName() + "\"></i>";
+		
+		switch(position) {
+		case BOTTOM:
+			postIcon += "<br/>" + content;
+			setText(getText());
+			break;
+		case RIGHT:
+			postIcon += content;
+			setText(getText());
+			break;
+		case TOP:
+			preIcon = content + "<br/>";
+			setText(getText());
+			break;
+		case LEFT:
+		default:
+			preIcon = content;
+			setText(getText());
+			break;
+		};
+	}
+	
+	public void removeImage(String imgId) {
+//		main.getWidgetCount()
+//		main.getElementById(imgId);
+	}
+	
+	public void removeIcon(String iconId) {
+		
+	}
 
 	public String getText() {
-		return text.getText();
+		return originalText;
 	}
 	
 	public void setText(final String text) {
-		this.text.setText(text);
+		originalText = text;
+		main.getElement().setInnerHTML(preImg + preIcon + originalText + postIcon + postImg);
 	}
 	
 	public ButtonType getType() {
