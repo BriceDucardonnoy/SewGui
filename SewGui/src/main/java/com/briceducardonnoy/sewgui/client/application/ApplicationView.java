@@ -124,7 +124,7 @@ class ApplicationView extends ViewImpl implements ApplicationPresenter.MyView {
 		Log.info("Brand clicked");
 //		placeManager.revealDefaultPlace();
 		placeManager.revealPlace(statusGo);
-		status.setActive(true);// TODO BDY: optimise it
+		status.setActive(true);
 		network.setActive(false);
 		stream.setActive(false);
 	}

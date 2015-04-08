@@ -9,9 +9,5 @@
 	}
 	</ui:style>
 	
-	<g:HTMLPanel ui:field="main" styleName="btn btn-default">
-		<!-- <i class="fa fa-wifi"></i> -->
-		<!-- <g:Label ui:field="btnText"> World!!!</g:Label> -->
-		<!-- <div id="imgBtnText" /> -->
-	</g:HTMLPanel>
+	<g:HTMLPanel ui:field="main" styleName="btn btn-default" />		
 </ui:UiBinder> 

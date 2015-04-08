@@ -141,6 +141,8 @@ public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView,
 				wns.add(new WifiNetwork("Wifi B", (short)80, (short)20, (short)30, true));
 				wns.add(new WifiNetwork("Wifi C", (short)60, (short)40, (short)70, true));
 				wns.add(new WifiNetwork("Wifi D", (short)40, (short)50, (short)40, false));
+				wns.add(new WifiNetwork("Wifi E", (short)20, (short)50, (short)40, false));
+				wns.add(new WifiNetwork("Wifi F", (short)10, (short)50, (short)40, false));
 				wifiListPres.setDevices(wns);
 				addToPopupSlot(wifiListPres, true);
 			}

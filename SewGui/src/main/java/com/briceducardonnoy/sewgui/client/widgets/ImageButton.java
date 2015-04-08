@@ -26,6 +26,16 @@ import org.gwtbootstrap3.client.ui.constants.IconSize;
 import org.gwtbootstrap3.client.ui.constants.IconType;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.dom.client.HasTouchEndHandlers;
+import com.google.gwt.event.dom.client.HasTouchStartHandlers;
+import com.google.gwt.event.dom.client.TouchEndEvent;
+import com.google.gwt.event.dom.client.TouchEndHandler;
+import com.google.gwt.event.dom.client.TouchStartEvent;
+import com.google.gwt.event.dom.client.TouchStartHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -41,7 +51,7 @@ import com.google.gwt.user.client.ui.Widget;
  * @author Brice DUCARDONNOY
  *
  */
-public class ImageButton extends Composite implements HasText {
+public class ImageButton extends Composite implements HasText, HasClickHandlers, HasTouchStartHandlers, HasTouchEndHandlers {
 
 	private static ImageButtonUiBinder uiBinder = GWT.create(ImageButtonUiBinder.class);
 
@@ -55,7 +65,6 @@ public class ImageButton extends Composite implements HasText {
 	private static final String LABELID = "imgBtnText";
 
 	@UiField HTMLPanel main;
-//	@UiField Label btnText;
 	
 	private ButtonType type;
 	private ButtonSize size;
@@ -75,7 +84,7 @@ public class ImageButton extends Composite implements HasText {
 
 	public ImageButton(String text) {
 		initWidget(uiBinder.createAndBindUi(this));
-//		btnText.setText(text);
+
 		originalText = text;
 		main.getElement().setInnerHTML(text);
 //		setStyleName("btn btn-primary");
@@ -86,12 +95,6 @@ public class ImageButton extends Composite implements HasText {
 		return LABELID;
 	}
 
-//	@UiHandler("button")
-//	void onClick(ClickEvent e) {
-//		Window.alert("Hello!");
-//	}
-	
-// TODO BDY: add setIcon and setImage and setPosition for insertion of a single widget 	
 	public void addImage(ImageResource imgRes, Position position, String id) {
 		Image img = new Image(imgRes);
 		img.setAltText(id);
@@ -160,7 +163,7 @@ public class ImageButton extends Composite implements HasText {
 	
 	public void setText(final String text) {
 		originalText = text;
-		main.getElement().setInnerHTML(preImg + preIcon + originalText + postIcon + postImg);
+		main.getElement().setInnerHTML(preImg + preIcon + " " + originalText + " " + postIcon + postImg);
 	}
 	
 	public ButtonType getType() {
@@ -179,6 +182,29 @@ public class ImageButton extends Composite implements HasText {
 	public final void setSize(final ButtonSize size) {
 		this.size = size;
 		main.addStyleName(size.getCssName());
+	}
+	
+	public String getId() {
+		return getElement().getId();
+	}
+	
+	public void setId(final String id) {
+		getElement().setId(id);
+	}
+
+	@Override
+	public HandlerRegistration addClickHandler(ClickHandler handler) {
+		return addDomHandler(handler, ClickEvent.getType());
+	}
+
+	@Override
+	public HandlerRegistration addTouchStartHandler(TouchStartHandler handler) {
+		return addDomHandler(handler, TouchStartEvent.getType());
+	}
+	
+	@Override
+	public HandlerRegistration addTouchEndHandler(TouchEndHandler handler) {
+		return addDomHandler(handler, TouchEndEvent.getType());
 	}
 
 }

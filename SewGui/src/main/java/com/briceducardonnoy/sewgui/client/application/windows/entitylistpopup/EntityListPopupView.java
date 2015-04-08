@@ -14,6 +14,7 @@ import org.gwtbootstrap3.client.ui.html.Strong;
 
 import com.briceducardonnoy.sewgui.client.application.windows.SewEntity;
 import com.briceducardonnoy.sewgui.client.lang.Translate;
+import com.briceducardonnoy.sewgui.client.widgets.ImageButton;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -66,7 +67,7 @@ private static Logger logger = Logger.getLogger("SewGuiList");
 		alert.add(title);
 		alert.add(new Br());
 		for(SewEntity item : items) {
-			Button bt = new Button(item.toHtml());
+			ImageButton bt = item.createImageButtonView();
 			bt.setId(item.getId());
 			bt.setWidth("100%");
 			bt.setType(ButtonType.PRIMARY);

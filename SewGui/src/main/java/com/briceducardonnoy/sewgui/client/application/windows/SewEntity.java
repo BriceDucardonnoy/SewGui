@@ -21,15 +21,11 @@
 package com.briceducardonnoy.sewgui.client.application.windows;
 
 import com.briceducardonnoy.sewgui.client.events.SewEntitySelectedEvent.SewEntitySelectedHandler;
+import com.briceducardonnoy.sewgui.client.widgets.ImageButton;
 import com.google.gwt.event.shared.GwtEvent.Type;
 
 public interface SewEntity {
 	public Type<SewEntitySelectedHandler> getType();
 	public String getId();
-	/**
-	 * Get a HTML string for the representation. Can be a simple redirection of <code>toString()</code> or 
-	 * something more sophisticated with link with images.
-	 * @return A HTML view
-	 */
-	public String toHtml();
+	public ImageButton createImageButtonView();
 }

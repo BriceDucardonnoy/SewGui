@@ -25,10 +25,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
+import org.gwtbootstrap3.client.ui.constants.IconType;
+
 import com.briceducardonnoy.sewgui.client.application.protocol.RequestHelper;
 import com.briceducardonnoy.sewgui.client.application.windows.SewEntity;
 import com.briceducardonnoy.sewgui.client.events.SewEntitySelectedEvent.SewEntitySelectedHandler;
+import com.briceducardonnoy.sewgui.client.images.SewImagesResources;
+import com.briceducardonnoy.sewgui.client.widgets.ImageButton;
+import com.briceducardonnoy.sewgui.client.widgets.ImageButton.Position;
 import com.google.gwt.event.shared.GwtEvent.Type;
+import com.google.gwt.resources.client.ImageResource;
 
 public class WifiNetwork implements SewEntity, Serializable {
 
@@ -92,11 +98,6 @@ public class WifiNetwork implements SewEntity, Serializable {
 		return essid + " (level = " + level + ", noise = " + noise + ", quality = " + quality + " and is " + (isSecurised ? "" : "not ") + "encrypted)";
 	}
 
-	@Override
-	public String toHtml() {
-		return toString();
-	}
-	
 	public static List<WifiNetwork> toWifiNetwork(List<Byte> array, int protocolVersion) {
 		List<WifiNetwork> wifis = new ArrayList<>();
 		int sz = getSizeOfFrame(protocolVersion);
@@ -157,6 +158,34 @@ public class WifiNetwork implements SewEntity, Serializable {
 	public Type<SewEntitySelectedHandler> getType() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public ImageButton createImageButtonView() {
+		ImageButton ib = new ImageButton(getEssid());
+		ib.addIcon(isSecurised ? IconType.LOCK : IconType.UNLOCK, Position.LEFT, "isSecurised");
+		ImageResource img;
+		if(level <= 10) {// 0 - 10
+			img = SewImagesResources.INSTANCE.signal00();
+		}
+		else if(level <= 35) {// 10 - 35
+			img = SewImagesResources.INSTANCE.signal25();
+		}
+		else if(level <= 65) {// 35 - 65
+			img = SewImagesResources.INSTANCE.signal50();
+		}
+		else if(level < 90) {// 65 - 90
+			img = SewImagesResources.INSTANCE.signal75();
+		}
+		else if(level <= 100) {// 90 - 100
+			img = SewImagesResources.INSTANCE.signal100();
+		}
+		else {// Unknown
+			logger.warning("Unknown level: " + level);
+			img = SewImagesResources.INSTANCE.signal00();
+		}
+		ib.addImage(img, Position.LEFT, "level");
+		return ib;
 	}
 
 }

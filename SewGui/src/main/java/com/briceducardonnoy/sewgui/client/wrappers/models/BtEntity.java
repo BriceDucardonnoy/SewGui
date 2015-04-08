@@ -25,6 +25,7 @@ import java.io.Serializable;
 import com.briceducardonnoy.sewgui.client.application.windows.SewEntity;
 import com.briceducardonnoy.sewgui.client.events.SewEntitySelectedEvent;
 import com.briceducardonnoy.sewgui.client.events.SewEntitySelectedEvent.SewEntitySelectedHandler;
+import com.briceducardonnoy.sewgui.client.widgets.ImageButton;
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONValue;
@@ -89,11 +90,6 @@ public class BtEntity implements SewEntity, Serializable {
 	}
 	
 	@Override
-	public String toHtml() {
-		return toString();
-	}
-
-	@Override
 	public String toString() {
 //		return "id: " + id + ", class: " + clazz + ", @: " + address + ", name: " + name;
 		return name + " (" + id + ")";
@@ -102,6 +98,13 @@ public class BtEntity implements SewEntity, Serializable {
 	@Override
 	public Type<SewEntitySelectedHandler> getType() {
 		return SewEntitySelectedEvent.getBT_Type();
+	}
+
+	@Override
+	public ImageButton createImageButtonView() {
+		ImageButton ib = new ImageButton(toString());
+		
+		return ib;
 	}
 
 }
