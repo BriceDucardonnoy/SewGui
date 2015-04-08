@@ -34,9 +34,6 @@ import com.briceducardonnoy.sewgui.client.application.context.ApplicationContext
 import com.briceducardonnoy.sewgui.client.images.SewImagesResources;
 import com.briceducardonnoy.sewgui.client.lang.Translate;
 import com.briceducardonnoy.sewgui.client.place.NameTokens;
-import com.briceducardonnoy.sewgui.client.widgets.ImageButton;
-import com.briceducardonnoy.sewgui.client.widgets.ImageButton.Position;
-import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -74,9 +71,8 @@ class ApplicationView extends ViewImpl implements ApplicationPresenter.MyView {
 	@UiField Button discoverWifi;
 	@UiField Button connect2device;
 	
-	@UiField ImageButton testBtn;
 	@UiField Button testWnd;
-	@UiField JavaScriptObject bonjour;
+//	@UiField ImageButton testBtn;
 
 	private PlaceRequest statusGo;
 	private PlaceRequest networkGo;
@@ -91,23 +87,15 @@ class ApplicationView extends ViewImpl implements ApplicationPresenter.MyView {
 		networkGo = new PlaceRequest.Builder().nameToken(NameTokens.getNetwork()).build();
 		streamGo = new PlaceRequest.Builder().nameToken(NameTokens.getStream()).build();
 		
-		logger.info("bonjour is a " + bonjour.getClass().getSimpleName());
-		
-		connect2device.setText("");
-		connect2device.setIcon(IconType.HOME);
-		connect2device.setIconSize(IconSize.LARGE);
-		connect2device.getElement().setInnerHTML("<br/>Connect");
-		Log.info("1st child: " + connect2device.getElement().getInnerHTML());
-		
 		discoverWifi.setIcon(IconType.LOCK);
 		discoverWifi.setIconSize(IconSize.LARGE);
 		discoverWifi.getElement().insertFirst(new Image(SewImagesResources.INSTANCE.signal75()).getElement());
 		discoverWifi.getElement().appendChild(new Image(SewImagesResources.INSTANCE.signal100()).getElement());
 		
-		testBtn.addImage(SewImagesResources.INSTANCE.signal75(), Position.LEFT, "signalStrength");
-		testBtn.addIcon(IconType.LOCK, Position.LEFT, "iconTest");
-		testBtn.addImage(SewImagesResources.INSTANCE.signal100(), Position.RIGHT, "signalStrength2");
-		testBtn.addIcon(IconType.LOCK, Position.RIGHT, "iconTest2", IconSize.LARGE);
+//		testBtn.addImage(SewImagesResources.INSTANCE.signal75(), Position.LEFT, "signalStrength");
+//		testBtn.addIcon(IconType.LOCK, Position.LEFT, "iconTest");
+//		testBtn.addImage(SewImagesResources.INSTANCE.signal100(), Position.RIGHT, "signalStrength2");
+//		testBtn.addIcon(IconType.LOCK, Position.RIGHT, "iconTest2", IconSize.LARGE);
 	}
 
 	@Override

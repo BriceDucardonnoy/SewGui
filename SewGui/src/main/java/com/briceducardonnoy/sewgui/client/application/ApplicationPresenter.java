@@ -263,6 +263,7 @@ public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView,
 		public void onSuccess(String result) {
 			logger.info("Disonnect success type is " + result.getClass().getSimpleName());
 			logger.info("Disonnect success: " + result + ". Now connect to " + deviceId);
+			context.setConnected2Device(false);
 			context.getBluetoothPlugin().unsubscribe(unsubscribeRawCB);
 		}
 	};
@@ -276,6 +277,7 @@ public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView,
 		public void onSuccess(String result) {
 //			logger.info("Connect success type is " + result.getClass().getSimpleName());
 			logger.info("Connect success: " + result);
+			context.setConnected2Device(true);
 			// TODO BDY: update a led to notify the user he is connected
 //			Window.alert("Connection established: " + result);
 //			context.getBluetoothPlugin().subscribe("\r\n", subscribeCB);
@@ -367,6 +369,11 @@ public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView,
 	private ClickHandler discoverH = new ClickHandler() {
 		@Override
 		public void onClick(ClickEvent event) {
+			if(!context.isPhoneGapAvailable() || !context.isConnected2Device()) {
+				logger.info("Not connected => do nothing");
+				Log.info("Not connected => do nothing");
+				return;
+			}
 			byte []request = RequestHelper.wifiDiscover(context.getCurrentProtocol());
 //			logger.info("Write " + datas);
 			context.getBluetoothPlugin().write(request, writeCB);

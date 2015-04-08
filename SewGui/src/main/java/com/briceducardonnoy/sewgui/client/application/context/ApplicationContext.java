@@ -34,12 +34,14 @@ public class ApplicationContext {
 	private boolean isPhoneGapAvailable;
 	private BluetoothSerialImpl bluetoothSerial;
 	private int deviceProtocol = 0;
+	private boolean isConnected2Device; 
 	
 	@Inject
 	ApplicationContext(final PhoneGap pg) {
 		phoneGap = pg;
 		phoneGap.getLog().setRemoteLogServiceUrl("http://192.168.1.46:8080/gwt-log");
 		isPhoneGapAvailable = false;
+		isConnected2Device = false;
 	}
 	
 //	public static ApplicationContext getInstance() {
@@ -79,6 +81,14 @@ public class ApplicationContext {
 
 	public final void setDeviceProtocol(int deviceProtocol) {
 		this.deviceProtocol = deviceProtocol;
+	}
+
+	public final boolean isConnected2Device() {
+		return isConnected2Device;
+	}
+
+	public final void setConnected2Device(final boolean isConnected2Device) {
+		this.isConnected2Device = isConnected2Device;
 	}
 	
 }
