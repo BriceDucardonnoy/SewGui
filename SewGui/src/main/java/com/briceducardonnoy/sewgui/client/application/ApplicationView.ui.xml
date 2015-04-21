@@ -4,18 +4,23 @@
 			xmlns:b.html="urn:import:org.gwtbootstrap3.client.ui.html"
 			xmlns:sew="urn:import:com.briceducardonnoy.sewgui.client.widgets">
 			
-	<!-- <ui:style>
-		.mainContent {
-			position: absolute;
-			margin-top: 60px;/* Navbar is 50px */
+	<ui:style>
+		.header {
+			display: flex;
 		}
-	</ui:style> -->
+	</ui:style>
+	
+	<ui:with field='res' type='com.briceducardonnoy.sewgui.client.images.SewImagesResources' />
             
     <g:HTMLPanel styleName="global">
 		<!-- Header -->
 		<b:Navbar ui:field="navbar" addStyleNames="navbar-fixed-top navbar-inverse">
 			<b:NavbarHeader>
-				<b:NavbarBrand ui:field="brand">SEW</b:NavbarBrand>
+				<b:NavbarBrand ui:field="brand" addStyleNames="{style.header}">
+					SEW
+					<!-- <g:Image ui:field="bluetoothImg" resource='{res.signal75}' altText="bluetoothConnection" />
+					<b:Icon ui:field="wifiStatus" icon="WIFI" /> -->
+				</b:NavbarBrand>
 				<b:NavbarCollapseButton dataTarget="#navbar-collapse" />
 			</b:NavbarHeader>
 	
@@ -41,10 +46,13 @@
 		</b:Navbar>
 		
 		<g:HTMLPanel styleName="mainContent">
+			Device <b:Icon type="QUESTION" size="LARGE" ui:field="bluetoothConnection" />
+			Network <b:Icon type="QUESTION" size="LARGE" ui:field="networkConnection" />
+			<b.html:Br />
 			<b:Button ui:field="reload" size="LARGE" type="INFO">Reload</b:Button>
-			<b:Button ui:field="connect2device" size="LARGE" type="PRIMARY">Connect to a device</b:Button>
-			<b:Button ui:field="disconnect" size="LARGE" icon="STAR" type="WARNING">Disonnect</b:Button>
-			<b:Button ui:field="discoverWifi" addStyleNames="btn-inverse">Discover WiFi</b:Button>
+			<b:Button ui:field="connect2device" type="PRIMARY" icon="SIGN_IN">Connect to a device</b:Button>
+			<b:Button ui:field="disconnect" icon="SIGN_OUT" type="WARNING">Disonnect</b:Button>
+			<b:Button ui:field="discoverWifi" addStyleNames="btn-inverse" icon="WIFI">Discover WiFi</b:Button>
 			<!-- <sew:ImageButton ui:field="testBtn" size="LARGE" type="WARNING">MONDE</sew:ImageButton> -->
 			<b:Button ui:field="testWnd" size="LARGE" icon="LINUX">Test window</b:Button>
 			<!-- Main content -->

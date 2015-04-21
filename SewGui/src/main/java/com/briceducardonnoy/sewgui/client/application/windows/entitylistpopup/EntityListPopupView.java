@@ -35,7 +35,7 @@ private static Logger logger = Logger.getLogger("SewGuiList");
 	private Translate translate = GWT.create(Translate.class);
 	private List<HandlerRegistration> handlers;
 	private String selectedDeviceId;
-	
+	// TODO BDY: make it "prettier"
 	private ClickHandler deviceH = new ClickHandler() {
 		@Override
 		public void onClick(ClickEvent event) {

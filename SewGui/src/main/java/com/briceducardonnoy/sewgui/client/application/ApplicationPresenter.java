@@ -278,7 +278,7 @@ public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView,
 //			logger.info("Connect success type is " + result.getClass().getSimpleName());
 			logger.info("Connect success: " + result);
 			context.setConnected2Device(true);
-			// TODO BDY: update a led to notify the user he is connected
+			// TODO BDY: update a led to notify the user he is connected in an always visible pane
 //			Window.alert("Connection established: " + result);
 //			context.getBluetoothPlugin().subscribe("\r\n", subscribeCB);
 //			context.getBluetoothPlugin().subscribe(String.valueOf(Character.toChars(255)), subscribeCB);// 0xFF

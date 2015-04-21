@@ -24,9 +24,9 @@ import java.util.logging.Logger;
 
 import org.gwtbootstrap3.client.ui.AnchorListItem;
 import org.gwtbootstrap3.client.ui.Button;
+import org.gwtbootstrap3.client.ui.Icon;
 import org.gwtbootstrap3.client.ui.Navbar;
 import org.gwtbootstrap3.client.ui.NavbarBrand;
-import org.gwtbootstrap3.client.ui.constants.IconSize;
 import org.gwtbootstrap3.client.ui.constants.IconType;
 
 import com.allen_sauer.gwt.log.client.Log;
@@ -77,6 +77,10 @@ class ApplicationView extends ViewImpl implements ApplicationPresenter.MyView {
 	private PlaceRequest statusGo;
 	private PlaceRequest networkGo;
 	private PlaceRequest streamGo;
+	
+	private Image bluetoothStatus;
+	private Icon wiredStatus;
+	private Icon wifiStatus;
 
 	@Inject
 	ApplicationView(Binder uiBinder, ApplicationContext ctx) {
@@ -87,15 +91,25 @@ class ApplicationView extends ViewImpl implements ApplicationPresenter.MyView {
 		networkGo = new PlaceRequest.Builder().nameToken(NameTokens.getNetwork()).build();
 		streamGo = new PlaceRequest.Builder().nameToken(NameTokens.getStream()).build();
 		
-		discoverWifi.setIcon(IconType.LOCK);
-		discoverWifi.setIconSize(IconSize.LARGE);
-		discoverWifi.getElement().insertFirst(new Image(SewImagesResources.INSTANCE.signal75()).getElement());
-		discoverWifi.getElement().appendChild(new Image(SewImagesResources.INSTANCE.signal100()).getElement());
+//		discoverWifi.setIcon(IconType.LOCK);
+//		discoverWifi.setIconSize(IconSize.LARGE);
+//		discoverWifi.getElement().insertFirst(new Image(SewImagesResources.INSTANCE.signal75()).getElement());
+//		discoverWifi.getElement().appendChild(new Image(SewImagesResources.INSTANCE.signal100()).getElement());
 		
 //		testBtn.addImage(SewImagesResources.INSTANCE.signal75(), Position.LEFT, "signalStrength");
 //		testBtn.addIcon(IconType.LOCK, Position.LEFT, "iconTest");
 //		testBtn.addImage(SewImagesResources.INSTANCE.signal100(), Position.RIGHT, "signalStrength2");
 //		testBtn.addIcon(IconType.LOCK, Position.RIGHT, "iconTest2", IconSize.LARGE);
+		
+		bluetoothStatus = new Image(SewImagesResources.INSTANCE.bluetoothOff());
+		wifiStatus = new Icon(IconType.WIFI);
+		wiredStatus = new Icon(IconType.SITEMAP);
+		wifiStatus.setColor("green");
+		wiredStatus.setColor("#830000");
+		
+		brand.add(bluetoothStatus);
+		brand.add(wiredStatus);
+		brand.add(wifiStatus);
 	}
 
 	@Override

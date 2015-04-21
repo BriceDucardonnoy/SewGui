@@ -44,4 +44,10 @@ public interface SewImagesResources extends ClientBundle {
 	
 	@Source("nm_signal_100.png")
 	ImageResource signal100();
+	
+//	@Source("bluetooth_disabled.png")
+	ImageResource bluetoothOff();
+	
+//	@Source("bluetooth_green.png")
+	ImageResource bluetoothOn();
 }

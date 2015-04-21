@@ -7,8 +7,18 @@
 			ui:generateKeys='com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator'
 			ui:generateLocales='default'>
     
+    <ui:style>
+    	.popup {
+			background: #222222 repeat scroll 0 0;
+			color: white;
+			border: 2px solid white;
+			/* round corners */
+			border-radius: 15px;
+		}
+    </ui:style>
 
 	<g:PopupPanel ui:field="main" modal="true" glassEnabled="true" autoHideEnabled="true">
+		<!-- <g:HTMLPanel addStyleNames="{style.popup}" ui:field="pane" /> -->
 	    <b:Alert type="INFO" ui:field="alert">
 			<b.html:Strong ui:field="title" text="List of recorded devices"/>
 			<b.html:Br />

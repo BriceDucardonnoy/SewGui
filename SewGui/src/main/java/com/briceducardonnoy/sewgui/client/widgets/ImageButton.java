@@ -183,6 +183,16 @@ public class ImageButton extends Composite implements HasText, HasClickHandlers,
 		this.size = size;
 		main.addStyleName(size.getCssName());
 	}
+	// TODO BDY: use a system where we add a widget with its position
+	/*
+	 * imageBtn.add(new Icon(IconType.WIFI, Position.LEFT))
+	 * or in UiBinder
+	 * <imgBtn>
+	 * 	<Icon type=WIFI position=LEFT />
+	 * </imgBtn>
+	 * To force the orientation (horiz, vert), use the flex CSS
+	 * See https://css-tricks.com/snippets/css/a-guide-to-flexbox/
+	 */
 	
 	public String getId() {
 		return getElement().getId();

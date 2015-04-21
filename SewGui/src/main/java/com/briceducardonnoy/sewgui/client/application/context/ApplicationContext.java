@@ -88,7 +88,7 @@ public class ApplicationContext {
 	}
 
 	public final void setConnected2Device(final boolean isConnected2Device) {
-		this.isConnected2Device = isConnected2Device;
+		this.isConnected2Device = isConnected2Device;// TODO BDY: update bluetooth icon color
 	}
 	
 }
