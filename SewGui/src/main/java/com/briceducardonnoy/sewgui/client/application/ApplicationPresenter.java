@@ -47,6 +47,7 @@ import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.typedarrays.client.Int8ArrayNative;
 import com.google.gwt.typedarrays.shared.ArrayBuffer;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.Image;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.googlecode.gwtphonegap.client.PhoneGap;
@@ -67,6 +68,7 @@ public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView,
 		Button getDiscoverWiFi();
 		Button getConnect2device();
 		Button getTestBtn();
+		public Image getBluetoothStatus();
 	}
 
 	private static Logger logger = Logger.getLogger("SewGui");
@@ -119,6 +121,7 @@ public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView,
 			}
 		}));
 		phoneGap.initializePhoneGap();
+		context.setBluetoothStatus(getView().getBluetoothStatus());
 		// Connect to device
 		registerHandler(getView().getConnect2device().addClickHandler(connect2H));
 		// Device selected
@@ -278,7 +281,6 @@ public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView,
 //			logger.info("Connect success type is " + result.getClass().getSimpleName());
 			logger.info("Connect success: " + result);
 			context.setConnected2Device(true);
-			// TODO BDY: update a led to notify the user he is connected in an always visible pane
 //			Window.alert("Connection established: " + result);
 //			context.getBluetoothPlugin().subscribe("\r\n", subscribeCB);
 //			context.getBluetoothPlugin().subscribe(String.valueOf(Character.toChars(255)), subscribeCB);// 0xFF

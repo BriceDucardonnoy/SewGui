@@ -7,7 +7,6 @@ import java.util.logging.Logger;
 import javax.inject.Inject;
 
 import org.gwtbootstrap3.client.ui.Alert;
-import org.gwtbootstrap3.client.ui.Button;
 import org.gwtbootstrap3.client.ui.constants.ButtonType;
 import org.gwtbootstrap3.client.ui.html.Br;
 import org.gwtbootstrap3.client.ui.html.Strong;
@@ -39,7 +38,7 @@ private static Logger logger = Logger.getLogger("SewGuiList");
 	private ClickHandler deviceH = new ClickHandler() {
 		@Override
 		public void onClick(ClickEvent event) {
-			Button btn = (Button) event.getSource();
+			ImageButton btn = (ImageButton) event.getSource();
 			logger.info("Click on " + btn.getId());
 			selectedDeviceId = btn.getId();
 //			alert.close();

@@ -21,7 +21,9 @@
 package com.briceducardonnoy.sewgui.client.application.context;
 
 import com.briceducardonnoy.sewgui.client.application.protocol.RequestHelper;
+import com.briceducardonnoy.sewgui.client.images.SewImagesResources;
 import com.briceducardonnoy.sewgui.client.wrappers.BluetoothSerialImpl;
+import com.google.gwt.user.client.ui.Image;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.googlecode.gwtphonegap.client.PhoneGap;
@@ -34,7 +36,8 @@ public class ApplicationContext {
 	private boolean isPhoneGapAvailable;
 	private BluetoothSerialImpl bluetoothSerial;
 	private int deviceProtocol = 0;
-	private boolean isConnected2Device; 
+	private boolean isConnected2Device;
+	private Image bluetoothStatus;
 	
 	@Inject
 	ApplicationContext(final PhoneGap pg) {
@@ -82,13 +85,20 @@ public class ApplicationContext {
 	public final void setDeviceProtocol(int deviceProtocol) {
 		this.deviceProtocol = deviceProtocol;
 	}
+	
+	public void setBluetoothStatus(Image bluetoothStatus) {
+		this.bluetoothStatus = bluetoothStatus;
+	}
 
 	public final boolean isConnected2Device() {
 		return isConnected2Device;
 	}
 
 	public final void setConnected2Device(final boolean isConnected2Device) {
-		this.isConnected2Device = isConnected2Device;// TODO BDY: update bluetooth icon color
+		this.isConnected2Device = isConnected2Device;
+		if(bluetoothStatus != null) {
+			bluetoothStatus.setResource(isConnected2Device ? SewImagesResources.INSTANCE.bluetoothOn() : SewImagesResources.INSTANCE.bluetoothOff());
+		}
 	}
-	
+	// TODO BDY: create a datamodel with a HashMap for between data and their widgets to update change and then manage the event
 }

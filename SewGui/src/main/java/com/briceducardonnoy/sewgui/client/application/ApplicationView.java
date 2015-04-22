@@ -184,4 +184,9 @@ class ApplicationView extends ViewImpl implements ApplicationPresenter.MyView {
 		return testWnd;
 	}
 	
+	@Override
+	public Image getBluetoothStatus() {
+		return bluetoothStatus;
+	}
+	
 }
