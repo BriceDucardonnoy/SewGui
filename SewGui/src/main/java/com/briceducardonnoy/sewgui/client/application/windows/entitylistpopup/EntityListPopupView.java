@@ -6,7 +6,6 @@ import java.util.logging.Logger;
 
 import javax.inject.Inject;
 
-import org.gwtbootstrap3.client.ui.Alert;
 import org.gwtbootstrap3.client.ui.constants.ButtonType;
 import org.gwtbootstrap3.client.ui.html.Br;
 import org.gwtbootstrap3.client.ui.html.Strong;
@@ -20,6 +19,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.EventBus;
@@ -34,20 +34,19 @@ private static Logger logger = Logger.getLogger("SewGuiList");
 	private Translate translate = GWT.create(Translate.class);
 	private List<HandlerRegistration> handlers;
 	private String selectedDeviceId;
-	// TODO BDY: make it "prettier"
+	
 	private ClickHandler deviceH = new ClickHandler() {
 		@Override
 		public void onClick(ClickEvent event) {
 			ImageButton btn = (ImageButton) event.getSource();
 			logger.info("Click on " + btn.getId());
 			selectedDeviceId = btn.getId();
-//			alert.close();
 			EntityListPopupView.this.hide();
 		}
 	};
 
 	@UiField PopupPanel main;
-	@UiField Alert alert;
+	@UiField HTMLPanel pane;
 	@UiField Strong title;
 
     @Inject
@@ -61,18 +60,19 @@ private static Logger logger = Logger.getLogger("SewGuiList");
 
 	@Override
 	public void setItems(List<? extends SewEntity> items) {
-		alert.clear();
+		pane.clear();
 		selectedDeviceId = "";
-		alert.add(title);
-		alert.add(new Br());
+		pane.add(title);
+		pane.add(new Br());
 		for(SewEntity item : items) {
 			ImageButton bt = item.createImageButtonView();
 			bt.setId(item.getId());
 			bt.setWidth("100%");
 			bt.setType(ButtonType.PRIMARY);
 			handlers.add(bt.addClickHandler(deviceH));
-			alert.add(bt);
-			alert.add(new Br());alert.add(new Br());
+			pane.add(bt);
+			pane.add(new Br());
+			pane.add(new Br());
 		}
 		
 	}

@@ -7,7 +7,7 @@
 			ui:generateKeys='com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator'
 			ui:generateLocales='default'>
     
-    <ui:style>
+    <!-- <ui:style>
     	.popup {
 			background: #222222 repeat scroll 0 0;
 			color: white;
@@ -15,16 +15,18 @@
 			/* round corners */
 			border-radius: 15px;
 		}
-    </ui:style>
+    </ui:style> -->
 
-	<g:PopupPanel ui:field="main" modal="true" glassEnabled="true" autoHideEnabled="true">
-		<!-- <g:HTMLPanel addStyleNames="{style.popup}" ui:field="pane" /> -->
-	    <b:Alert type="INFO" ui:field="alert">
+	<!-- <g:PopupPanel ui:field="main" modal="true" glassEnabled="true" autoHideEnabled="true" addStyleNames="{style.popup}"> -->
+	<g:PopupPanel ui:field="main" modal="true" glassEnabled="true" autoHideEnabled="true" styleName="popup">
+		<g:HTMLPanel ui:field="pane">
+	    <!-- <b:Alert type="INFO" ui:field="alert"> -->
 			<b.html:Strong ui:field="title" text="List of recorded devices"/>
 			<b.html:Br />
 			<!-- <b.html:Text text="..."/> -->
 			<!-- <g:Label>Patate</g:Label> -->
 			<b:Button type="PRIMARY" width="100%">Hello</b:Button>
-		</b:Alert>
+		<!-- </b:Alert> -->
+		</g:HTMLPanel>
     </g:PopupPanel>
 </ui:UiBinder>

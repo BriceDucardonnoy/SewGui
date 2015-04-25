@@ -308,7 +308,7 @@ public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView,
 		@Override
 		public void onClick(ClickEvent event) {
 			logger.info("Disconnect from " + deviceId);
-			context.getBluetoothPlugin().write("EOC\r\n", writeDisconnectCB);// TODO BDY: update it
+			context.getBluetoothPlugin().write("EOC\r\n", writeDisconnectCB);// TODO BDY: update disconnect according to the protocol
 		}
 	};
 	// Subscribe
