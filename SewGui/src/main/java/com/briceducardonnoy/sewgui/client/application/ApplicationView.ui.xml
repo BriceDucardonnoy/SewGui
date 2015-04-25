@@ -6,7 +6,15 @@
 			
 	<ui:style>
 		.header {
-			display: flex;
+			/*-webkit-box-orient: horizontal;*/
+			/*display: flex;*/
+			display: -webkit-box;
+		    display: -webkit-flex;
+		    display: flex;
+			-webkit-flex-direction: row;
+			flex-direction: row;
+			-webkit-flex: 1;
+            flex:1;
 		}
 	</ui:style>
 	

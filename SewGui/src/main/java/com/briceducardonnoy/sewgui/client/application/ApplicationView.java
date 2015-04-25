@@ -40,6 +40,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.Window.Navigator;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.SimplePanel;
@@ -100,6 +101,10 @@ class ApplicationView extends ViewImpl implements ApplicationPresenter.MyView {
 //		testBtn.addIcon(IconType.LOCK, Position.LEFT, "iconTest");
 //		testBtn.addImage(SewImagesResources.INSTANCE.signal100(), Position.RIGHT, "signalStrength2");
 //		testBtn.addIcon(IconType.LOCK, Position.RIGHT, "iconTest2", IconSize.LARGE);
+		
+		// TODO BDY: SEW brand etc. in flex mode
+		logger.info("Navigator UA = " + Navigator.getUserAgent() + ", \nplatform is " + Navigator.getPlatform() + ", \nappname is " + Navigator.getAppName()
+				+ " \nand appversion is " + Navigator.getAppVersion());
 		
 		bluetoothStatus = new Image(SewImagesResources.INSTANCE.bluetoothOff());
 		wifiStatus = new Icon(IconType.WIFI);
