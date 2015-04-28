@@ -29,12 +29,15 @@ import org.gwtbootstrap3.client.ui.Button;
 import com.allen_sauer.gwt.log.client.Log;
 import com.briceducardonnoy.sewgui.client.application.context.ApplicationContext;
 import com.briceducardonnoy.sewgui.client.application.exceptions.IncorrectFrameException;
+import com.briceducardonnoy.sewgui.client.application.model.DataModel;
 import com.briceducardonnoy.sewgui.client.application.protocol.RequestHelper;
 import com.briceducardonnoy.sewgui.client.application.protocol.models.WifiNetwork;
 import com.briceducardonnoy.sewgui.client.application.windows.entitylistpopup.EntityListPopupPresenter;
 import com.briceducardonnoy.sewgui.client.customCallbacks.ListCallback;
+import com.briceducardonnoy.sewgui.client.events.DataModelEvent;
 import com.briceducardonnoy.sewgui.client.events.SewEntitySelectedEvent;
 import com.briceducardonnoy.sewgui.client.events.SewEntitySelectedEvent.BTDeviceSelectedHandler;
+import com.briceducardonnoy.sewgui.client.images.SewImagesResources;
 import com.briceducardonnoy.sewgui.client.lang.Translate;
 import com.briceducardonnoy.sewgui.client.wrappers.BluetoothSerialImpl;
 import com.briceducardonnoy.sewgui.client.wrappers.models.BtEntity;
@@ -74,6 +77,7 @@ public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView,
 	private static Logger logger = Logger.getLogger("SewGui");
 
 	@Inject ApplicationContext context;
+	@Inject DataModel model;
 	@Inject EntityListPopupPresenter<BtEntity> btListPres;
 	private PhoneGap phoneGap;
 	private Translate translate = GWT.create(Translate.class);
@@ -89,9 +93,10 @@ public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView,
 	}
 	
 	@Inject
-	ApplicationPresenter(EventBus eventBus, MyView view, MyProxy proxy, ApplicationContext ctx) {
+	ApplicationPresenter(EventBus eventBus, MyView view, MyProxy proxy, ApplicationContext ctx, DataModel model) {
 		super(eventBus, view, proxy, RevealType.Root);
 		context = ctx;
+		this.model = model;
 		phoneGap = context.getPhoneGap();
 	}
 	
@@ -121,7 +126,17 @@ public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView,
 			}
 		}));
 		phoneGap.initializePhoneGap();
-		context.setBluetoothStatus(getView().getBluetoothStatus());
+//		context.setBluetoothStatus(getView().getBluetoothStatus());
+		registerHandler(getEventBus().addHandler(DataModelEvent.getType(), new DataModelEvent.DataModelHandler() {
+			@Override
+			public void onDataModelUpdated(DataModelEvent event) {
+				if(event.getUpdatedIds().contains(DataModel.IS_BLUETOOTH_CONNECTED)) {
+					logger.info("Update bluetooth state to " + context.isConnected2Device());
+					getView().getBluetoothStatus().setResource(
+							context.isConnected2Device() ? SewImagesResources.INSTANCE.bluetoothOn() : SewImagesResources.INSTANCE.bluetoothOff());
+				}
+			}
+		}));
 		// Connect to device
 		registerHandler(getView().getConnect2device().addClickHandler(connect2H));
 		// Device selected

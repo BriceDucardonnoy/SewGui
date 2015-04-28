@@ -20,10 +20,9 @@
  */
 package com.briceducardonnoy.sewgui.client.application.context;
 
+import com.briceducardonnoy.sewgui.client.application.model.DataModel;
 import com.briceducardonnoy.sewgui.client.application.protocol.RequestHelper;
-import com.briceducardonnoy.sewgui.client.images.SewImagesResources;
 import com.briceducardonnoy.sewgui.client.wrappers.BluetoothSerialImpl;
-import com.google.gwt.user.client.ui.Image;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.googlecode.gwtphonegap.client.PhoneGap;
@@ -33,18 +32,23 @@ public class ApplicationContext {
 
 	@Inject PhoneGap phoneGap;
 	
-	private boolean isPhoneGapAvailable;
+//	private boolean isPhoneGapAvailable;
 	private BluetoothSerialImpl bluetoothSerial;
 	private int deviceProtocol = 0;
-	private boolean isConnected2Device;
-	private Image bluetoothStatus;
+//	private boolean isConnected2Device;
+//	private Image bluetoothStatus;
+	
+	@Inject DataModel model;
 	
 	@Inject
-	ApplicationContext(final PhoneGap pg) {
+	ApplicationContext(final PhoneGap pg, final DataModel model) {
 		phoneGap = pg;
+		this.model = model;
 		phoneGap.getLog().setRemoteLogServiceUrl("http://192.168.1.46:8080/gwt-log");
-		isPhoneGapAvailable = false;
-		isConnected2Device = false;
+//		isPhoneGapAvailable = false;
+//		isConnected2Device = false;
+		model.updateValue(DataModel.IS_PHONEGAP_AVAILABLE, false, false);
+		model.updateValue(DataModel.IS_BLUETOOTH_CONNECTED, false, false);
 	}
 	
 //	public static ApplicationContext getInstance() {
@@ -59,11 +63,13 @@ public class ApplicationContext {
 	}
 
 	public boolean isPhoneGapAvailable() {
-		return isPhoneGapAvailable;
+//		return isPhoneGapAvailable;
+		return (boolean) model.getValue(DataModel.IS_PHONEGAP_AVAILABLE);
 	}
 
 	public void setPhoneGapAvailable(final boolean isPhoneGapAvailable) {
-		this.isPhoneGapAvailable = isPhoneGapAvailable;
+//		this.isPhoneGapAvailable = isPhoneGapAvailable;
+		model.updateValue(DataModel.IS_PHONEGAP_AVAILABLE, isPhoneGapAvailable);
 	}
 
 	public BluetoothSerialImpl getBluetoothPlugin() {
@@ -86,19 +92,21 @@ public class ApplicationContext {
 		this.deviceProtocol = deviceProtocol;
 	}
 	
-	public void setBluetoothStatus(Image bluetoothStatus) {
-		this.bluetoothStatus = bluetoothStatus;
-	}
+//	public void setBluetoothStatus(Image bluetoothStatus) {
+//		this.bluetoothStatus = bluetoothStatus;
+//	}
 
 	public final boolean isConnected2Device() {
-		return isConnected2Device;
+//		return isConnected2Device;
+		return (boolean) model.getValue(DataModel.IS_BLUETOOTH_CONNECTED); 
 	}
 
 	public final void setConnected2Device(final boolean isConnected2Device) {
-		this.isConnected2Device = isConnected2Device;
-		if(bluetoothStatus != null) {
-			bluetoothStatus.setResource(isConnected2Device ? SewImagesResources.INSTANCE.bluetoothOn() : SewImagesResources.INSTANCE.bluetoothOff());
-		}
+//		this.isConnected2Device = isConnected2Device;
+////		if(bluetoothStatus != null) {
+////			bluetoothStatus.setResource(isConnected2Device ? SewImagesResources.INSTANCE.bluetoothOn() : SewImagesResources.INSTANCE.bluetoothOff());
+////		}
+		model.updateValue(DataModel.IS_BLUETOOTH_CONNECTED, isConnected2Device);
 	}
-	// TODO BDY: create a datamodel with a HashMap for between data and their widgets to update change and then manage the event
+	
 }

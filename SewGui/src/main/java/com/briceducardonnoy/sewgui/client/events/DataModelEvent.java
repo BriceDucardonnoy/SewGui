@@ -10,7 +10,7 @@ public class DataModelEvent extends GwtEvent<DataModelEvent.DataModelHandler> {
     private static Type<DataModelHandler> TYPE = new Type<DataModelHandler>();
     
     public interface DataModelHandler extends EventHandler {
-        void onDataModel(DataModelEvent event);
+        void onDataModelUpdated(DataModelEvent event);
     }
     
     private List<Integer> updatedIds;
@@ -30,7 +30,7 @@ public class DataModelEvent extends GwtEvent<DataModelEvent.DataModelHandler> {
 
     @Override
     protected void dispatch(final DataModelHandler handler) {
-        handler.onDataModel(this);
+        handler.onDataModelUpdated(this);
     }
 
     @Override

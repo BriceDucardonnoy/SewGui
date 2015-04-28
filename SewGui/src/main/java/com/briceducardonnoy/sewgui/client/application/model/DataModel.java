@@ -43,12 +43,12 @@ public class DataModel {
 	DataModel(EventBus eventBus) {
 //		globalData = new HashMap<>(10);
 		this.eventBus = eventBus;
-		registeredData = new HashMap<>(10);
+		registeredData = new HashMap<>();
 		subscribedIds = new ArrayList<>();
 	}
 	
 	/**
-	 * List of the IDs that we wish to receive a <code>DataModelEvent</code> where an update appear.<br />
+	 * List of the IDs that we wish to receive a {@link DataModelEvent} where an update appear.<br />
 	 * As it's a single user project, no need to know who the the requester
 	 * @param ids The list of IDs to listen
 	 */
@@ -59,7 +59,7 @@ public class DataModel {
 	}
 	
 	/**
-	 * ID that we wish to receive a <code>DataModelEvent</code> where an update appear.<br />
+	 * ID that we wish to receive a {@link DataModelEvent} where an update appear.<br />
 	 * As it's a single user project, no need to know who the the requester
 	 * @param id The ID to listen
 	 */
@@ -94,14 +94,21 @@ public class DataModel {
 		eventBus.fireEvent(new DataModelEvent(new ArrayList<Integer>(values.keySet())));
 	}
 	
+	/**
+	 * Update the value which key is <code>id</code> with value <code>value</code>
+	 * and fire a {@link DataModelEvent}
+	 * @param id The ID of the object
+	 * @param value Its new value
+	 * @return True if ID has been added or updated (eg. different from previous value)
+	 */
 	public boolean updateValue(Integer id, Object value) {
 		return updateValue(id, value, true);
 	}
 	
 	/**
-	 * Update the value with id <code>id</code> to <code>value</code> and fire event if asked
-	 * @param id
-	 * @param value
+	 * Update the value with id <code>id</code> to <code>value</code> and fire a {@link DataModelEvent} if asked
+	 * @param id The ID of the object
+	 * @param value Its new value
 	 * @param signal True to fire a DataModelEvent
 	 * @return True if the new value is different from the old one or if new key has been created
 	 */
@@ -119,4 +126,14 @@ public class DataModel {
 	}
 	
 	// TODO BDY: create interface that must implement widgets which wish to be notified for datamodel change. Or let all be done by the presenter
+	// TODO BDY: load it from json file?
+	
+	public final static int IS_PHONEGAP_AVAILABLE;
+	public final static int IS_BLUETOOTH_CONNECTED;
+	static {
+		int i = 0;
+		IS_PHONEGAP_AVAILABLE = i++;
+		IS_BLUETOOTH_CONNECTED = i++;
+	}
+	
 }
