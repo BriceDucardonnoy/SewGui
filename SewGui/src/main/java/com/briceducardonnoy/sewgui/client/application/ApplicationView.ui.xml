@@ -54,9 +54,6 @@
 		</b:Navbar>
 		
 		<g:HTMLPanel styleName="mainContent">
-			Device <b:Icon type="QUESTION" size="LARGE" ui:field="bluetoothConnection" />
-			Network <b:Icon type="QUESTION" size="LARGE" ui:field="networkConnection" />
-			<b.html:Br />
 			<b:Button ui:field="reload" size="LARGE" type="INFO">Reload</b:Button>
 			<b:Button ui:field="connect2device" type="PRIMARY" icon="SIGN_IN">Connect to a device</b:Button>
 			<b:Button ui:field="disconnect" icon="SIGN_OUT" type="WARNING">Disonnect</b:Button>

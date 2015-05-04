@@ -79,6 +79,7 @@ public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView,
 	@Inject ApplicationContext context;
 	@Inject DataModel model;
 	@Inject EntityListPopupPresenter<BtEntity> btListPres;
+	@Inject EntityListPopupPresenter<WifiNetwork> wifiListPres;
 	private PhoneGap phoneGap;
 	private Translate translate = GWT.create(Translate.class);
 //	private int count = 2;
@@ -126,11 +127,11 @@ public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView,
 			}
 		}));
 		phoneGap.initializePhoneGap();
-//		context.setBluetoothStatus(getView().getBluetoothStatus());
+		// DataModel
 		registerHandler(getEventBus().addHandler(DataModelEvent.getType(), new DataModelEvent.DataModelHandler() {
 			@Override
 			public void onDataModelUpdated(DataModelEvent event) {
-				if(event.getUpdatedIds().contains(DataModel.IS_BLUETOOTH_CONNECTED)) {
+				if(event.getUpdatedIds().contains(DataModel.IS_BLUETOOTH_CONNECTED)) {// TODO BDY: add and remove then for other page in the onReveal/onHide
 					logger.info("Update bluetooth state to " + context.isConnected2Device());
 					getView().getBluetoothStatus().setResource(
 							context.isConnected2Device() ? SewImagesResources.INSTANCE.bluetoothOn() : SewImagesResources.INSTANCE.bluetoothOff());
@@ -166,7 +167,7 @@ public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView,
 			}
 		}));
 	}
-	@Inject EntityListPopupPresenter<WifiNetwork> wifiListPres;
+	
 	/*
 	 * Handlers and callback
 	 */

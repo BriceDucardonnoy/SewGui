@@ -126,7 +126,7 @@ public class DataModel {
 	}
 	
 	// TODO BDY: create interface that must implement widgets which wish to be notified for datamodel change. Or let all be done by the presenter
-	// TODO BDY: load it from json file?
+	// Load it from json file?
 	
 	public final static int IS_PHONEGAP_AVAILABLE;
 	public final static int IS_BLUETOOTH_CONNECTED;
