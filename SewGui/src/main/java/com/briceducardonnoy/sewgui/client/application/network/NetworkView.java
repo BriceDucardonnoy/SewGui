@@ -24,8 +24,8 @@ import javax.inject.Inject;
 
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.IsWidget;
-import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.gwtplatform.mvp.client.ViewImpl;
 
@@ -34,7 +34,7 @@ class NetworkView extends ViewImpl implements NetworkPresenter.MyView {
     }
 
     @UiField
-    SimplePanel main;
+    HTMLPanel main;
 
     @Inject
     NetworkView(Binder uiBinder) {
@@ -44,7 +44,8 @@ class NetworkView extends ViewImpl implements NetworkPresenter.MyView {
     @Override
     public void setInSlot(Object slot, IsWidget content) {
         if (slot == NetworkPresenter.SLOT_Network) {
-            main.setWidget(content);
+        	main.clear();
+            main.add(content);
         } else {
             super.setInSlot(slot, content);
         }

@@ -32,7 +32,7 @@
 				<b:NavbarCollapseButton dataTarget="#navbar-collapse" />
 			</b:NavbarHeader>
 	
-			<b:NavbarCollapse b:id="navbar-collapse">
+			<b:NavbarCollapse b:id="navbar-collapse" ui:field="collapsedElements">
 				<b:NavbarNav>
 					<b:AnchorListItem ui:field="status" active="true">Status</b:AnchorListItem>
 					<b:AnchorListItem ui:field="network">Network</b:AnchorListItem>

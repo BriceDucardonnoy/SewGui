@@ -27,6 +27,7 @@ import org.gwtbootstrap3.client.ui.Button;
 import org.gwtbootstrap3.client.ui.Icon;
 import org.gwtbootstrap3.client.ui.Navbar;
 import org.gwtbootstrap3.client.ui.NavbarBrand;
+import org.gwtbootstrap3.client.ui.NavbarCollapse;
 import org.gwtbootstrap3.client.ui.constants.IconType;
 
 import com.allen_sauer.gwt.log.client.Log;
@@ -64,6 +65,7 @@ class ApplicationView extends ViewImpl implements ApplicationPresenter.MyView {
 	@UiField SimplePanel main;
 	@UiField Navbar navbar;
 	@UiField NavbarBrand brand;
+	@UiField NavbarCollapse collapsedElements;
 	@UiField AnchorListItem status;
 	@UiField AnchorListItem network;
 	@UiField AnchorListItem stream;	
@@ -108,8 +110,8 @@ class ApplicationView extends ViewImpl implements ApplicationPresenter.MyView {
 		bluetoothStatus = new Image(SewImagesResources.INSTANCE.bluetoothOff());
 		wifiStatus = new Icon(IconType.WIFI);
 		wiredStatus = new Icon(IconType.SITEMAP);
-		wifiStatus.setColor("green");
-		wiredStatus.setColor("#830000");
+		wifiStatus.setColor("#FF0000");
+		wiredStatus.setColor("#FF0000");
 		
 		brand.add(bluetoothStatus);
 		brand.add(wiredStatus);
@@ -133,6 +135,7 @@ class ApplicationView extends ViewImpl implements ApplicationPresenter.MyView {
 		status.setActive(true);
 		network.setActive(false);
 		stream.setActive(false);
+		collapsedElements.hide();
 	}
 
 	@UiHandler("status")
@@ -142,6 +145,7 @@ class ApplicationView extends ViewImpl implements ApplicationPresenter.MyView {
 		status.setActive(true);
 		network.setActive(false);
 		stream.setActive(false);
+		collapsedElements.hide();
 	}
 
 	@UiHandler("network")
@@ -151,6 +155,8 @@ class ApplicationView extends ViewImpl implements ApplicationPresenter.MyView {
 		status.setActive(false);
 		network.setActive(true);
 		stream.setActive(false);
+		collapsedElements.hide();
+//		collapsedElements.toggle();
 	}
 
 	@UiHandler("stream")
@@ -160,6 +166,7 @@ class ApplicationView extends ViewImpl implements ApplicationPresenter.MyView {
 		status.setActive(false);
 		network.setActive(false);
 		stream.setActive(true);
+		collapsedElements.hide();
 	}
 
 	@UiHandler("reload")

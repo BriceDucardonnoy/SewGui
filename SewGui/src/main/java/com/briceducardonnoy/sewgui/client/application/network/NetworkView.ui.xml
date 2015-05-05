@@ -2,7 +2,75 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
              xmlns:g="urn:import:com.google.gwt.user.client.ui">
              
-    <g:SimplePanel ui:field="main">
-    	<g:HTMLPanel>Hello Network</g:HTMLPanel>
-    </g:SimplePanel>
+    <ui:style>
+    	.parent {
+			/* Legacy */
+		    display: -moz-box;
+		    display: -webkit-box;
+		 
+		    /* Hybrid */
+		    display: -ms-flexbox;
+		 
+		    /* Modern */
+		    display: -webkit-flex;
+		    display: flex;
+		}
+		
+		.networkRadioBox {
+			border: 1px solid;
+			/*width: 100%;*/
+			margin-top: 10px;
+			font-size: 20px;
+			/*padding-left: 5px;*/
+			padding: 10px;
+		}
+		
+		.mainConfig {
+			display: -webkit-box;
+		    display: -webkit-flex;
+		    display: flex;
+		    
+		    -webkit-box-orient: horizontal;
+		    -moz-box-orient: horizontal;
+		    
+		    -webkit-box-direction: normal;
+		    -moz-box-direction: normal;
+		    
+		    -ms-flex-direction: row;
+		    -webkit-flex-direction: row;
+		    flex-direction: row;
+		    
+		  	padding: 10px;
+			border: 1px solid red;
+			width: 100%;
+			margin-top: 10px;
+			
+			-webkit-box-pack: justify;
+		    -moz-box-pack: justify;
+		    -webkit-justify-content: space-around;
+		    -ms-flex-pack: space-around;
+			justify-content: space-around;
+		    
+			-webkit-flex: 1;
+			flex:1;
+		}
+	
+    </ui:style>
+    
+    
+    <g:HTMLPanel ui:field="main">
+    	<!-- <g:HTMLPanel ui:field="config" addStyleNames="{style.mainConfig}"> -->
+    	<g:HTMLPanel ui:field="config" styleName="mainConfig">
+	    	<g:HTMLPanel ui:field="connectionType" styleName="networkRadioBox">
+	    		<g:RadioButton ui:field="ethernet" name="connectionType" value="true">Ethernet</g:RadioButton><br/>
+	    		<g:RadioButton ui:field="wifi" name="connectionType">WiFi</g:RadioButton>
+	    	</g:HTMLPanel>
+	    	<g:HTMLPanel ui:field="configType" styleName="networkRadioBox">
+	    		<g:RadioButton ui:field="dhcp" name="configType">DHCP</g:RadioButton><br/>
+	    		<g:RadioButton ui:field="staticConf" name="configType" value="true">Static</g:RadioButton>
+	    	</g:HTMLPanel>
+    	</g:HTMLPanel>
+    	<g:HTMLPanel ui:field="settings">
+    	</g:HTMLPanel>
+    </g:HTMLPanel>
 </ui:UiBinder>
