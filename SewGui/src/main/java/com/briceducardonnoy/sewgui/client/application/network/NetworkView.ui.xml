@@ -18,7 +18,7 @@
 		
 		.networkRadioBox {
 			border: 1px solid;
-			/*width: 100%;*/
+			width: 120px;
 			margin-top: 10px;
 			font-size: 20px;
 			/*padding-left: 5px;*/
@@ -61,6 +61,7 @@
     <g:HTMLPanel ui:field="main">
     	<!-- <g:HTMLPanel ui:field="config" addStyleNames="{style.mainConfig}"> -->
     	<g:HTMLPanel ui:field="config" styleName="mainConfig">
+	    	<!-- <g:HTMLPanel ui:field="connectionType" addStyleNames="{style.networkRadioBox}"> -->
 	    	<g:HTMLPanel ui:field="connectionType" styleName="networkRadioBox">
 	    		<g:RadioButton ui:field="ethernet" name="connectionType" value="true">Ethernet</g:RadioButton><br/>
 	    		<g:RadioButton ui:field="wifi" name="connectionType">WiFi</g:RadioButton>

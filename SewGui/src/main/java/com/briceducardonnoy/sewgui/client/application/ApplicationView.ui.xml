@@ -13,8 +13,8 @@
 		    display: flex;
 			/*-webkit-flex-direction: row;*/
 			flex-direction: row;
-			/*-webkit-flex: 1;
-			flex:1;*/
+			-webkit-flex: 1;
+			flex:1;
 		}
 	</ui:style>
 	
@@ -55,9 +55,9 @@
 		
 		<g:HTMLPanel styleName="mainContent">
 			<b:Button ui:field="reload" size="LARGE" type="INFO">Reload</b:Button>
-			<b:Button ui:field="connect2device" type="PRIMARY" icon="SIGN_IN">Connect to a device</b:Button>
+			<b:Button ui:field="connect2device" type="PRIMARY" icon="SIGN_IN">Connect</b:Button>
 			<b:Button ui:field="disconnect" icon="SIGN_OUT" type="WARNING">Disonnect</b:Button>
-			<b:Button ui:field="discoverWifi" addStyleNames="btn-inverse" icon="WIFI">Discover WiFi</b:Button>
+			<b:Button ui:field="discoverWifi" addStyleNames="btn-inverse" icon="WIFI">Discover</b:Button>
 			<!-- <sew:ImageButton ui:field="testBtn" size="LARGE" type="WARNING">MONDE</sew:ImageButton> -->
 			<b:Button ui:field="testWnd" size="LARGE" icon="LINUX">Test window</b:Button>
 			<!-- Main content -->
