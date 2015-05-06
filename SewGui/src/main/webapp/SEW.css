@@ -96,6 +96,7 @@ body {
 	background: lightgrey;
 	width: 120px;
 	font-size: 20px;
+	border-radius: 5px;
 }
 
 .mainConfig {
@@ -115,6 +116,15 @@ body {
 	margin-top: 10px;
 }
 
+.mainAlignment {
+	display: -webkit-box;
+    display: -webkit-flex;
+    display: flex;
+    
+    -webkit-box-direction: normal;
+    -moz-box-direction: normal;
+}
+
 @media screen and (orientation: landscape) {
 	.networkRadioBox {
 		height: 100%;
@@ -130,7 +140,16 @@ body {
 	    -webkit-flex-direction: column;
 	    flex-direction: column;
 	    
-		/*width: 100px;*/
+		height: 100%;
+	}
+	
+	.mainAlignment {
+		-webkit-box-orient: horizontal;
+	    -moz-box-orient: horizontal;
+	    
+	    -ms-flex-direction: row;
+	    -webkit-flex-direction: row;
+	    flex-direction: row;
 	}
 }
 
@@ -156,5 +175,14 @@ body {
 	    -webkit-justify-content: space-around;
 	    -ms-flex-pack: space-around;
 		justify-content: space-around;
+	}
+	
+	.mainAlignment {
+		-webkit-box-orient: vertical;
+	    -moz-box-orient: vertical;
+	    
+	    -ms-flex-direction: column;
+	    -webkit-flex-direction: column;
+	    flex-direction: column;
 	}
 }

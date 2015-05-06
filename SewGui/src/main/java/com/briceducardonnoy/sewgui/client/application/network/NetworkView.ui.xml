@@ -1,6 +1,7 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
-             xmlns:g="urn:import:com.google.gwt.user.client.ui">
+             xmlns:g="urn:import:com.google.gwt.user.client.ui"
+             xmlns:b="urn:import:org.gwtbootstrap3.client.ui">
              
     <ui:style>
     	.parent {
@@ -16,16 +17,17 @@
 		    display: flex;
 		}
 		
-		.networkRadioBox {
-			border: 1px solid;
-			width: 120px;
-			margin-top: 10px;
+		.settings {
+			border: 1px solid purple;
+			margin: 10px;
 			font-size: 20px;
-			/*padding-left: 5px;*/
-			padding: 10px;
 		}
 		
-		.mainConfig {
+		.labelForm {
+			width: 200px;
+		}
+		
+		.formRow {
 			display: -webkit-box;
 		    display: -webkit-flex;
 		    display: flex;
@@ -40,26 +42,22 @@
 		    -webkit-flex-direction: row;
 		    flex-direction: row;
 		    
-		  	padding: 10px;
-			border: 1px solid red;
-			width: 100%;
-			margin-top: 10px;
-			
-			-webkit-box-pack: justify;
-		    -moz-box-pack: justify;
-		    -webkit-justify-content: space-around;
-		    -ms-flex-pack: space-around;
-			justify-content: space-around;
-		    
-			-webkit-flex: 1;
-			flex:1;
+		    margin-bottom: 10px;
+		}
+		
+		.wifiOptions {
+			font-size: 10px;
+		}
+		
+		.roundBtn {
+			margin-left: 10px;
+			border-radius: 100px;
 		}
 	
     </ui:style>
     
-    
-    <g:HTMLPanel ui:field="main">
-    	<!-- <g:HTMLPanel ui:field="config" addStyleNames="{style.mainConfig}"> -->
+    <g:HTMLPanel ui:field="main" styleName="mainAlignment">
+    	<!-- Main config: WiFi/Eth, DHCP/static -->
     	<g:HTMLPanel ui:field="config" styleName="mainConfig">
 	    	<!-- <g:HTMLPanel ui:field="connectionType" addStyleNames="{style.networkRadioBox}"> -->
 	    	<g:HTMLPanel ui:field="connectionType" styleName="networkRadioBox">
@@ -71,7 +69,39 @@
 	    		<g:RadioButton ui:field="staticConf" name="configType" value="true">Static</g:RadioButton>
 	    	</g:HTMLPanel>
     	</g:HTMLPanel>
-    	<g:HTMLPanel ui:field="settings">
+    	<!-- Settings: IP, NM, GW... -->
+    	<g:HTMLPanel ui:field="settings" addStyleNames="{style.settings}">
+    		<!-- WiFi ESSID and selection -->
+    		<g:HTMLPanel addStyleNames="{style.formRow}">
+    			<g:Label ui:field="wifiLabel" addStyleNames="{style.labelForm}">WiFi</g:Label>
+    			<g:TextBox ui:field="wifiText" />
+    			<b:Button ui:field="searchWifi" icon="SEARCH" addStyleNames="{style.roundBtn}" />
+    		</g:HTMLPanel>
+    		<!-- WiFi password with a remember and possibility to see password -->
+    		<g:HTMLPanel addStyleNames="{style.formRow}">
+    			<g:Label ui:field="pwdLabel" addStyleNames="{style.labelForm}">Password</g:Label>
+    			<g:PasswordTextBox ui:field="pwdText" />
+    			<g:CheckBox ui:field="clearPwd" addStyleNames="{style.wifiOptions}">Show</g:CheckBox>
+    			<g:CheckBox ui:field="rememberPwd" addStyleNames="{style.wifiOptions}">Remember</g:CheckBox>
+    		</g:HTMLPanel>
+    		<!-- IP -->
+    		<g:HTMLPanel addStyleNames="{style.formRow}">
+    			<g:Label ui:field="ipLabel" addStyleNames="{style.labelForm}">IP Address</g:Label>
+    			<g:TextBox ui:field="ipText" />
+    		</g:HTMLPanel>
+    		<!-- Netmask -->
+    		<g:HTMLPanel addStyleNames="{style.formRow}">
+    			<g:Label ui:field="nmLabel" addStyleNames="{style.labelForm}">Netmask</g:Label>
+    			<g:TextBox ui:field="nmText" />
+    		</g:HTMLPanel>
+    		<!-- Gateway -->
+    		<g:HTMLPanel addStyleNames="{style.formRow}">
+    			<g:Label ui:field="gwLabel" addStyleNames="{style.labelForm}">Gateway</g:Label>
+    			<g:TextBox ui:field="gwText" />
+    		</g:HTMLPanel>
     	</g:HTMLPanel>
+    	<!-- Buttons -->
+    	<g:LayoutPanel>
+    	</g:LayoutPanel>
     </g:HTMLPanel>
 </ui:UiBinder>
