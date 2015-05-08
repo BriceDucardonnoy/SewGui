@@ -17,34 +17,6 @@
 		    display: flex;
 		}
 		
-		.settings {
-			border: 1px solid purple;
-			margin: 10px;
-			font-size: 20px;
-		}
-		
-		.labelForm {
-			width: 200px;
-		}
-		
-		.formRow {
-			display: -webkit-box;
-		    display: -webkit-flex;
-		    display: flex;
-		    
-		    -webkit-box-orient: horizontal;
-		    -moz-box-orient: horizontal;
-		    
-		    -webkit-box-direction: normal;
-		    -moz-box-direction: normal;
-		    
-		    -ms-flex-direction: row;
-		    -webkit-flex-direction: row;
-		    flex-direction: row;
-		    
-		    margin-bottom: 10px;
-		}
-		
 		.wifiOptions {
 			font-size: 10px;
 		}
@@ -75,33 +47,33 @@
 		    	</g:HTMLPanel>
 	    	</g:HTMLPanel>
 	    	<!-- Settings: IP, NM, GW... -->
-	    	<g:HTMLPanel ui:field="settings" addStyleNames="{style.settings}">
+	    	<g:HTMLPanel ui:field="settings" styleName="settings">
 	    		<!-- WiFi ESSID and selection -->
-	    		<g:HTMLPanel addStyleNames="{style.formRow}">
-	    			<g:Label ui:field="wifiLabel" addStyleNames="{style.labelForm}">WiFi</g:Label>
+	    		<g:HTMLPanel styleName="formRow">
+	    			<g:Label ui:field="wifiLabel" styleName="labelForm">WiFi</g:Label>
 	    			<g:TextBox ui:field="wifiText" />
 	    			<b:Button ui:field="searchWifi" icon="SEARCH" addStyleNames="{style.roundBtn}" />
 	    		</g:HTMLPanel>
 	    		<!-- WiFi password with a remember and possibility to see password -->
-	    		<g:HTMLPanel addStyleNames="{style.formRow}">
-	    			<g:Label ui:field="pwdLabel" addStyleNames="{style.labelForm}">Password</g:Label>
+	    		<g:HTMLPanel styleName="formRow">
+	    			<g:Label ui:field="pwdLabel" styleName="labelForm">Password</g:Label>
 	    			<g:PasswordTextBox ui:field="pwdText" />
 	    			<g:CheckBox ui:field="clearPwd" addStyleNames="{style.wifiOptions}">Show</g:CheckBox>
 	    			<g:CheckBox ui:field="rememberPwd" addStyleNames="{style.wifiOptions}">Remember</g:CheckBox>
 	    		</g:HTMLPanel>
 	    		<!-- IP -->
-	    		<g:HTMLPanel addStyleNames="{style.formRow}">
-	    			<g:Label ui:field="ipLabel" addStyleNames="{style.labelForm}">IP Address</g:Label>
+	    		<g:HTMLPanel styleName="formRow">
+	    			<g:Label ui:field="ipLabel" styleName="labelForm">IP Address</g:Label>
 	    			<g:TextBox ui:field="ipText" />
 	    		</g:HTMLPanel>
 	    		<!-- Netmask -->
-	    		<g:HTMLPanel addStyleNames="{style.formRow}">
-	    			<g:Label ui:field="nmLabel" addStyleNames="{style.labelForm}">Netmask</g:Label>
+	    		<g:HTMLPanel styleName="formRow">
+	    			<g:Label ui:field="nmLabel" styleName="labelForm">Netmask</g:Label>
 	    			<g:TextBox ui:field="nmText" />
 	    		</g:HTMLPanel>
 	    		<!-- Gateway -->
-	    		<g:HTMLPanel addStyleNames="{style.formRow}">
-	    			<g:Label ui:field="gwLabel" addStyleNames="{style.labelForm}">Gateway</g:Label>
+	    		<g:HTMLPanel styleName="formRow">
+	    			<g:Label ui:field="gwLabel" styleName="labelForm">Gateway</g:Label>
 	    			<g:TextBox ui:field="gwText" />
 	    		</g:HTMLPanel>
 	    	</g:HTMLPanel>

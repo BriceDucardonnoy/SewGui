@@ -125,6 +125,34 @@ body {
     -moz-box-direction: normal;
 }
 
+.labelForm {
+	width: 200px;
+}
+
+.formRow {
+	display: -webkit-box;
+    display: -webkit-flex;
+    display: flex;
+    
+    -webkit-box-orient: horizontal;
+    -moz-box-orient: horizontal;
+    
+    -webkit-box-direction: normal;
+    -moz-box-direction: normal;
+    
+    -ms-flex-direction: row;
+    -webkit-flex-direction: row;
+    flex-direction: row;
+    
+    margin-bottom: 10px;
+}
+
+.settings {
+	border: 1px solid purple;
+	margin: 10px;
+	font-size: 20px;
+}
+
 @media screen and (orientation: landscape) {
 	.networkRadioBox {
 		height: 100%;
