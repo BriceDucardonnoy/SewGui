@@ -59,10 +59,11 @@ public class WifiNetwork implements SewEntity, Serializable {
 			level = (short) (array.get(index++) & 0xFF);
 			noise = (short) (array.get(index++) & 0xFF);
 			quality = (short) (array.get(index++) & 0xFF);
-			for(int i = 0; index < 40 ; index++) {
-				tmpArray[i++] = array.get(index);
-			}
-			isSecurised = new String(tmpArray).startsWith("on") ? true : false;
+//			for(int i = 0; index < 40 ; index++) {
+//				tmpArray[i++] = array.get(index);
+//			}
+//			isSecurised = new String(tmpArray).startsWith("on") ? true : false;
+			isSecurised = array.get(index++) == 1 ? true : false;
 			logger.info(toString());
 		}
 	}
@@ -79,7 +80,7 @@ public class WifiNetwork implements SewEntity, Serializable {
 
 	private static int getSizeOfFrame(int protocolVersion) {
 		switch(protocolVersion) {
-		case 1: return 40;
+		case 1: return 37;
 		default: return 0;
 		}
 	}
