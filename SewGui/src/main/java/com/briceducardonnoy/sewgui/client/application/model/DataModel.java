@@ -125,7 +125,6 @@ public class DataModel {
 		eventBus.fireEvent(new DataModelEvent(new ArrayList<Integer>(registeredData.keySet())));
 	}
 	
-	// TODO BDY: create interface that must implement widgets which wish to be notified for datamodel change. Or let all be done by the presenter
 	// Load it from json file?
 	
 	public final static int IS_PHONEGAP_AVAILABLE;

@@ -65,4 +65,6 @@ class NetworkView extends ViewImpl implements NetworkPresenter.MyView {
     		pwdText.getElement().setAttribute("type", "password");
     	}
     }
+    
+    // TODO BDY: add primary DNS and secondary DNS
 }

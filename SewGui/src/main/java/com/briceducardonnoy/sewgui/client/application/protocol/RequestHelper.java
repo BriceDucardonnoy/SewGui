@@ -98,14 +98,18 @@ public class RequestHelper {
 
 	public final static byte VERSION = 1;
 	// Function codes <=> CMD
-	public final static byte DISCOVER = 0;
+	public final static byte DISCOVER 		= 0;
+	public final static byte STOPPAIRING 	= 1;
+	public final static byte GETNETWORK 	= 2;
 	
 	private static Logger logger = Logger.getLogger("SewGui");
 	private static final byte []version = {(byte) 0xFE, 0, 0, 0, 0, (byte) 0xFF};// Special request to ask for version number (version is 0). No CRC needed.
 	private static final byte []discover = {(byte) 0xFE, VERSION, 1, DISCOVER, 0, 0, (byte) 0xFF};
+	private static final byte []stopPairing = {(byte) 0xFE, VERSION, 1, STOPPAIRING, 0, 0, (byte) 0xFF};
 
 	static {
 		setCrcIntoByteArray(discover, getCrc16(discover));
+		setCrcIntoByteArray(stopPairing, getCrc16(stopPairing));
 	}
 	
 	private static int getCrc16(byte []datas) {
@@ -164,6 +168,11 @@ public class RequestHelper {
 		if(protocol == 1) return discover;
 		return new byte[0];
 	}
+	
+	public static byte[] stopPairing(int protocol) {
+		if(protocol == 1) return stopPairing;
+		return new byte[0];
+	}
 
 	/**
 	 * Check response is valid, eg. check for start and stop flags and check the CRC.<br/>
@@ -202,13 +211,17 @@ public class RequestHelper {
 		case DISCOVER:
 			eventBus.fireEvent(new WiFiDiscoverEvent(response.get(1), message));			
 			break;
+		case GETNETWORK:
+			// TODO BDY: GETNETWORK event NYI
+			break;
 		default: logger.warning("Code function unrecognized: " + cmd + " => do nothing");
 		}
 	}
 
 	public static void main(String[] args) {
-		setCrcIntoByteArray(discover, getCrc16(discover));
 		System.out.println("FF = " + String.valueOf(Character.toChars(255)));
+		setCrcIntoByteArray(discover, getCrc16(discover));
+		setCrcIntoByteArray(stopPairing, getCrc16(stopPairing));
 	}
 
 }
