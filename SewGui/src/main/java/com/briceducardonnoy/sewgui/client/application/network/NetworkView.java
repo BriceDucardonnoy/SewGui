@@ -22,10 +22,14 @@ package com.briceducardonnoy.sewgui.client.application.network;
 
 import javax.inject.Inject;
 
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.IsWidget;
+import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.gwtplatform.mvp.client.ViewImpl;
 
@@ -33,8 +37,9 @@ class NetworkView extends ViewImpl implements NetworkPresenter.MyView {
     interface Binder extends UiBinder<Widget, NetworkView> {
     }
 
-    @UiField
-    HTMLPanel main;
+    @UiField HTMLPanel main;
+    @UiField PasswordTextBox pwdText;
+    @UiField CheckBox clearPwd;
 
     @Inject
     NetworkView(Binder uiBinder) {
@@ -49,5 +54,15 @@ class NetworkView extends ViewImpl implements NetworkPresenter.MyView {
         } else {
             super.setInSlot(slot, content);
         }
+    }
+    
+    @UiHandler("clearPwd")
+    public void onCheck(ClickEvent event) {
+    	if(clearPwd.getValue()) {
+    		pwdText.getElement().setAttribute("type", "text");    		
+    	}
+    	else {
+    		pwdText.getElement().setAttribute("type", "password");
+    	}
     }
 }
