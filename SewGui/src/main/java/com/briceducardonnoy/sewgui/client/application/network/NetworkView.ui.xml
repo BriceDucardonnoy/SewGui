@@ -76,6 +76,16 @@
 	    			<g:Label ui:field="gwLabel" styleName="labelForm">Gateway</g:Label>
 	    			<g:TextBox ui:field="gwText" />
 	    		</g:HTMLPanel>
+	    		<!-- Primary DNS -->
+	    		<g:HTMLPanel styleName="formRow">
+	    			<g:Label ui:field="dns1Label" styleName="labelForm">Primary DNS</g:Label>
+	    			<g:TextBox ui:field="dns1Text" />
+	    		</g:HTMLPanel>
+	    		<!-- Secondary DNS -->
+	    		<g:HTMLPanel styleName="formRow">
+	    			<g:Label ui:field="dns2Label" styleName="labelForm">Secondary DNS</g:Label>
+	    			<g:TextBox ui:field="dns2Text" />
+	    		</g:HTMLPanel>
 	    	</g:HTMLPanel>
     	</g:HTMLPanel><!-- allSettings -->
     	<!-- Buttons -->

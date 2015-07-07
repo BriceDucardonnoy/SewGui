@@ -97,6 +97,8 @@ public class RequestHelper {
 	};
 
 	public final static byte VERSION = 1;
+	
+	public final static byte QUESTION_LENGTH = 1;// Number of bytes of a question request
 	// Function codes <=> CMD
 	public final static byte DISCOVER 		= 0;
 	public final static byte STOPPAIRING 	= 1;
@@ -104,14 +106,20 @@ public class RequestHelper {
 	
 	private static Logger logger = Logger.getLogger("SewGui");
 	private static final byte []version = {(byte) 0xFE, 0, 0, 0, 0, (byte) 0xFF};// Special request to ask for version number (version is 0). No CRC needed.
-	private static final byte []discover = {(byte) 0xFE, VERSION, 1, DISCOVER, 0, 0, (byte) 0xFF};
-	private static final byte []stopPairing = {(byte) 0xFE, VERSION, 1, STOPPAIRING, 0, 0, (byte) 0xFF};
+	private static final byte []discover = {(byte) 0xFE, VERSION, QUESTION_LENGTH, DISCOVER, 0, 0, (byte) 0xFF};
+	private static final byte []stopPairing = {(byte) 0xFE, VERSION, QUESTION_LENGTH, STOPPAIRING, 0, 0, (byte) 0xFF};
+	private static final byte []getNetwork = {(byte) 0xFE, VERSION, QUESTION_LENGTH, GETNETWORK, 0, 0, (byte) 0xFF};
 
 	static {
 		setCrcIntoByteArray(discover, getCrc16(discover));
 		setCrcIntoByteArray(stopPairing, getCrc16(stopPairing));
+		setCrcIntoByteArray(getNetwork, getCrc16(getNetwork));
 	}
 	
+	/*
+	 * Utils functions
+	 * No need to update here
+	 */
 	private static int getCrc16(byte []datas) {
 		int crc = 0x0000;
 
@@ -119,7 +127,7 @@ public class RequestHelper {
 			crc = (crc >>> 8) ^ crcTable[(crc ^ datas[i]) & 0xff];
 		}
 
-		//		logger.info("CRC16 = " + String.format("0x%04X ", crc) + ": " + crc);
+//		logger.info("CRC16 = " + String.format("0x%04X ", crc) + ": " + crc);
 		logger.info("CRC16 = 0x" + Integer.toHexString(crc & 0xFFFF) + ": " + crc);
 		return crc;
 	}
@@ -131,7 +139,7 @@ public class RequestHelper {
 			crc = (crc >>> 8) ^ crcTable[(crc ^ datas.get(i)) & 0xff];
 		}
 
-		//		logger.info("CRC16 = " + String.format("0x%04X ", crc) + ": " + crc);
+//		logger.info("CRC16 = " + String.format("0x%04X ", crc) + ": " + crc);
 		logger.info("CRC16 = 0x" + Integer.toHexString(crc & 0xFFFF) + ": " + crc);
 		return crc;
 	}
@@ -142,7 +150,7 @@ public class RequestHelper {
 
 		String output = "Frame = ";
 		for(byte b : datas) {
-			//			output += String.format("0x%02X ", b) + " ";
+//			output += String.format("0x%02X ", b) + " ";
 			output += "0x" + Integer.toHexString(b & 0xFF) + " ";
 		}
 		logger.info(output);
@@ -163,17 +171,7 @@ public class RequestHelper {
 		default: return -1;
 		}
 	}
-
-	public static byte[] wifiDiscover(int protocol) {
-		if(protocol == 1) return discover;
-		return new byte[0];
-	}
 	
-	public static byte[] stopPairing(int protocol) {
-		if(protocol == 1) return stopPairing;
-		return new byte[0];
-	}
-
 	/**
 	 * Check response is valid, eg. check for start and stop flags and check the CRC.<br/>
 	 * Then, depending of the <code>code function</code>, fire the corresponding event to allow 
@@ -218,10 +216,39 @@ public class RequestHelper {
 		}
 	}
 
+	/*
+	 * Requests helpers functions
+	 * Update here to add requests
+	 */
+	public static byte[] wifiDiscover(int protocol) {
+		switch (protocol) {
+			case 1: return discover;
+			default: return new byte[0];
+		}
+	}
+	
+	public static byte[] stopPairing(int protocol) {
+		switch (protocol) {
+			case 1: return stopPairing;
+			default: return new byte[0];
+		}
+	}
+	
+	public static byte[] getNetwork(int protocol) {
+		switch (protocol) {
+			case 1: return getNetwork;
+			default: return new byte[0];
+		}
+	}
+
 	public static void main(String[] args) {
 		System.out.println("FF = " + String.valueOf(Character.toChars(255)));
+		logger.info("Discover");
 		setCrcIntoByteArray(discover, getCrc16(discover));
+		logger.info("Stop pairing");
 		setCrcIntoByteArray(stopPairing, getCrc16(stopPairing));
+		logger.info("Get network");
+		setCrcIntoByteArray(getNetwork, getCrc16(getNetwork));
 	}
 
 }

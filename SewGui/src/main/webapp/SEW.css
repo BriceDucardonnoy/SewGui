@@ -196,13 +196,18 @@ body {
 	    -webkit-flex-direction: row;
 	    flex-direction: row;
 	    
-		width: 100%;
+		/*width: 100%;*/
+		width: 100vw;
 		
 		-webkit-box-pack: justify;
 	    -moz-box-pack: justify;
 	    -webkit-justify-content: space-around;
 	    -ms-flex-pack: space-around;
 		justify-content: space-around;
+	}
+	
+	.settings {
+		width: 100vw;
 	}
 	
 	.mainAlignment {

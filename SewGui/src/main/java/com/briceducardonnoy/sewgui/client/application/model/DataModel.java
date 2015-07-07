@@ -69,6 +69,26 @@ public class DataModel {
 		}
 	}
 	
+	/**
+	 * Group of IDs we wish to receive a {@link DataModelEvent} where an update appear.<br />
+	 * As it's a single user project, no need to know who the the requester
+	 * @param group The group {@link Group}
+	 */
+	public void subscribe(Group group) {
+		switch (group) {
+		case NETWORK:
+			subscribe(IP);
+			subscribe(NM);
+			subscribe(GW);
+			subscribe(PDNS);
+			subscribe(SDNS);
+			subscribe(WiFi);
+			subscribe(WiFi_PWD);
+			break;
+		default: break;
+		}
+	}
+	
 	public void unsubscribe(List<Integer> ids) {
 		for(Integer id : ids) {
 			unsubscribe(id);
@@ -77,6 +97,21 @@ public class DataModel {
 	
 	public void unsubscribe(Integer id) {
 		subscribedIds.remove(id);
+	}
+	
+	public void unsubscribe(Group group) {
+		switch (group) {
+		case NETWORK:
+			unsubscribe(IP);
+			unsubscribe(NM);
+			unsubscribe(GW);
+			unsubscribe(PDNS);
+			unsubscribe(SDNS);
+			unsubscribe(WiFi);
+			unsubscribe(WiFi_PWD);
+			break;
+		default: break;
+		}
 	}
 	
 	public Object getValue(Integer id) {
@@ -126,13 +161,35 @@ public class DataModel {
 	}
 	
 	// Load it from json file?
-	
+	/*
+	 * IDs
+	 */
 	public final static int IS_PHONEGAP_AVAILABLE;
 	public final static int IS_BLUETOOTH_CONNECTED;
+	public final static int IP;
+	public final static int NM;
+	public final static int GW;
+	public final static int PDNS;
+	public final static int SDNS;
+	public final static int WiFi;
+	public final static int WiFi_PWD;
 	static {
 		int i = 0;
 		IS_PHONEGAP_AVAILABLE = i++;
 		IS_BLUETOOTH_CONNECTED = i++;
+		IP = i++;
+		NM = i++;
+		GW = i++;
+		PDNS = i++;
+		SDNS = i++;
+		WiFi = i++;
+		WiFi_PWD = i++;
 	}
 	
+	/*
+	 * Groups
+	 */
+	public enum Group {
+		NETWORK;
+	}
 }

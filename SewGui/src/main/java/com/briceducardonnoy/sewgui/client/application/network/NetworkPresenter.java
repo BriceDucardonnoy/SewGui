@@ -20,18 +20,27 @@
  */
 package com.briceducardonnoy.sewgui.client.application.network;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
+import com.allen_sauer.gwt.log.client.Log;
 import com.briceducardonnoy.sewgui.client.application.ApplicationPresenter;
+import com.briceducardonnoy.sewgui.client.application.context.ApplicationContext;
+import com.briceducardonnoy.sewgui.client.application.protocol.RequestHelper;
 import com.briceducardonnoy.sewgui.client.application.protocol.models.WifiNetwork;
 import com.briceducardonnoy.sewgui.client.application.windows.entitylistpopup.EntityListPopupPresenter;
+import com.briceducardonnoy.sewgui.client.events.DataModelEvent;
+import com.briceducardonnoy.sewgui.client.events.DataModelEvent.DataModelHandler;
 import com.briceducardonnoy.sewgui.client.events.WiFiDiscoverEvent;
 import com.briceducardonnoy.sewgui.client.events.WiFiDiscoverEvent.WiFiDiscoverHandler;
 import com.briceducardonnoy.sewgui.client.place.NameTokens;
+import com.google.gwt.core.client.Callback;
 import com.google.gwt.event.shared.GwtEvent.Type;
+import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
+import com.google.web.bindery.event.shared.HandlerRegistration;
 import com.gwtplatform.mvp.client.Presenter;
 import com.gwtplatform.mvp.client.View;
 import com.gwtplatform.mvp.client.annotations.ContentSlot;
@@ -52,11 +61,15 @@ public class NetworkPresenter extends Presenter<NetworkPresenter.MyView, Network
 	}
 
 	private static Logger logger = Logger.getLogger("SewGui");
+	private List<HandlerRegistration> handlers;
 	@Inject EntityListPopupPresenter<WifiNetwork> wifiListPopup;
+	@Inject ApplicationContext context;
 
 	@Inject
-	NetworkPresenter(EventBus eventBus, MyView view, MyProxy proxy) {
+	NetworkPresenter(EventBus eventBus, MyView view, MyProxy proxy, ApplicationContext context) {
 		super(eventBus, view, proxy, ApplicationPresenter.SLOT_SetMainContent);
+		this.context = context;
+		handlers = new ArrayList<>();
 	}
 
 	protected void onBind() {
@@ -75,9 +88,52 @@ public class NetworkPresenter extends Presenter<NetworkPresenter.MyView, Network
 
 	protected void onReveal() {
 		super.onReveal();
+		if(!context.isPhoneGapAvailable() || !context.isConnected2Device()) {
+			logger.info("Not connected => do nothing");
+			Log.info("Not connected => do nothing");
+			return;
+		}
+		// Add network update handler or data model update on their IDs? or data model with network group
+		getEventBus().addHandler(DataModelEvent.getType(), dmHandler);
+		// Ask network data to remote unit
+		byte []request = RequestHelper.getNetwork(context.getCurrentProtocol());
+		context.getBluetoothPlugin().write(request, getNetworkCB);
+	}
+	
+	@Override
+	protected void onHide() {
+		super.onHide();
+		// Remove handlers
+		for(HandlerRegistration handler : handlers) {
+			handler.removeHandler();
+		}
 	}
 
 	protected void onReset() {
 		super.onReset();
 	}
+	
+	/*
+	 * Handlers and callback
+	 */
+	private DataModelHandler dmHandler = new DataModelHandler() {
+		@Override
+		public void onDataModelUpdated(DataModelEvent event) {
+			logger.info("DataModelEvent for network page");
+			logger.info(event.toString());
+			// TODO BDY: write here the parse code
+		}
+	};
+	
+	private Callback<Object, String> getNetworkCB = new Callback<Object, String>() {
+		@Override
+		public void onFailure(String reason) {
+			logger.warning("Get nework failed " + reason);
+			Window.alert("Get network failed " + reason);
+		}
+		@Override
+		public void onSuccess(Object result) {
+			logger.info("Get network succeed");
+		}
+	};
 }

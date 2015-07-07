@@ -131,7 +131,7 @@ public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView,
 		registerHandler(getEventBus().addHandler(DataModelEvent.getType(), new DataModelEvent.DataModelHandler() {
 			@Override
 			public void onDataModelUpdated(DataModelEvent event) {
-				if(event.getUpdatedIds().contains(DataModel.IS_BLUETOOTH_CONNECTED)) {// TODO BDY: add and remove then for other page in the onReveal/onHide
+				if(event.getUpdatedIds().contains(DataModel.IS_BLUETOOTH_CONNECTED)) {
 					logger.info("Update bluetooth state to " + context.isConnected2Device());
 					getView().getBluetoothStatus().setResource(
 							context.isConnected2Device() ? SewImagesResources.INSTANCE.bluetoothOn() : SewImagesResources.INSTANCE.bluetoothOff());
@@ -402,7 +402,7 @@ public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView,
 	private Callback<Object, String> writeCB = new Callback<Object, String>() {
 		@Override
 		public void onFailure(String reason) {
-			logger.info("Write failed " + reason);
+			logger.warning("Write failed " + reason);
 			Window.alert("Write failed " + reason);
 		}
 

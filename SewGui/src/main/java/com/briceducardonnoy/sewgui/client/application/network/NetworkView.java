@@ -66,5 +66,4 @@ class NetworkView extends ViewImpl implements NetworkPresenter.MyView {
     	}
     }
     
-    // TODO BDY: add primary DNS and secondary DNS
 }
