@@ -27,6 +27,7 @@ import java.util.logging.Logger;
 import com.allen_sauer.gwt.log.client.Log;
 import com.briceducardonnoy.sewgui.client.application.ApplicationPresenter;
 import com.briceducardonnoy.sewgui.client.application.context.ApplicationContext;
+import com.briceducardonnoy.sewgui.client.application.model.DataModel;
 import com.briceducardonnoy.sewgui.client.application.model.DataModel.Group;
 import com.briceducardonnoy.sewgui.client.application.protocol.RequestHelper;
 import com.briceducardonnoy.sewgui.client.application.protocol.models.WifiNetwork;
@@ -52,6 +53,15 @@ import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 
 public class NetworkPresenter extends Presenter<NetworkPresenter.MyView, NetworkPresenter.MyProxy>  {
 	interface MyView extends View  {
+		void setDhcp(final boolean isDhcp);
+		void setWifi(final boolean isWifi);
+		void setIp(final String ip);
+		void setNetmask(final String netmask);
+		void setGateway(final String gateway);
+		void setPrimaryDNS(final String dns1);
+		void setSecondaryDNS(final String dns2);
+		void setEssid(String value);
+		void setPwd(String value);
 	}
 	@ContentSlot
 	public static final Type<RevealContentHandler<?>> SLOT_Network = new Type<RevealContentHandler<?>>();
@@ -125,6 +135,16 @@ public class NetworkPresenter extends Presenter<NetworkPresenter.MyView, Network
 			logger.info("DataModelEvent for network page");
 			logger.info(event.getUpdatedIds().toString());
 			// TODO BDY: Remove the extra logger line...
+			getView().setDhcp((Boolean) context.getModel().getValue(DataModel.IS_DHCP));
+			String essid = (String) context.getModel().getValue(DataModel.WiFi_ESSID);
+			getView().setWifi(essid != null && !essid.isEmpty());
+			getView().setIp((String) context.getModel().getValue(DataModel.IP));
+			getView().setNetmask((String) context.getModel().getValue(DataModel.NM));
+			getView().setGateway((String) context.getModel().getValue(DataModel.GW));
+			getView().setPrimaryDNS((String) context.getModel().getValue(DataModel.PDNS));
+			getView().setSecondaryDNS((String) context.getModel().getValue(DataModel.SDNS));
+			getView().setEssid((String) context.getModel().getValue(DataModel.WiFi_ESSID));
+			getView().setPwd((String) context.getModel().getValue(DataModel.WiFi_PWD));
 		}
 	};
 	
