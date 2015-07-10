@@ -22,6 +22,8 @@ package com.briceducardonnoy.sewgui.client.application.network;
 
 import javax.inject.Inject;
 
+import org.gwtbootstrap3.client.ui.Button;
+
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -57,6 +59,8 @@ class NetworkView extends ViewImpl implements NetworkPresenter.MyView {
 
 	@UiField TextBox dns1Text;
 	@UiField TextBox dns2Text;
+	
+	@UiField Button searchWifi;
 
 	@Inject
 	NetworkView(Binder uiBinder) {
@@ -82,11 +86,6 @@ class NetworkView extends ViewImpl implements NetworkPresenter.MyView {
 		}
 	}
 
-	@UiHandler("searchWifi")
-	public void onSearchWifi(ClickEvent event) {
-		// TODO BDY: NYI discover (see ApplicationPresenterXXX)
-	}
-	
 	@Override
 	public void setDhcp(final boolean isDhcp) {
 		if(isDhcp) {
@@ -161,6 +160,11 @@ class NetworkView extends ViewImpl implements NetworkPresenter.MyView {
 
 		dns1Text.setEnabled(enabled);;
 		dns2Text.setEnabled(enabled);;
+	}
+
+	@Override
+	public Button getDiscoverWiFi() {
+		return searchWifi;
 	}
 
 }

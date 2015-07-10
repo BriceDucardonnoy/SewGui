@@ -387,7 +387,7 @@ public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView,
 			}
 		}
 	};
-	// Write
+	// Discover Wifi. To remove as soon as implemented in network view. Discover button is only here for test purpose.
 	private ClickHandler discoverH = new ClickHandler() {
 		@Override
 		public void onClick(ClickEvent event) {

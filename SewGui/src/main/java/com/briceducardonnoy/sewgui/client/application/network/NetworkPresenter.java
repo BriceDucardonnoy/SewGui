@@ -24,6 +24,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
+import org.gwtbootstrap3.client.ui.Button;
+
 import com.allen_sauer.gwt.log.client.Log;
 import com.briceducardonnoy.sewgui.client.application.ApplicationPresenter;
 import com.briceducardonnoy.sewgui.client.application.context.ApplicationContext;
@@ -38,6 +40,8 @@ import com.briceducardonnoy.sewgui.client.events.WiFiDiscoverEvent;
 import com.briceducardonnoy.sewgui.client.events.WiFiDiscoverEvent.WiFiDiscoverHandler;
 import com.briceducardonnoy.sewgui.client.place.NameTokens;
 import com.google.gwt.core.client.Callback;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
@@ -63,6 +67,7 @@ public class NetworkPresenter extends Presenter<NetworkPresenter.MyView, Network
 		void setEssid(String value);
 		void setPwd(String value);
 		void setWidgetEnabled(boolean b);
+		Button getDiscoverWiFi();
 	}
 	@ContentSlot
 	public static final Type<RevealContentHandler<?>> SLOT_Network = new Type<RevealContentHandler<?>>();
@@ -86,16 +91,8 @@ public class NetworkPresenter extends Presenter<NetworkPresenter.MyView, Network
 
 	protected void onBind() {
 		super.onBind();
-		registerHandler(getEventBus().addHandler(WiFiDiscoverEvent.getType(), new WiFiDiscoverHandler() {
-			@Override
-			public void onWiFiDiscover(WiFiDiscoverEvent event) {
-				logger.info("Wifi discover event received");
-				List<WifiNetwork> wifis = WifiNetwork.toWifiNetwork(event.getMessage(), event.getProtocolVersion());
-				logger.info(wifis.toString());
-				wifiListPopup.setDevices(wifis);
-				addToPopupSlot(wifiListPopup, true);
-			}
-		}));
+		registerHandler(getView().getDiscoverWiFi().addClickHandler(discoverH));
+		registerHandler(getEventBus().addHandler(WiFiDiscoverEvent.getType(), wifiFoundH));
 	}
 
 	protected void onReveal() {
@@ -149,6 +146,7 @@ public class NetworkPresenter extends Presenter<NetworkPresenter.MyView, Network
 				return;
 			}
 			// TODO BDY: Remove the extra logger line...
+			// TODO BDY: Create a system similar of activatePage which (dis)abled the widget depending of the status instead of write manually a "setWidgetEnabled"
 			getView().setDhcp((Boolean) context.getModel().getValue(DataModel.IS_DHCP));
 			String essid = (String) context.getModel().getValue(DataModel.WiFi_ESSID);
 			getView().setWifi(essid != null && !essid.isEmpty());
@@ -173,6 +171,41 @@ public class NetworkPresenter extends Presenter<NetworkPresenter.MyView, Network
 		public void onSuccess(Object result) {
 			logger.info("Get network succeed");
 			getView().setWidgetEnabled(true);
+		}
+	};
+	// WiFi
+	private ClickHandler discoverH = new ClickHandler() {
+		@Override
+		public void onClick(ClickEvent event) {
+			if(!context.isPhoneGapAvailable() || !context.isConnected2Device()) {
+				logger.info("Not connected => do nothing");
+				Log.info("Not connected => do nothing");
+				return;
+			}
+			byte []request = RequestHelper.wifiDiscover(context.getCurrentProtocol());
+//			logger.info("Write " + datas);
+			context.getBluetoothPlugin().write(request, discoverCB);
+		}
+	};
+	private Callback<Object, String> discoverCB = new Callback<Object, String>() {
+		@Override
+		public void onFailure(String reason) {
+			logger.warning("Write failed " + reason);
+			Window.alert("Write failed " + reason);
+		}
+		@Override
+		public void onSuccess(Object result) {
+			logger.info("Write success: " + result);
+		}
+	};
+	private WiFiDiscoverHandler wifiFoundH = new WiFiDiscoverHandler() {
+		@Override
+		public void onWiFiDiscover(WiFiDiscoverEvent event) {
+			logger.info("Wifi discover event received");
+			List<WifiNetwork> wifis = WifiNetwork.toWifiNetwork(event.getMessage(), event.getProtocolVersion());
+			logger.info(wifis.toString());
+			wifiListPopup.setDevices(wifis);
+			addToPopupSlot(wifiListPopup, true);
 		}
 	};
 }
