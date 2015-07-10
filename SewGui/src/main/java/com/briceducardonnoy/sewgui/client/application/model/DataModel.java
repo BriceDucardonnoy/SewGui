@@ -24,8 +24,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.logging.Logger;
 
 import com.briceducardonnoy.sewgui.client.events.DataModelEvent;
+import com.briceducardonnoy.sewgui.client.events.DataModelEvent.DataModelHandler;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
@@ -33,6 +35,7 @@ import com.google.web.bindery.event.shared.EventBus;
 @Singleton
 public class DataModel {
 
+	private static Logger logger = Logger.getLogger("SewGui");
 //	HashMap<Integer, Object> globalData;
 	private HashMap<Integer, Object> registeredData;
 	private List<Integer> subscribedIds;
@@ -45,6 +48,13 @@ public class DataModel {
 		this.eventBus = eventBus;
 		registeredData = new HashMap<>();
 		subscribedIds = new ArrayList<>();
+		eventBus.addHandler(DataModelEvent.getRawType(), new DataModelHandler() {
+			@Override
+			public void onDataModelUpdated(DataModelEvent event) {
+				logger.info("Get raw data to integrate (sz=" + event.getValues2update().size() + ")");
+				updateValues(event.getValues2update());
+			}
+		});
 	}
 	
 	/**
@@ -82,7 +92,8 @@ public class DataModel {
 			subscribe(GW);
 			subscribe(PDNS);
 			subscribe(SDNS);
-			subscribe(WiFi);
+			subscribe(IS_DHCP);
+			subscribe(WiFi_ESSID);
 			subscribe(WiFi_PWD);
 			break;
 		default: break;
@@ -107,7 +118,8 @@ public class DataModel {
 			unsubscribe(GW);
 			unsubscribe(PDNS);
 			unsubscribe(SDNS);
-			unsubscribe(WiFi);
+			unsubscribe(IS_DHCP);
+			unsubscribe(WiFi_ESSID);
 			unsubscribe(WiFi_PWD);
 			break;
 		default: break;
@@ -121,12 +133,27 @@ public class DataModel {
 	public void updateValues(HashMap<Integer, Object> values) {
 		updateValues(values, true);
 	}
-	
+	// TODO BDY: write JavaDoc
 	public void updateValues(HashMap<Integer, Object> values, boolean signal) {
+		if(values == null) {
+			logger.warning("HashMap of values to update is null. Skip the update process");
+			return;
+		}
 		for(Entry<Integer, Object> entry : values.entrySet()) {
 			updateValue(entry.getKey(), entry.getValue(), false);// Send one DataModelEvent for all
 		}
-		eventBus.fireEvent(new DataModelEvent(new ArrayList<Integer>(values.keySet())));
+		eventBus.fireEvent(new DataModelEvent(getListOfSubscribedIdsFromHM(values)));
+	}
+	
+	private List<Integer> getListOfSubscribedIdsFromHM(HashMap<Integer, Object> values) {
+		List<Integer> notify = new ArrayList<>();
+		if(values == null || values.isEmpty()) return notify;
+		for(Integer key : values.keySet()) {
+			if(subscribedIds.contains(key)) {
+				notify.add(key);
+			}
+		}
+		return notify;
 	}
 	
 	/**
@@ -150,7 +177,7 @@ public class DataModel {
 	public boolean updateValue(Integer id, Object value, boolean signal) {
 		if(value == null) return false;
 		boolean ret = !value.equals(registeredData.put(id, value));
-		if(signal) {
+		if(signal && subscribedIds.contains(id)) {
 			eventBus.fireEvent(new DataModelEvent(id));
 		}
 		return ret;
@@ -158,6 +185,10 @@ public class DataModel {
 	
 	public void notify4AllKeys() {
 		eventBus.fireEvent(new DataModelEvent(new ArrayList<Integer>(registeredData.keySet())));
+	}
+	
+	public void notifyAllSubscribedKeys() {
+		eventBus.fireEvent(new DataModelEvent(subscribedIds));
 	}
 	
 	// Load it from json file?
@@ -171,8 +202,10 @@ public class DataModel {
 	public final static int GW;
 	public final static int PDNS;
 	public final static int SDNS;
-	public final static int WiFi;
+	public final static int WiFi_ESSID;
 	public final static int WiFi_PWD;
+	public final static int IS_DHCP;
+	
 	static {
 		int i = 0;
 		IS_PHONEGAP_AVAILABLE = i++;
@@ -182,7 +215,8 @@ public class DataModel {
 		GW = i++;
 		PDNS = i++;
 		SDNS = i++;
-		WiFi = i++;
+		IS_DHCP = i++;
+		WiFi_ESSID = i++;
 		WiFi_PWD = i++;
 	}
 	

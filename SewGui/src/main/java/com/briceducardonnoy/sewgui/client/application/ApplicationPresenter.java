@@ -98,6 +98,8 @@ public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView,
 		super(eventBus, view, proxy, RevealType.Root);
 		context = ctx;
 		this.model = model;
+		model.subscribe(DataModel.IS_PHONEGAP_AVAILABLE);
+		model.subscribe(DataModel.IS_BLUETOOTH_CONNECTED);
 		phoneGap = context.getPhoneGap();
 	}
 	
@@ -128,7 +130,7 @@ public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView,
 		}));
 		phoneGap.initializePhoneGap();
 		// DataModel
-		registerHandler(getEventBus().addHandler(DataModelEvent.getType(), new DataModelEvent.DataModelHandler() {
+		registerHandler(getEventBus().addHandler(DataModelEvent.getSerializedType(), new DataModelEvent.DataModelHandler() {
 			@Override
 			public void onDataModelUpdated(DataModelEvent event) {
 				if(event.getUpdatedIds().contains(DataModel.IS_BLUETOOTH_CONNECTED)) {

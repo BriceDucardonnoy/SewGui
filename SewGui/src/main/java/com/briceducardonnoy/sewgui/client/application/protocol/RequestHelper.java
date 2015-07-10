@@ -25,6 +25,8 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import com.briceducardonnoy.sewgui.client.application.exceptions.IncorrectFrameException;
+import com.briceducardonnoy.sewgui.client.application.protocol.models.NetworkInfos;
+import com.briceducardonnoy.sewgui.client.events.DataModelEvent;
 import com.briceducardonnoy.sewgui.client.events.WiFiDiscoverEvent;
 import com.google.gwt.typedarrays.client.Int8ArrayNative;
 import com.google.web.bindery.event.shared.EventBus;
@@ -210,7 +212,7 @@ public class RequestHelper {
 			eventBus.fireEvent(new WiFiDiscoverEvent(response.get(1), message));			
 			break;
 		case GETNETWORK:
-			// TODO BDY: GETNETWORK event NYI
+			eventBus.fireEvent(new DataModelEvent(new NetworkInfos(message, response.get(1)).toHashMap()));
 			break;
 		default: logger.warning("Code function unrecognized: " + cmd + " => do nothing");
 		}

@@ -18,19 +18,10 @@
  * arising from, out of or in connection with the software or the use or other 
  * dealings in the Software.
  */
-package com.briceducardonnoy.sewgui.client.application.windows;
+package com.briceducardonnoy.sewgui.client.application.protocol.models;
 
-import com.briceducardonnoy.sewgui.client.events.SewEntitySelectedEvent.SewEntitySelectedHandler;
-import com.briceducardonnoy.sewgui.client.widgets.ImageButton;
-import com.google.gwt.event.shared.GwtEvent.Type;
+import java.util.HashMap;
 
-public interface SewEntity {
-	public Type<SewEntitySelectedHandler> getType();
-	public String getId();
-	/**
-	 * Method called in case where the <code>SewEntity</code> needs to 
-	 * be represented in a popup containing a button for each instance.
-	 * @return An <code>ImageButton</code> representing the <code>SewEntity</code>
-	 */
-	public ImageButton createImageButtonView();
+public interface IsPartOfDataModel {
+	public HashMap<Integer, Object> toHashMap();
 }

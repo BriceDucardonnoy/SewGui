@@ -21,13 +21,15 @@
 package com.briceducardonnoy.sewgui.client.application.protocol.models;
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Logger;
 
+import com.briceducardonnoy.sewgui.client.application.model.DataModel;
 import com.briceducardonnoy.sewgui.client.application.protocol.RequestHelper;
 import com.briceducardonnoy.sewgui.client.utils.Utils;
 
-public class NetworkInfos implements Serializable {
+public class NetworkInfos implements IsPartOfDataModel, Serializable {
 
 	private static final long serialVersionUID = -4171111589426819693L;
 	private static Logger logger = Logger.getLogger("SewGui");
@@ -135,6 +137,28 @@ public class NetworkInfos implements Serializable {
 
 	public final void setWifi(final boolean isWifi) {
 		this.isWifi = isWifi;
+	}
+
+	@Override
+	public HashMap<Integer, Object> toHashMap() {
+		HashMap<Integer, Object> serialized = new HashMap<>();
+		
+		serialized.put(DataModel.IP, ip);
+		serialized.put(DataModel.NM, nm);
+		serialized.put(DataModel.GW, gw);
+		serialized.put(DataModel.PDNS, dns1);
+		serialized.put(DataModel.SDNS, dns2);
+		serialized.put(DataModel.IS_DHCP, isDhcp);
+		if(isWifi) {
+			serialized.put(DataModel.WiFi_ESSID, essid);
+			serialized.put(DataModel.WiFi_PWD, pwd);
+		}
+		else {
+			serialized.put(DataModel.WiFi_ESSID, "");
+			serialized.put(DataModel.WiFi_PWD, "");
+		}
+		
+		return serialized;
 	}
 
 }

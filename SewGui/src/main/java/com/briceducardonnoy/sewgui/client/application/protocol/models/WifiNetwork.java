@@ -29,6 +29,7 @@ import org.gwtbootstrap3.client.ui.constants.IconType;
 
 import com.briceducardonnoy.sewgui.client.application.protocol.RequestHelper;
 import com.briceducardonnoy.sewgui.client.application.windows.SewEntity;
+import com.briceducardonnoy.sewgui.client.events.SewEntitySelectedEvent;
 import com.briceducardonnoy.sewgui.client.events.SewEntitySelectedEvent.SewEntitySelectedHandler;
 import com.briceducardonnoy.sewgui.client.images.SewImagesResources;
 import com.briceducardonnoy.sewgui.client.widgets.ImageButton;
@@ -157,8 +158,7 @@ public class WifiNetwork implements SewEntity, Serializable {
 	
 	@Override
 	public Type<SewEntitySelectedHandler> getType() {
-		// TODO Auto-generated method stub
-		return null;
+		return SewEntitySelectedEvent.getType();
 	}
 
 	@Override

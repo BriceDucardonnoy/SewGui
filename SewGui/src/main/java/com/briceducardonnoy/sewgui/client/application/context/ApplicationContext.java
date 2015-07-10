@@ -51,6 +51,10 @@ public class ApplicationContext {
 //		}
 //		return instance;
 //	}
+	
+	public DataModel getModel() {
+		return model;
+	}
 
 	public PhoneGap getPhoneGap() {
 		return phoneGap;
