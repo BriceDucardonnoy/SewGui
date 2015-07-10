@@ -42,8 +42,8 @@
 		    		<g:RadioButton ui:field="wifi" name="connectionType">WiFi</g:RadioButton>
 		    	</g:HTMLPanel>
 		    	<g:HTMLPanel ui:field="configType" styleName="networkRadioBox">
-		    		<g:RadioButton ui:field="dhcp" name="configType">DHCP</g:RadioButton><br/>
-		    		<g:RadioButton ui:field="staticConf" name="configType" value="true">Static</g:RadioButton>
+		    		<g:RadioButton ui:field="dhcp" name="configType" value="true">DHCP</g:RadioButton><br/>
+		    		<g:RadioButton ui:field="staticConf" name="configType">Static</g:RadioButton>
 		    	</g:HTMLPanel>
 	    	</g:HTMLPanel>
 	    	<!-- Settings: IP, NM, GW... -->

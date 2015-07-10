@@ -62,6 +62,7 @@ public class NetworkPresenter extends Presenter<NetworkPresenter.MyView, Network
 		void setSecondaryDNS(final String dns2);
 		void setEssid(String value);
 		void setPwd(String value);
+		void setWidgetEnabled(boolean b);
 	}
 	@ContentSlot
 	public static final Type<RevealContentHandler<?>> SLOT_Network = new Type<RevealContentHandler<?>>();
@@ -99,14 +100,15 @@ public class NetworkPresenter extends Presenter<NetworkPresenter.MyView, Network
 
 	protected void onReveal() {
 		super.onReveal();
-		if(!context.isPhoneGapAvailable() || !context.isConnected2Device()) {
-			logger.info("Not connected => do nothing");
-			Log.info("Not connected => do nothing");
-			return;
-		}
 		// Subscribe IDs to DataModel and add handlers
 		context.getModel().subscribe(Group.NETWORK);
 		handlers.add(getEventBus().addHandler(DataModelEvent.getSerializedType(), dmHandler));
+		if(!context.isPhoneGapAvailable() || !context.isConnected2Device()) {
+			logger.info("Not connected => do nothing");
+			Log.info("Not connected => do nothing");
+			getView().setWidgetEnabled(false);
+			return;
+		}
 		// Ask network data to remote unit
 		byte []request = RequestHelper.getNetwork(context.getCurrentProtocol());
 		context.getBluetoothPlugin().write(request, getNetworkCB);
@@ -134,6 +136,18 @@ public class NetworkPresenter extends Presenter<NetworkPresenter.MyView, Network
 		public void onDataModelUpdated(DataModelEvent event) {
 			logger.info("DataModelEvent for network page");
 			logger.info(event.getUpdatedIds().toString());
+			// If it's related to the connection, send the network informations request
+			if(event.getUpdatedIds().contains(DataModel.IS_BLUETOOTH_CONNECTED)) {
+				logger.info("Update bluetooth state to " + context.isConnected2Device());
+				if(context.isConnected2Device()) {
+					byte []request = RequestHelper.getNetwork(context.getCurrentProtocol());
+					context.getBluetoothPlugin().write(request, getNetworkCB);
+				}
+				else {
+					getView().setWidgetEnabled(false);
+				}
+				return;
+			}
 			// TODO BDY: Remove the extra logger line...
 			getView().setDhcp((Boolean) context.getModel().getValue(DataModel.IS_DHCP));
 			String essid = (String) context.getModel().getValue(DataModel.WiFi_ESSID);
@@ -153,10 +167,12 @@ public class NetworkPresenter extends Presenter<NetworkPresenter.MyView, Network
 		public void onFailure(String reason) {
 			logger.warning("Get nework failed " + reason);
 			Window.alert("Get network failed " + reason);
+			getView().setWidgetEnabled(false);
 		}
 		@Override
 		public void onSuccess(Object result) {
 			logger.info("Get network succeed");
+			getView().setWidgetEnabled(true);
 		}
 	};
 }

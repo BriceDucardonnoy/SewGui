@@ -142,4 +142,25 @@ class NetworkView extends ViewImpl implements NetworkPresenter.MyView {
 		pwdText.setText(pwd);
 	}
 
+	@Override
+	public void setWidgetEnabled(boolean enabled) {
+		clearPwd.setEnabled(enabled);
+		dhcp.setEnabled(enabled);;
+		staticConf.setEnabled(enabled);;
+		ethernet.setEnabled(enabled);;
+		wifi.setEnabled(enabled);;
+
+		wifiText.setEnabled(enabled);;
+		pwdText.setEnabled(enabled);;
+		clearPwd.setEnabled(enabled);;
+		rememberPwd.setEnabled(enabled);;
+
+		ipText.setEnabled(enabled);;
+		nmText.setEnabled(enabled);;
+		gwText.setEnabled(enabled);;
+
+		dns1Text.setEnabled(enabled);;
+		dns2Text.setEnabled(enabled);;
+	}
+
 }
