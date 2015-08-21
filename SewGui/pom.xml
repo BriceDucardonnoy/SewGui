@@ -11,7 +11,7 @@
     <properties>
         <!-- client -->
         <gwt.version>2.7.0</gwt.version>
-        <gwtp.version>1.4</gwtp.version>
+        <gwtp.version>1.5</gwtp.version>
         <gin.version>2.1.2</gin.version>
         <!-- <gwt-pushstate.version>1.1.4</gwt-pushstate.version> -->
         <gwt.compiler.localWorkers>6</gwt.compiler.localWorkers>

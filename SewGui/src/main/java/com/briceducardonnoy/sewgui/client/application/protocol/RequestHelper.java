@@ -209,7 +209,7 @@ public class RequestHelper {
 		
 		switch(cmd) {
 		case DISCOVER:
-			eventBus.fireEvent(new WiFiDiscoverEvent(response.get(1), message));			
+			eventBus.fireEvent(new WiFiDiscoverEvent(response.get(1), message));
 			break;
 		case GETNETWORK:
 			eventBus.fireEvent(new DataModelEvent(new NetworkInfos(message, response.get(1)).toHashMap()));

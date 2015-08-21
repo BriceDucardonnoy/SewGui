@@ -30,15 +30,14 @@ import com.googlecode.gwtphonegap.client.PhoneGap;
 @Singleton
 public class ApplicationContext {
 
-	@Inject PhoneGap phoneGap;
-	@Inject DataModel model;
-	
+	private PhoneGap phoneGap;
+	private DataModel model;
 	private BluetoothSerialImpl bluetoothSerial;
 	private int deviceProtocol = 0;	
 	
 	@Inject
 	ApplicationContext(final PhoneGap pg, final DataModel model) {
-		phoneGap = pg;
+		phoneGap = pg;// TODO BDY: if network LAN ok, color the LAN icon
 		this.model = model;
 		phoneGap.getLog().setRemoteLogServiceUrl("http://192.168.1.46:8080/gwt-log");
 		model.updateValue(DataModel.IS_PHONEGAP_AVAILABLE, false, false);

@@ -22,6 +22,7 @@ package com.briceducardonnoy.sewgui.client.application.network;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
 import org.gwtbootstrap3.client.ui.Button;
@@ -42,18 +43,16 @@ import com.briceducardonnoy.sewgui.client.place.NameTokens;
 import com.google.gwt.core.client.Callback;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 import com.gwtplatform.mvp.client.Presenter;
 import com.gwtplatform.mvp.client.View;
-import com.gwtplatform.mvp.client.annotations.ContentSlot;
 import com.gwtplatform.mvp.client.annotations.NameToken;
 import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
+import com.gwtplatform.mvp.client.presenter.slots.NestedSlot;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
-import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 
 public class NetworkPresenter extends Presenter<NetworkPresenter.MyView, NetworkPresenter.MyProxy>  {
 	interface MyView extends View  {
@@ -67,20 +66,22 @@ public class NetworkPresenter extends Presenter<NetworkPresenter.MyView, Network
 		void setEssid(String value);
 		void setPwd(String value);
 		void setWidgetEnabled(boolean b);
-		Button getDiscoverWiFi();
+		Button getDiscoverWiFiBtn();
+		Button getCancelBtn();
+		Button getSubmitBtn();
 	}
-	@ContentSlot
-	public static final Type<RevealContentHandler<?>> SLOT_Network = new Type<RevealContentHandler<?>>();
+	
+	public static final NestedSlot SLOT_Network = new NestedSlot();
 
 	@NameToken(NameTokens.network)
 	@ProxyCodeSplit
 	interface MyProxy extends ProxyPlace<NetworkPresenter> {
 	}
 
-	private static Logger logger = Logger.getLogger("SewGui");
+	private static Logger logger = LogManager.getLogManager().getLogger("SewGui");
 	private List<HandlerRegistration> handlers;
+	private ApplicationContext context;
 	@Inject EntityListPopupPresenter<WifiNetwork> wifiListPopup;
-	@Inject ApplicationContext context;
 
 	@Inject
 	NetworkPresenter(EventBus eventBus, MyView view, MyProxy proxy, ApplicationContext context) {
@@ -91,8 +92,9 @@ public class NetworkPresenter extends Presenter<NetworkPresenter.MyView, Network
 
 	protected void onBind() {
 		super.onBind();
-		registerHandler(getView().getDiscoverWiFi().addClickHandler(discoverH));
+		registerHandler(getView().getDiscoverWiFiBtn().addClickHandler(discoverH));
 		registerHandler(getEventBus().addHandler(WiFiDiscoverEvent.getType(), wifiFoundH));
+		
 	}
 
 	protected void onReveal() {
@@ -109,6 +111,8 @@ public class NetworkPresenter extends Presenter<NetworkPresenter.MyView, Network
 		// Ask network data to remote unit
 		byte []request = RequestHelper.getNetwork(context.getCurrentProtocol());
 		context.getBluetoothPlugin().write(request, getNetworkCB);
+		getView().getCancelBtn().setEnabled(false);
+		getView().getSubmitBtn().setEnabled(false);
 	}
 	
 	@Override
@@ -145,7 +149,7 @@ public class NetworkPresenter extends Presenter<NetworkPresenter.MyView, Network
 				}
 				return;
 			}
-			// TODO BDY: Remove the extra logger line...
+			// TODO BDY: Store local password
 			// TODO BDY: Create a system similar of activatePage which (dis)abled the widget depending of the status instead of write manually a "setWidgetEnabled"
 			getView().setDhcp((Boolean) context.getModel().getValue(DataModel.IS_DHCP));
 			String essid = (String) context.getModel().getValue(DataModel.WiFi_ESSID);

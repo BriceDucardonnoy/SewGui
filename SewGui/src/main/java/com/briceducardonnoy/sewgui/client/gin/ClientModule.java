@@ -11,18 +11,17 @@ import com.gwtplatform.mvp.shared.proxy.RouteTokenFormatter;
 
 /**
  * See more on setting up the PlaceManager on <a
- * href="// See more on: https://github.com/ArcBees/GWTP/wiki/PlaceManager">DefaultModule's > DefaultPlaceManager</a>
+ * href="// See more on: https://github.com/ArcBees/GWTP/wiki/PlaceManager" > DefaultModule's > DefaultPlaceManager</a>
  */
 public class ClientModule extends AbstractPresenterModule {
-    @Override
+	@Override
     protected void configure() {
         install(new DefaultModule.Builder().tokenFormatter(RouteTokenFormatter.class).build());
         install(new ApplicationModule());
 
-        // DefaultPlaceManager Places
-        bindConstant().annotatedWith(DefaultPlace.class).to(NameTokens.status);
-        bindConstant().annotatedWith(ErrorPlace.class).to(NameTokens.status);// TODO BDY: implement error and unauthorized places
-        bindConstant().annotatedWith(UnauthorizedPlace.class).to(NameTokens.status);
-        
+		// DefaultPlaceManager Places
+		bindConstant().annotatedWith(DefaultPlace.class).to(NameTokens.status);
+		bindConstant().annotatedWith(ErrorPlace.class).to(NameTokens.status);// TODO BDY: implement error and unauthorized places
+		bindConstant().annotatedWith(UnauthorizedPlace.class).to(NameTokens.status);
     }
 }

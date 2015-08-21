@@ -20,6 +20,7 @@
  */
 package com.briceducardonnoy.sewgui.client.application;
 
+import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
 import org.gwtbootstrap3.client.ui.AnchorListItem;
@@ -43,7 +44,6 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.Window.Navigator;
 import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
@@ -57,7 +57,7 @@ class ApplicationView extends ViewImpl implements ApplicationPresenter.MyView {
 	}
 
 	private final Translate translate = GWT.create(Translate.class);
-	private static Logger logger = Logger.getLogger("SewGui");
+	private static Logger logger = LogManager.getLogManager().getLogger("SewGui");
 
 	@Inject PlaceManager placeManager;
 	@Inject ApplicationContext context;
@@ -90,6 +90,8 @@ class ApplicationView extends ViewImpl implements ApplicationPresenter.MyView {
 		initWidget(uiBinder.createAndBindUi(this));
 		Log.info(translate.Bonjour() + " from appsView");
 		
+		bindSlot(ApplicationPresenter.SLOT_SetMainContent, main);
+		
 		statusGo = new PlaceRequest.Builder().nameToken(NameTokens.getStatus()).build();
 		networkGo = new PlaceRequest.Builder().nameToken(NameTokens.getNetwork()).build();
 		streamGo = new PlaceRequest.Builder().nameToken(NameTokens.getStream()).build();
@@ -107,6 +109,8 @@ class ApplicationView extends ViewImpl implements ApplicationPresenter.MyView {
 		logger.info("Navigator UA = " + Navigator.getUserAgent() + ", \nplatform is " + Navigator.getPlatform() + ", \nappname is " + Navigator.getAppName()
 				+ " \nand appversion is " + Navigator.getAppVersion());
 		
+//		logger.log(Level.WARNING, "This is what an exception might look like", new RuntimeException("2 + 2 = 5"));
+		
 		bluetoothStatus = new Image(SewImagesResources.INSTANCE.bluetoothOff());
 		wifiStatus = new Icon(IconType.WIFI);
 		wiredStatus = new Icon(IconType.SITEMAP);
@@ -118,14 +122,14 @@ class ApplicationView extends ViewImpl implements ApplicationPresenter.MyView {
 		brand.add(wifiStatus);
 	}
 
-	@Override
-	public void setInSlot(Object slot, IsWidget content) {
-		if (slot == ApplicationPresenter.SLOT_SetMainContent) {
-			main.setWidget(content);
-		} else {
-			super.setInSlot(slot, content);
-		}
-	}
+//	@Override
+//	public void setInSlot(Object slot, IsWidget content) {
+//		if (slot == ApplicationPresenter.SLOT_SetMainContent) {
+//			main.setWidget(content);
+//		} else {
+//			super.setInSlot(slot, content);
+//		}
+//	}
 
 	@UiHandler("brand")
 	void onBrandSelected(ClickEvent event) {

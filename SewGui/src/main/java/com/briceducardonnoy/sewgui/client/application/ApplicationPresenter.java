@@ -30,6 +30,7 @@ import com.allen_sauer.gwt.log.client.Log;
 import com.briceducardonnoy.sewgui.client.application.context.ApplicationContext;
 import com.briceducardonnoy.sewgui.client.application.exceptions.IncorrectFrameException;
 import com.briceducardonnoy.sewgui.client.application.model.DataModel;
+import com.briceducardonnoy.sewgui.client.application.model.FormModel;
 import com.briceducardonnoy.sewgui.client.application.protocol.RequestHelper;
 import com.briceducardonnoy.sewgui.client.application.protocol.models.WifiNetwork;
 import com.briceducardonnoy.sewgui.client.application.windows.entitylistpopup.EntityListPopupPresenter;
@@ -46,7 +47,6 @@ import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.shared.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.typedarrays.client.Int8ArrayNative;
 import com.google.gwt.typedarrays.shared.ArrayBuffer;
 import com.google.gwt.user.client.Window;
@@ -60,10 +60,9 @@ import com.googlecode.gwtphonegap.client.PhoneGapTimeoutEvent;
 import com.googlecode.gwtphonegap.client.PhoneGapTimeoutHandler;
 import com.gwtplatform.mvp.client.Presenter;
 import com.gwtplatform.mvp.client.View;
-import com.gwtplatform.mvp.client.annotations.ContentSlot;
 import com.gwtplatform.mvp.client.annotations.ProxyStandard;
+import com.gwtplatform.mvp.client.presenter.slots.NestedSlot;
 import com.gwtplatform.mvp.client.proxy.Proxy;
-import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 
 public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView, ApplicationPresenter.MyProxy> {
 	interface MyView extends View {
@@ -76,18 +75,19 @@ public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView,
 
 	private static Logger logger = Logger.getLogger("SewGui");
 
-	@Inject ApplicationContext context;
-	@Inject DataModel model;
-	@Inject EntityListPopupPresenter<BtEntity> btListPres;
-	@Inject EntityListPopupPresenter<WifiNetwork> wifiListPres;
+	private ApplicationContext context;
+	private DataModel model;
 	private PhoneGap phoneGap;
 	private Translate translate = GWT.create(Translate.class);
 //	private int count = 2;
 	private String deviceId;
 	private boolean need2connect = false;
+
+	@Inject EntityListPopupPresenter<BtEntity> btListPres;
+	@Inject EntityListPopupPresenter<WifiNetwork> wifiListPres;
+	@Inject FormModel form;
 	
-	@ContentSlot
-	public static final Type<RevealContentHandler<?>> SLOT_SetMainContent = new Type<>();
+	public static final NestedSlot SLOT_SetMainContent = new NestedSlot();
 
 	@ProxyStandard
 	interface MyProxy extends Proxy<ApplicationPresenter> {
@@ -98,7 +98,7 @@ public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView,
 		super(eventBus, view, proxy, RevealType.Root);
 		context = ctx;
 		this.model = model;
-		model.subscribe(DataModel.IS_PHONEGAP_AVAILABLE);
+		this.model.subscribe(DataModel.IS_PHONEGAP_AVAILABLE);
 		model.subscribe(DataModel.IS_BLUETOOTH_CONNECTED);
 		phoneGap = context.getPhoneGap();
 	}
@@ -106,6 +106,7 @@ public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView,
 	@Override
 	protected void onBind() {
 		super.onBind();
+		form.resetForm();
 		// PhoneGap initialization
 		registerHandler(phoneGap.addHandler(new PhoneGapAvailableHandler() {
 			@Override
