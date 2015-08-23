@@ -70,16 +70,6 @@ class NetworkView extends ViewImpl implements NetworkPresenter.MyView {
 		bindSlot(NetworkPresenter.SLOT_Network, main);
 	}
 
-//	@Override
-//	public void setInSlot(Object slot, IsWidget content) {
-//		if (slot == NetworkPresenter.SLOT_Network) {
-//			main.clear();
-//			main.add(content);
-//		} else {
-//			super.setInSlot(slot, content);
-//		}
-//	}
-
 	@UiHandler("clearPwd")
 	public void onShowPassword(ClickEvent event) {
 		if (clearPwd.getValue()) {
@@ -111,32 +101,32 @@ class NetworkView extends ViewImpl implements NetworkPresenter.MyView {
 
 	@Override
 	public void setIp(final String ip) {
-		ipText.setOriginalText(ip);
+		ipText.setOriginalValue(ip);
 	}
 
 	@Override
 	public void setNetmask(final String netmask) {
-		nmText.setOriginalText(netmask);
+		nmText.setOriginalValue(netmask);
 	}
 
 	@Override
 	public void setGateway(final String gateway) {
-		gwText.setOriginalText(gateway);
+		gwText.setOriginalValue(gateway);
 	}
 
 	@Override
 	public void setPrimaryDNS(final String dns1) {
-		dns1Text.setOriginalText(dns1);
+		dns1Text.setOriginalValue(dns1);
 	}
 
 	@Override
 	public void setSecondaryDNS(final String dns2) {
-		dns2Text.setOriginalText(dns2);
+		dns2Text.setOriginalValue(dns2);
 	}
 
 	@Override
 	public void setEssid(String essid) {
-		wifiText.setOriginalText(essid);wifiText.record();
+		wifiText.setOriginalValue(essid);//wifiText.record();
 	}
 
 	@Override
