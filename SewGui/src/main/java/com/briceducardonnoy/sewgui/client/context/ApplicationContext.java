@@ -18,10 +18,10 @@
  * arising from, out of or in connection with the software or the use or other 
  * dealings in the Software.
  */
-package com.briceducardonnoy.sewgui.client.application.context;
+package com.briceducardonnoy.sewgui.client.context;
 
-import com.briceducardonnoy.sewgui.client.application.model.DataModel;
 import com.briceducardonnoy.sewgui.client.application.protocol.RequestHelper;
+import com.briceducardonnoy.sewgui.client.model.DataModel;
 import com.briceducardonnoy.sewgui.client.wrappers.BluetoothSerialImpl;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;

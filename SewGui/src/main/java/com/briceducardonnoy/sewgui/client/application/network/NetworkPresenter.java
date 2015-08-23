@@ -29,16 +29,18 @@ import org.gwtbootstrap3.client.ui.Button;
 
 import com.allen_sauer.gwt.log.client.Log;
 import com.briceducardonnoy.sewgui.client.application.ApplicationPresenter;
-import com.briceducardonnoy.sewgui.client.application.context.ApplicationContext;
-import com.briceducardonnoy.sewgui.client.application.model.DataModel;
-import com.briceducardonnoy.sewgui.client.application.model.DataModel.Group;
 import com.briceducardonnoy.sewgui.client.application.protocol.RequestHelper;
 import com.briceducardonnoy.sewgui.client.application.protocol.models.WifiNetwork;
 import com.briceducardonnoy.sewgui.client.application.windows.entitylistpopup.EntityListPopupPresenter;
+import com.briceducardonnoy.sewgui.client.context.ApplicationContext;
 import com.briceducardonnoy.sewgui.client.events.DataModelEvent;
 import com.briceducardonnoy.sewgui.client.events.DataModelEvent.DataModelHandler;
 import com.briceducardonnoy.sewgui.client.events.WiFiDiscoverEvent;
 import com.briceducardonnoy.sewgui.client.events.WiFiDiscoverEvent.WiFiDiscoverHandler;
+import com.briceducardonnoy.sewgui.client.model.DataModel;
+import com.briceducardonnoy.sewgui.client.model.DataModel.Group;
+import com.briceducardonnoy.sewgui.client.model.IFormManaged;
+import com.briceducardonnoy.sewgui.client.model.IFormManager;
 import com.briceducardonnoy.sewgui.client.place.NameTokens;
 import com.google.gwt.core.client.Callback;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -54,7 +56,8 @@ import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
 import com.gwtplatform.mvp.client.presenter.slots.NestedSlot;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 
-public class NetworkPresenter extends Presenter<NetworkPresenter.MyView, NetworkPresenter.MyProxy>  {
+public class NetworkPresenter extends Presenter<NetworkPresenter.MyView, NetworkPresenter.MyProxy> implements IFormManager {
+	
 	interface MyView extends View  {
 		void setDhcp(final boolean isDhcp);
 		void setWifi(final boolean isWifi);
@@ -69,6 +72,7 @@ public class NetworkPresenter extends Presenter<NetworkPresenter.MyView, Network
 		Button getDiscoverWiFiBtn();
 		Button getCancelBtn();
 		Button getSubmitBtn();
+		List<IFormManaged<?>> getFormWidgets();
 	}
 	
 	public static final NestedSlot SLOT_Network = new NestedSlot();
@@ -81,6 +85,7 @@ public class NetworkPresenter extends Presenter<NetworkPresenter.MyView, Network
 	private static Logger logger = LogManager.getLogManager().getLogger("SewGui");
 	private List<HandlerRegistration> handlers;
 	private ApplicationContext context;
+	private List<IFormManaged<? extends Comparable<?>>> formWidgets;
 	@Inject EntityListPopupPresenter<WifiNetwork> wifiListPopup;
 
 	@Inject
@@ -88,17 +93,24 @@ public class NetworkPresenter extends Presenter<NetworkPresenter.MyView, Network
 		super(eventBus, view, proxy, ApplicationPresenter.SLOT_SetMainContent);
 		this.context = context;
 		handlers = new ArrayList<>();
+		formWidgets = new ArrayList<>();
 	}
 
+	@Override
 	protected void onBind() {
 		super.onBind();
 		registerHandler(getView().getDiscoverWiFiBtn().addClickHandler(discoverH));
 		registerHandler(getEventBus().addHandler(WiFiDiscoverEvent.getType(), wifiFoundH));
-		
+		register(getView().getFormWidgets());
 	}
 
 	protected void onReveal() {
 		super.onReveal();
+		// List widget registered
+		for(IFormManaged<?> widget : formWidgets) {
+			Log.info("Have registered " + widget.getName());
+			logger.info("Have registered " + widget.getName());
+		}
 		// Subscribe IDs to DataModel and add handlers
 		context.getModel().subscribe(Group.NETWORK);
 		handlers.add(getEventBus().addHandler(DataModelEvent.getSerializedType(), dmHandler));
@@ -125,8 +137,24 @@ public class NetworkPresenter extends Presenter<NetworkPresenter.MyView, Network
 		}
 	}
 
-	protected void onReset() {
-		super.onReset();
+	/*
+	 * IFormManager inherited methods
+	 */
+	@Override
+	public void register(List<IFormManaged<?>> widgets) {
+		for(IFormManaged<? extends Comparable<?>> widget : widgets) {
+			formWidgets.add(widget);
+		}
+	}
+	
+	@Override
+	public void submit() {
+		// TODO BDY: NYI submit
+	}
+	
+	@Override
+	public void cancel() {
+		// TODO BDY: NYI cancel
 	}
 	
 	/*
@@ -212,4 +240,5 @@ public class NetworkPresenter extends Presenter<NetworkPresenter.MyView, Network
 			addToPopupSlot(wifiListPopup, true);
 		}
 	};
+
 }

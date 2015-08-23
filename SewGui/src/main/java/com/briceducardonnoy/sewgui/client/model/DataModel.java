@@ -18,7 +18,7 @@
  * arising from, out of or in connection with the software or the use or other 
  * dealings in the Software.
  */
-package com.briceducardonnoy.sewgui.client.application.model;
+package com.briceducardonnoy.sewgui.client.model;
 
 import java.util.ArrayList;
 import java.util.HashMap;

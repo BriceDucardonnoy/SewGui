@@ -20,44 +20,24 @@
  */
 package com.briceducardonnoy.sewgui.client.widgets;
 
-import com.briceducardonnoy.sewgui.client.application.model.IFormManaged;
+import com.briceducardonnoy.sewgui.client.model.IFormManaged;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.inject.Inject;
 
 public class TextBoxForm extends TextBox implements IFormManaged<String> {
 	private String originalText;
-//	@Inject FormModel form;
-//	
-//	@Inject
-//	public TextBoxForm() {
-//		super();
-//		form = new FormModel();
-//		form.addWidget(this);
-//		originalText = "";
-//	}
-//	
-//	@UiFactory
-//	public void createTextBoxForm(FormModel form) {
-//		this.form = form;
-//	}
-	
-//	@UiConstructor
+	private String name = "Unknown";
+
 	@Inject
 	public TextBoxForm() {
 		super();
-//		form.addWidget(this);
 		originalText = "";
 	}
-	
 	
 	@Override
 	public boolean isDirty() {
 		return !originalText.equals(getText());
 	}
-	
-//	public void record() {
-//		form.addWidget(this);// Cannot be done in constructor. Do it through an event?
-//	}
 
 	@Override
 	public void submit() {
@@ -79,4 +59,14 @@ public class TextBoxForm extends TextBox implements IFormManaged<String> {
 		originalText = originalValue;
 		setText(originalValue);
 	}
+
+	@Override
+	public String getName() {
+		return name;
+	}
+
+	public void setName(final String name) {
+		this.name = name;
+	}
+
 }

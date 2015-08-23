@@ -25,8 +25,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Logger;
 
-import com.briceducardonnoy.sewgui.client.application.model.DataModel;
 import com.briceducardonnoy.sewgui.client.application.protocol.RequestHelper;
+import com.briceducardonnoy.sewgui.client.model.DataModel;
 import com.briceducardonnoy.sewgui.client.utils.Utils;
 
 public class NetworkInfos implements IsPartOfDataModel, Serializable {

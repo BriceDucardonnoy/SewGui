@@ -20,10 +20,14 @@
  */
 package com.briceducardonnoy.sewgui.client.application.network;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.inject.Inject;
 
 import org.gwtbootstrap3.client.ui.Button;
 
+import com.briceducardonnoy.sewgui.client.model.IFormManaged;
 import com.briceducardonnoy.sewgui.client.widgets.TextBoxForm;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -37,6 +41,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.gwtplatform.mvp.client.ViewImpl;
 
 class NetworkView extends ViewImpl implements NetworkPresenter.MyView {
+	
     interface Binder extends UiBinder<Widget, NetworkView> {
     }
 
@@ -68,6 +73,18 @@ class NetworkView extends ViewImpl implements NetworkPresenter.MyView {
 	NetworkView(Binder uiBinder) {
 		initWidget(uiBinder.createAndBindUi(this));
 		bindSlot(NetworkPresenter.SLOT_Network, main);
+	}
+
+	@Override
+	public List<IFormManaged<?>> getFormWidgets() {
+		List<IFormManaged<?>> widgets = new ArrayList<>();
+		widgets.add(wifiText);
+		widgets.add(ipText);
+		widgets.add(nmText);
+		widgets.add(gwText);
+		widgets.add(dns1Text);
+		widgets.add(dns2Text);
+		return widgets;
 	}
 
 	@UiHandler("clearPwd")

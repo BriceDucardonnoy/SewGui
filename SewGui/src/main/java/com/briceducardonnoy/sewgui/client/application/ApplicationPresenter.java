@@ -27,19 +27,18 @@ import java.util.logging.Logger;
 import org.gwtbootstrap3.client.ui.Button;
 
 import com.allen_sauer.gwt.log.client.Log;
-import com.briceducardonnoy.sewgui.client.application.context.ApplicationContext;
 import com.briceducardonnoy.sewgui.client.application.exceptions.IncorrectFrameException;
-import com.briceducardonnoy.sewgui.client.application.model.DataModel;
-import com.briceducardonnoy.sewgui.client.application.model.FormModel;
 import com.briceducardonnoy.sewgui.client.application.protocol.RequestHelper;
 import com.briceducardonnoy.sewgui.client.application.protocol.models.WifiNetwork;
 import com.briceducardonnoy.sewgui.client.application.windows.entitylistpopup.EntityListPopupPresenter;
+import com.briceducardonnoy.sewgui.client.context.ApplicationContext;
 import com.briceducardonnoy.sewgui.client.customCallbacks.ListCallback;
 import com.briceducardonnoy.sewgui.client.events.DataModelEvent;
 import com.briceducardonnoy.sewgui.client.events.SewEntitySelectedEvent;
 import com.briceducardonnoy.sewgui.client.events.SewEntitySelectedEvent.BTDeviceSelectedHandler;
 import com.briceducardonnoy.sewgui.client.images.SewImagesResources;
 import com.briceducardonnoy.sewgui.client.lang.Translate;
+import com.briceducardonnoy.sewgui.client.model.DataModel;
 import com.briceducardonnoy.sewgui.client.wrappers.BluetoothSerialImpl;
 import com.briceducardonnoy.sewgui.client.wrappers.models.BtEntity;
 import com.google.gwt.core.client.Callback;
@@ -85,7 +84,6 @@ public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView,
 
 	@Inject EntityListPopupPresenter<BtEntity> btListPres;
 	@Inject EntityListPopupPresenter<WifiNetwork> wifiListPres;
-	@Inject FormModel form;
 	
 	public static final NestedSlot SLOT_SetMainContent = new NestedSlot();
 
@@ -106,7 +104,6 @@ public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView,
 	@Override
 	protected void onBind() {
 		super.onBind();
-		form.resetForm();
 		// PhoneGap initialization
 		registerHandler(phoneGap.addHandler(new PhoneGapAvailableHandler() {
 			@Override

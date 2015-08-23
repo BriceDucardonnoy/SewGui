@@ -18,37 +18,12 @@
  * arising from, out of or in connection with the software or the use or other 
  * dealings in the Software.
  */
-package com.briceducardonnoy.sewgui.client.application.model;
+package com.briceducardonnoy.sewgui.client.model;
 
+import java.util.List;
 
-/**
- * Interface to implement by a widget which needs a submit / cancel operation in a form.
- * @author Brice DUCARDONNOY
- *
- * @param <A> Primitive object like String, Integer, Double...
- */
-public interface IFormManaged<A extends Comparable<A>> {
-	/**
-	 * Indicates weather or not the widget has its original value changed and not submitted
-	 * @return True if widget's value isn't saved
-	 */
-	public boolean isDirty();
-	/**
-	 * Save the value in the model and mark the widget as not dirty
-	 */
+public interface IFormManager {
+	public void register(List<IFormManaged<?>> widgets);
 	public void submit();
-	/**
-	 * Restore the last submitted value
-	 */
 	public void cancel();
-	/**
-	 * Get the original value which is used to know if the widget is dirty
-	 * @return The original value
-	 */
-	public A getOriginalValue();
-	/**
-	 * Set the original value to compare with to get the dirty status
-	 * @param originalValue
-	 */
-	public void setOriginalValue(final A originalValue);
 }
