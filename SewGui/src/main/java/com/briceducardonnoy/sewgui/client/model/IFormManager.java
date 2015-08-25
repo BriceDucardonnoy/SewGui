@@ -26,4 +26,10 @@ public interface IFormManager {
 	public void register(List<IFormManaged<?>> widgets);
 	public void submit();
 	public void cancel();
+	/**
+	 * Get the group name of the form.<br/>
+	 * This is used in pair with the widgets inside of the current form
+	 * @return The name of the group
+	 */
+	public String getFormGroup();
 }

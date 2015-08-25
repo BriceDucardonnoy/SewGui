@@ -28,6 +28,8 @@ import java.util.logging.Logger;
 
 import com.briceducardonnoy.sewgui.client.events.DataModelEvent;
 import com.briceducardonnoy.sewgui.client.events.DataModelEvent.DataModelHandler;
+import com.briceducardonnoy.sewgui.client.events.DirtyWidgetEvent;
+import com.briceducardonnoy.sewgui.client.events.DirtyWidgetEvent.DirtyWidgetHandler;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
@@ -39,6 +41,7 @@ public class DataModel {
 //	HashMap<Integer, Object> globalData;
 	private HashMap<Integer, Object> registeredData;
 	private List<Integer> subscribedIds;
+	private List<IFormManaged<?>> dirtyWidget;
 	
 	@Inject EventBus eventBus;
 	
@@ -48,6 +51,8 @@ public class DataModel {
 		this.eventBus = eventBus;
 		registeredData = new HashMap<>();
 		subscribedIds = new ArrayList<>();
+		dirtyWidget = new ArrayList<>();
+		// The model is never free instead of leaving the application => no need to register the handlers
 		eventBus.addHandler(DataModelEvent.getRawType(), new DataModelHandler() {
 			@Override
 			public void onDataModelUpdated(DataModelEvent event) {
@@ -55,11 +60,75 @@ public class DataModel {
 				updateValues(event.getValues2update());
 			}
 		});
+		eventBus.addHandler(DirtyWidgetEvent.getType(), new DirtyWidgetHandler() {
+			@Override
+			public void onDirtyWidget(DirtyWidgetEvent event) {
+				logger.info("DIRTY EVENT SEEN");
+				if(event.isDirty()) {
+					markWidgetAsDirty(event.getDirtyWidget());
+				}
+				else {
+					markWidgetAsClean(event.getDirtyWidget());
+				}
+			}
+		});
+	}
+	
+	/*
+	 * Dirty widget management part
+	 */
+	/**
+	 * Indicate if the model contains a {@link IFormManaged} not stored remotely
+	 * @return True if at least one data needs to be saved on remote unit
+	 */
+	public boolean isDirtyModel() {
+		return dirtyWidget.size() > 0;
 	}
 	
 	/**
+	 * Mark the model as clean. Eg. all {@link IFormManaged} have been saved
+	 */
+	public void resetDirtyState() {
+		dirtyWidget.clear();
+		// TODO BDY: send a noDirtyEvent for buttons
+	}
+	
+	/**
+	 * Get the list of dirty {@link IFormManaged}
+	 * @return A list of dirty {@link IFormManaged}
+	 */
+	public List<IFormManaged<?>> getDirtyWidget() {
+		return dirtyWidget;
+	}
+	
+	/**
+	 * Mark a {@link IFormManaged} as dirty if not already
+	 * @param widget The {@link IFormManaged} object to mark as dirty
+	 */
+	public void markWidgetAsDirty(IFormManaged<?> widget) {
+		if(!dirtyWidget.contains(widget)) {
+			dirtyWidget.add(widget);
+		}
+		// TODO BDY: send a DirtyEvent for buttons if size > 1
+	}
+	
+	/**
+	 * Mark a {@link IFormManaged} as clean if it was seen as dirty
+	 * @param widget The element to be removed from this list, if present
+	 */
+	public void markWidgetAsClean(IFormManaged<?> widget) {
+		if(dirtyWidget.contains(widget)) {
+			dirtyWidget.remove(widget);
+			// TODO BDY: send a noDirtyEvent for buttons if size if now 0 and 1 before
+		}
+	}
+	
+	/*
+	 * Subscription and notification part
+	 */
+	/**
 	 * List of the IDs that we wish to receive a {@link DataModelEvent} where an update appear.<br />
-	 * As it's a single user project, no need to know who the the requester
+	 * As it's a single user project, no need to know who the requester is
 	 * @param ids The list of IDs to listen
 	 */
 	public void subscribe(List<Integer> ids) {
@@ -70,7 +139,7 @@ public class DataModel {
 	
 	/**
 	 * ID that we wish to receive a {@link DataModelEvent} where an update appear.<br />
-	 * As it's a single user project, no need to know who the the requester
+	 * As it's a single user project, no need to know who the requester is
 	 * @param id The ID to listen
 	 */
 	public void subscribe(Integer id) {
@@ -81,7 +150,7 @@ public class DataModel {
 	
 	/**
 	 * Group of IDs we wish to receive a {@link DataModelEvent} where an update appear.<br />
-	 * As it's a single user project, no need to know who the the requester
+	 * As it's a single user project, no need to know who the requester is
 	 * @param group The group {@link Group}
 	 */
 	public void subscribe(Group group) {
@@ -100,16 +169,31 @@ public class DataModel {
 		}
 	}
 	
+	/**
+	 * List of the IDs that we wish to stop receiving a {@link DataModelEvent} where an update appear.<br />
+	 * As it's a single user project, no need to know who the requester is
+	 * @param ids The list of IDs to listen
+	 */
 	public void unsubscribe(List<Integer> ids) {
 		for(Integer id : ids) {
 			unsubscribe(id);
 		}
 	}
 	
+	/**
+	 * ID that we wish to stop receiving a {@link DataModelEvent} where an update appear.<br />
+	 * As it's a single user project, no need to know who the requester is
+	 * @param id The ID to listen
+	 */
 	public void unsubscribe(Integer id) {
 		subscribedIds.remove(id);
 	}
 	
+	/**
+	 * Group of IDs we wish to stop receiving a {@link DataModelEvent} where an update appear.<br />
+	 * As it's a single user project, no need to know who the requester is
+	 * @param group The group {@link Group}
+	 */
 	public void unsubscribe(Group group) {
 		switch (group) {
 		case NETWORK:
@@ -126,14 +210,31 @@ public class DataModel {
 		}
 	}
 	
+	/**
+	 * Get the value of a data in stored in the model whatever it's still registered or not.<br/>
+	 * <b>WARNING:</b> if the data with id <code>id</code> is no more registered for update,
+	 * the value can be obsolete.
+	 * @param id The id of the data to get value
+	 * @return The value or <code>null</code> if the data isn't found
+	 */
 	public Object getValue(Integer id) {
 		return registeredData.get(id);
 	}
 	
+	/**
+	 * Update the values of subscribed IDs present in <code>values</code> and fire one {@link DataModelEvent} with all the IDs
+	 * @param values A map of ID <-> value pair
+	 */
 	public void updateValues(HashMap<Integer, Object> values) {
 		updateValues(values, true);
 	}
-	// TODO BDY: write JavaDoc
+	
+	/**
+	 * Update the values of subscribed IDs present in <code>values</code> and fire a {@link DataModelEvent} with all the IDs
+	 * depending of <code>signal</code>
+	 * @param values A map of ID <-> value pair
+	 * @param signal Indicates weather or not the {@link DataModelEvent} has to be sent after the updtae
+	 */
 	public void updateValues(HashMap<Integer, Object> values, boolean signal) {
 		if(values == null) {
 			logger.warning("HashMap of values to update is null. Skip the update process");
@@ -183,15 +284,22 @@ public class DataModel {
 		return ret;
 	}
 	
+	/**
+	 * Fire a {@link DataModelEvent} for all registered IDs, whatever they are still subscribed
+	 * notification or not
+	 */
 	public void notify4AllKeys() {
 		eventBus.fireEvent(new DataModelEvent(new ArrayList<Integer>(registeredData.keySet())));
 	}
 	
+	/**
+	 * Fire a {@link DataModelEvent} for all subscribed IDs
+	 */
 	public void notifyAllSubscribedKeys() {
 		eventBus.fireEvent(new DataModelEvent(subscribedIds));
 	}
 	
-	// Load it from json file?
+	// TODO BDY: Load it from json file?
 	/*
 	 * IDs
 	 */

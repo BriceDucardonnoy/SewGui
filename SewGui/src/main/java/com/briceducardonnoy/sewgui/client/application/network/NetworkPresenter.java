@@ -110,6 +110,7 @@ public class NetworkPresenter extends Presenter<NetworkPresenter.MyView, Network
 		for(IFormManaged<?> widget : formWidgets) {
 			Log.info("Have registered " + widget.getName());
 			logger.info("Have registered " + widget.getName());
+//			handlers.add(widget.asWidget().addDomHandler(Utils.leaveEditableWidgetHandler, BlurEvent.getType()));
 		}
 		// Subscribe IDs to DataModel and add handlers
 		context.getModel().subscribe(Group.NETWORK);
@@ -155,6 +156,11 @@ public class NetworkPresenter extends Presenter<NetworkPresenter.MyView, Network
 	@Override
 	public void cancel() {
 		// TODO BDY: NYI cancel
+	}
+	
+	@Override
+	public String getFormGroup() {
+		return "NETWORK";
 	}
 	
 	/*

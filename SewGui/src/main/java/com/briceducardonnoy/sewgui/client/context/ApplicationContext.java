@@ -25,6 +25,7 @@ import com.briceducardonnoy.sewgui.client.model.DataModel;
 import com.briceducardonnoy.sewgui.client.wrappers.BluetoothSerialImpl;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.google.web.bindery.event.shared.EventBus;
 import com.googlecode.gwtphonegap.client.PhoneGap;
 
 @Singleton
@@ -35,10 +36,13 @@ public class ApplicationContext {
 	private BluetoothSerialImpl bluetoothSerial;
 	private int deviceProtocol = 0;	
 	
+	@Inject static EventBus eventBus;
+	
 	@Inject
-	ApplicationContext(final PhoneGap pg, final DataModel model) {
-		phoneGap = pg;// TODO BDY: if network LAN ok, color the LAN icon
+	ApplicationContext(final PhoneGap pg, final DataModel model, final EventBus eventBus) {
+		phoneGap = pg;// TODO BDY: if network LAN ok, color the LAN icon (green if ping www.google.com, orange if only 8.8.8.8). Same for WiFi (need ping in embed).
 		this.model = model;
+		ApplicationContext.eventBus = eventBus;
 		phoneGap.getLog().setRemoteLogServiceUrl("http://192.168.1.46:8080/gwt-log");
 		model.updateValue(DataModel.IS_PHONEGAP_AVAILABLE, false, false);
 		model.updateValue(DataModel.IS_BLUETOOTH_CONNECTED, false, false);
@@ -57,6 +61,10 @@ public class ApplicationContext {
 
 	public PhoneGap getPhoneGap() {
 		return phoneGap;
+	}
+	
+	public static EventBus getEventBus() {
+		return eventBus;
 	}
 
 	public boolean isPhoneGapAvailable() {

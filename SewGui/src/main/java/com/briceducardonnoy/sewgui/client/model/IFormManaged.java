@@ -20,13 +20,16 @@
  */
 package com.briceducardonnoy.sewgui.client.model;
 
+import com.google.gwt.user.client.ui.IsWidget;
+
 /**
- * Interface to implement by a widget which needs a submit / cancel operation in a form.
+ * Interface to implement by a widget which needs a submit / cancel operation in a form.<br/>
+ * Extends <code>IsWidget</code> to get access to all kind of handlers
  * @author Brice DUCARDONNOY
  *
  * @param <A> Primitive object like String, Integer, Double...
  */
-public interface IFormManaged<A extends Comparable<A>> {
+public interface IFormManaged<A extends Comparable<A>> extends IsWidget {
 	/**
 	 * Indicates weather or not the widget has its original value changed and not submitted
 	 * @return True if widget's value isn't saved
@@ -55,4 +58,9 @@ public interface IFormManaged<A extends Comparable<A>> {
 	 * @return The name of the widget
 	 */
 	public String getName();
+	/**
+	 * Get the form group the widget belongs to.
+	 * @return The name of the group
+	 */
+	public String getFormGroup();
 }

@@ -23,6 +23,8 @@ package com.briceducardonnoy.sewgui.client.utils;
 import java.util.List;
 
 public class Utils {
+	
+//	private static Logger logger = LogManager.getLogManager().getLogger("SewGui");
 
 	public static int getIntFromByteList(List<Byte> array, int idx) {
 		if(idx + 4 > array.size()) {
@@ -57,5 +59,20 @@ public class Utils {
 		
 		return new String(res).trim();
 	}
+	
+//	public static BlurHandler leaveEditableWidgetHandler = new BlurHandler() {
+//		@Override
+//		public void onBlur(BlurEvent event) {
+//			IFormManaged<?> widget = (IFormManaged<?>) event.getSource();
+//			logger.info("Quit edition of " + widget.getName());
+////			fire new dirty event
+//			if(widget.isDirty()) {
+//				//
+//			}
+//			else {
+//				
+//			}
+//		}
+//	};
 	
 }

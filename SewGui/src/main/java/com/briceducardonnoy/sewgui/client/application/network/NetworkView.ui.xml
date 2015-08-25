@@ -52,7 +52,7 @@
 	    		<!-- WiFi ESSID and selection -->
 	    		<g:HTMLPanel styleName="formRow">
 	    			<g:Label ui:field="wifiLabel" styleName="labelForm">WiFi</g:Label>
-	    			<brice:TextBoxForm ui:field="wifiText" name="ESSID" />
+	    			<brice:TextBoxForm ui:field="wifiText" name="ESSID" formGroup="NETWORK" />
 	    			<b:Button ui:field="searchWifiBtn" icon="SEARCH" addStyleNames="{style.roundBtn}" />
 	    		</g:HTMLPanel>
 	    		<!-- WiFi password with a remember and possibility to see password -->
@@ -65,27 +65,27 @@
 	    		<!-- IP -->
 	    		<g:HTMLPanel styleName="formRow">
 	    			<g:Label ui:field="ipLabel" styleName="labelForm">IP Address</g:Label>
-	    			<brice:TextBoxForm ui:field="ipText" name="IP" />
+	    			<brice:TextBoxForm ui:field="ipText" name="IP" formGroup="NETWORK" />
 	    		</g:HTMLPanel>
 	    		<!-- Netmask -->
 	    		<g:HTMLPanel styleName="formRow">
 	    			<g:Label ui:field="nmLabel" styleName="labelForm">Netmask</g:Label>
-	    			<brice:TextBoxForm ui:field="nmText" name="Netmask" />
+	    			<brice:TextBoxForm ui:field="nmText" name="Netmask" formGroup="NETWORK" />
 	    		</g:HTMLPanel>
 	    		<!-- Gateway -->
 	    		<g:HTMLPanel styleName="formRow">
 	    			<g:Label ui:field="gwLabel" styleName="labelForm">Gateway</g:Label>
-	    			<brice:TextBoxForm ui:field="gwText" name="Gateway" />
+	    			<brice:TextBoxForm ui:field="gwText" name="Gateway" formGroup="NETWORK" />
 	    		</g:HTMLPanel>
 	    		<!-- Primary DNS -->
 	    		<g:HTMLPanel styleName="formRow">
 	    			<g:Label ui:field="dns1Label" styleName="labelForm">Primary DNS</g:Label>
-	    			<brice:TextBoxForm ui:field="dns1Text" name="Primary DNS" />
+	    			<brice:TextBoxForm ui:field="dns1Text" name="Primary DNS" formGroup="NETWORK" />
 	    		</g:HTMLPanel>
 	    		<!-- Secondary DNS -->
 	    		<g:HTMLPanel styleName="formRow">
 	    			<g:Label ui:field="dns2Label" styleName="labelForm">Secondary DNS</g:Label>
-	    			<brice:TextBoxForm ui:field="dns2Text" name="Secondary DNS" />
+	    			<brice:TextBoxForm ui:field="dns2Text" name="Secondary DNS" formGroup="NETWORK" />
 	    		</g:HTMLPanel>
 	    	</g:HTMLPanel>
     	</g:HTMLPanel><!-- allSettings -->

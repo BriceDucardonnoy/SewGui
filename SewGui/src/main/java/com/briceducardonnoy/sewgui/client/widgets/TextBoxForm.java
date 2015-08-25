@@ -20,18 +20,47 @@
  */
 package com.briceducardonnoy.sewgui.client.widgets;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.LogManager;
+import java.util.logging.Logger;
+
+import com.briceducardonnoy.sewgui.client.context.ApplicationContext;
+import com.briceducardonnoy.sewgui.client.events.DirtyWidgetEvent;
 import com.briceducardonnoy.sewgui.client.model.IFormManaged;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.inject.Inject;
+import com.google.web.bindery.event.shared.HandlerRegistration;
 
 public class TextBoxForm extends TextBox implements IFormManaged<String> {
+	private static Logger logger = LogManager.getLogManager().getLogger("SewGui");
+	
 	private String originalText;
 	private String name = "Unknown";
+	private String formGroup = "Global";
+	private List<HandlerRegistration> handlers;
 
 	@Inject
 	public TextBoxForm() {
 		super();
 		originalText = "";
+		handlers = new ArrayList<>();
+		handlers.add(addValueChangeHandler(new ValueChangeHandler<String>() {
+			@Override
+			public void onValueChange(ValueChangeEvent<String> event) {
+				if(isDirty()) {
+					logger.log(Level.FINE, getName() + " is dirty");
+					ApplicationContext.getEventBus().fireEvent(new DirtyWidgetEvent(TextBoxForm.this, true));
+				}
+				else {
+					logger.log(Level.FINE, getName() + " is no more dirty");
+					ApplicationContext.getEventBus().fireEvent(new DirtyWidgetEvent(TextBoxForm.this, false));
+				}
+			}
+		}));
 	}
 	
 	@Override
@@ -57,7 +86,7 @@ public class TextBoxForm extends TextBox implements IFormManaged<String> {
 	@Override
 	public void setOriginalValue(final String originalValue) {
 		originalText = originalValue;
-		setText(originalValue);
+		setValue(originalValue);
 	}
 
 	@Override
@@ -65,8 +94,19 @@ public class TextBoxForm extends TextBox implements IFormManaged<String> {
 		return name;
 	}
 
+	@Override
 	public void setName(final String name) {
+		super.setName(name);
 		this.name = name;
 	}
 
+	@Override
+	public String getFormGroup() {
+		return formGroup;
+	}
+	
+	public void setFormGroup(String formGroup) {
+		this.formGroup = formGroup;
+	}
+	
 }
