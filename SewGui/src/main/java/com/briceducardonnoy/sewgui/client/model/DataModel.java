@@ -27,6 +27,7 @@ import java.util.Map.Entry;
 import java.util.logging.Logger;
 
 import com.briceducardonnoy.sewgui.client.events.DataModelEvent;
+import com.briceducardonnoy.sewgui.client.events.DirtyModelEvent;
 import com.briceducardonnoy.sewgui.client.events.DataModelEvent.DataModelHandler;
 import com.briceducardonnoy.sewgui.client.events.DirtyWidgetEvent;
 import com.briceducardonnoy.sewgui.client.events.DirtyWidgetEvent.DirtyWidgetHandler;
@@ -86,11 +87,15 @@ public class DataModel {
 	}
 	
 	/**
-	 * Mark the model as clean. Eg. all {@link IFormManaged} have been saved
+	 * Mark the model as clean. Eg. all {@link IFormManaged} have been saved<br/>
+	 * Fire a {@link DirtyModelEvent} as false if the dirty list wasn't clear
 	 */
 	public void resetDirtyState() {
+		boolean sendIt = isDirtyModel();
 		dirtyWidget.clear();
-		// TODO BDY: send a noDirtyEvent for buttons
+		if(sendIt) {
+			eventBus.fireEvent(new DirtyModelEvent(false));
+		}
 	}
 	
 	/**
@@ -102,24 +107,31 @@ public class DataModel {
 	}
 	
 	/**
-	 * Mark a {@link IFormManaged} as dirty if not already
+	 * Mark a {@link IFormManaged} as dirty if not already<br/>
+	 * Fire a {@link DirtyModelEvent} if it's the lonely dirty widget
 	 * @param widget The {@link IFormManaged} object to mark as dirty
 	 */
 	public void markWidgetAsDirty(IFormManaged<?> widget) {
 		if(!dirtyWidget.contains(widget)) {
 			dirtyWidget.add(widget);
+			if(dirtyWidget.size() == 1) {
+				eventBus.fireEvent(new DirtyModelEvent(true));
+			}
 		}
-		// TODO BDY: send a DirtyEvent for buttons if size > 1
 	}
 	
 	/**
-	 * Mark a {@link IFormManaged} as clean if it was seen as dirty
+	 * Mark a {@link IFormManaged} as clean if it was seen as dirty<br/>
+	 * Fire a {@link DirtyModelEvent} as false if no more widget are marked as dirty.
 	 * @param widget The element to be removed from this list, if present
 	 */
 	public void markWidgetAsClean(IFormManaged<?> widget) {
+		boolean sendIt = isDirtyModel();
 		if(dirtyWidget.contains(widget)) {
 			dirtyWidget.remove(widget);
-			// TODO BDY: send a noDirtyEvent for buttons if size if now 0 and 1 before
+			if(sendIt && !isDirtyModel()) {
+				eventBus.fireEvent(new DirtyModelEvent(false));
+			}
 		}
 	}
 	

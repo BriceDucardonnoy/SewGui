@@ -63,6 +63,11 @@ public class ApplicationContext {
 		return phoneGap;
 	}
 	
+	/**
+	 * Convenient method to allow all classes from the app the get
+	 * access to the eventBus
+	 * @return The application EventBus
+	 */
 	public static EventBus getEventBus() {
 		return eventBus;
 	}
