@@ -34,7 +34,10 @@ import com.briceducardonnoy.sewgui.client.application.protocol.models.WifiNetwor
 import com.briceducardonnoy.sewgui.client.application.windows.entitylistpopup.EntityListPopupPresenter;
 import com.briceducardonnoy.sewgui.client.context.ApplicationContext;
 import com.briceducardonnoy.sewgui.client.events.DataModelEvent;
+import com.briceducardonnoy.sewgui.client.events.SearchWidgetForGroupEvent;
 import com.briceducardonnoy.sewgui.client.events.DataModelEvent.DataModelHandler;
+import com.briceducardonnoy.sewgui.client.events.DirtyModelEvent;
+import com.briceducardonnoy.sewgui.client.events.DirtyModelEvent.DirtyModelHandler;
 import com.briceducardonnoy.sewgui.client.events.WiFiDiscoverEvent;
 import com.briceducardonnoy.sewgui.client.events.WiFiDiscoverEvent.WiFiDiscoverHandler;
 import com.briceducardonnoy.sewgui.client.model.DataModel;
@@ -68,11 +71,9 @@ public class NetworkPresenter extends Presenter<NetworkPresenter.MyView, Network
 		void setSecondaryDNS(final String dns2);
 		void setEssid(String value);
 		void setPwd(String value);
-		void setWidgetEnabled(boolean b);
+		void setWidgetEnabled(boolean enableb);
+		void setFormActionEnabled(boolean enabled);
 		Button getDiscoverWiFiBtn();
-		Button getCancelBtn();
-		Button getSubmitBtn();
-		List<IFormManaged<?>> getFormWidgets();
 	}
 	
 	public static final NestedSlot SLOT_Network = new NestedSlot();
@@ -91,6 +92,7 @@ public class NetworkPresenter extends Presenter<NetworkPresenter.MyView, Network
 	@Inject
 	NetworkPresenter(EventBus eventBus, MyView view, MyProxy proxy, ApplicationContext context) {
 		super(eventBus, view, proxy, ApplicationPresenter.SLOT_SetMainContent);
+		logger.info("CREATE");
 		this.context = context;
 		handlers = new ArrayList<>();
 		formWidgets = new ArrayList<>();
@@ -99,21 +101,21 @@ public class NetworkPresenter extends Presenter<NetworkPresenter.MyView, Network
 	@Override
 	protected void onBind() {
 		super.onBind();
+		logger.info("BIND");
 		registerHandler(getView().getDiscoverWiFiBtn().addClickHandler(discoverH));
 		registerHandler(getEventBus().addHandler(WiFiDiscoverEvent.getType(), wifiFoundH));
-		register(getView().getFormWidgets());
+		registerHandler(getEventBus().addHandler(DirtyModelEvent.getType(), dirtyModelH));
+		register(context.getFormManagedWidgetFromFormName(getFormGroup()));
 	}
 
 	protected void onReveal() {
 		super.onReveal();
-		// List widget registered
-		for(IFormManaged<?> widget : formWidgets) {
-			Log.info("Have registered " + widget.getName());
-			logger.info("Have registered " + widget.getName());
-//			handlers.add(widget.asWidget().addDomHandler(Utils.leaveEditableWidgetHandler, BlurEvent.getType()));
+		logger.info("REVEAL");
+		if(formWidgets.isEmpty()) {
+			register(context.getFormManagedWidgetFromFormName(getFormGroup()));
 		}
 		// Subscribe IDs to DataModel and add handlers
-		context.getModel().subscribe(Group.NETWORK);
+		context.getModel().subscribe(Group.NETWORK);// Won't be present in the future as widget themselves will ask their value through events
 		handlers.add(getEventBus().addHandler(DataModelEvent.getSerializedType(), dmHandler));
 		if(!context.isPhoneGapAvailable() || !context.isConnected2Device()) {
 			logger.info("Not connected => do nothing");
@@ -124,8 +126,7 @@ public class NetworkPresenter extends Presenter<NetworkPresenter.MyView, Network
 		// Ask network data to remote unit
 		byte []request = RequestHelper.getNetwork(context.getCurrentProtocol());
 		context.getBluetoothPlugin().write(request, getNetworkCB);
-		getView().getCancelBtn().setEnabled(false);
-		getView().getSubmitBtn().setEnabled(false);
+		getView().setFormActionEnabled(false);
 	}
 	
 	@Override
@@ -143,8 +144,18 @@ public class NetworkPresenter extends Presenter<NetworkPresenter.MyView, Network
 	 */
 	@Override
 	public void register(List<IFormManaged<?>> widgets) {
+		if(widgets == null) {
+			// Not normal as we are a IFormManager
+			logger.info(getFormGroup() + ": No form widget found, ask for them");
+			getEventBus().fireEvent(new SearchWidgetForGroupEvent(getFormGroup()));
+			return;
+		}
 		for(IFormManaged<? extends Comparable<?>> widget : widgets) {
-			formWidgets.add(widget);
+			if(!formWidgets.contains(widget)) {
+				Log.info("Register " + widget.getName() + " in form " + getFormGroup());
+				logger.info("Register " + widget.getName() + " in form " + getFormGroup());
+				formWidgets.add(widget);
+			}
 		}
 	}
 	
@@ -225,6 +236,7 @@ public class NetworkPresenter extends Presenter<NetworkPresenter.MyView, Network
 			context.getBluetoothPlugin().write(request, discoverCB);
 		}
 	};
+	
 	private Callback<Object, String> discoverCB = new Callback<Object, String>() {
 		@Override
 		public void onFailure(String reason) {
@@ -236,6 +248,7 @@ public class NetworkPresenter extends Presenter<NetworkPresenter.MyView, Network
 			logger.info("Write success: " + result);
 		}
 	};
+	
 	private WiFiDiscoverHandler wifiFoundH = new WiFiDiscoverHandler() {
 		@Override
 		public void onWiFiDiscover(WiFiDiscoverEvent event) {
@@ -244,6 +257,14 @@ public class NetworkPresenter extends Presenter<NetworkPresenter.MyView, Network
 			logger.info(wifis.toString());
 			wifiListPopup.setDevices(wifis);
 			addToPopupSlot(wifiListPopup, true);
+		}
+	};
+	
+	// Model
+	private DirtyModelHandler dirtyModelH = new DirtyModelHandler() {
+		@Override
+		public void onDirtyModel(DirtyModelEvent event) {
+			getView().setFormActionEnabled(event.isModelDirty());
 		}
 	};
 

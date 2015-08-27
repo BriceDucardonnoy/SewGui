@@ -20,14 +20,11 @@
  */
 package com.briceducardonnoy.sewgui.client.application.network;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.inject.Inject;
 
 import org.gwtbootstrap3.client.ui.Button;
 
-import com.briceducardonnoy.sewgui.client.model.IFormManaged;
+import com.briceducardonnoy.sewgui.client.context.ApplicationContext;
 import com.briceducardonnoy.sewgui.client.widgets.TextBoxForm;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -44,7 +41,6 @@ class NetworkView extends ViewImpl implements NetworkPresenter.MyView {
 	
     interface Binder extends UiBinder<Widget, NetworkView> {
     }
-
 	@UiField HTMLPanel main;
 
 	@UiField RadioButton dhcp;
@@ -71,20 +67,14 @@ class NetworkView extends ViewImpl implements NetworkPresenter.MyView {
 
 	@Inject
 	NetworkView(Binder uiBinder) {
+		ApplicationContext.getEventBus();
 		initWidget(uiBinder.createAndBindUi(this));
 		bindSlot(NetworkPresenter.SLOT_Network, main);
 	}
 
 	@Override
-	public List<IFormManaged<?>> getFormWidgets() {
-		List<IFormManaged<?>> widgets = new ArrayList<>();
-		widgets.add(wifiText);
-		widgets.add(ipText);
-		widgets.add(nmText);
-		widgets.add(gwText);
-		widgets.add(dns1Text);
-		widgets.add(dns2Text);
-		return widgets;
+	public Button getDiscoverWiFiBtn() {
+		return searchWifiBtn;
 	}
 
 	@UiHandler("clearPwd")
@@ -95,7 +85,7 @@ class NetworkView extends ViewImpl implements NetworkPresenter.MyView {
 			pwdText.getElement().setAttribute("type", "password");
 		}
 	}
-
+// TODO BDY: remove all these methods. All will be done in presenter thanks to the registered widgets or by datamodel handler in widget itself
 	@Override
 	public void setDhcp(final boolean isDhcp) {
 		if(isDhcp) {
@@ -170,23 +160,12 @@ class NetworkView extends ViewImpl implements NetworkPresenter.MyView {
 
 		dns1Text.setEnabled(enabled);
 		dns2Text.setEnabled(enabled);
-		
-		// XXX BDY: play with cancel / submit
 	}
 
 	@Override
-	public Button getDiscoverWiFiBtn() {
-		return searchWifiBtn;
+	public void setFormActionEnabled(boolean enabled) {
+		submitBtn.setEnabled(enabled);
+		cancelBtn.setEnabled(enabled);
 	}
 	
-	@Override
-	public Button getCancelBtn() {
-		return cancelBtn;
-	}
-	
-	@Override
-	public Button getSubmitBtn() {
-		return submitBtn;
-	}
-
 }

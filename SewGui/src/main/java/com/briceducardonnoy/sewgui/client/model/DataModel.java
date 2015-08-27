@@ -27,8 +27,8 @@ import java.util.Map.Entry;
 import java.util.logging.Logger;
 
 import com.briceducardonnoy.sewgui.client.events.DataModelEvent;
-import com.briceducardonnoy.sewgui.client.events.DirtyModelEvent;
 import com.briceducardonnoy.sewgui.client.events.DataModelEvent.DataModelHandler;
+import com.briceducardonnoy.sewgui.client.events.DirtyModelEvent;
 import com.briceducardonnoy.sewgui.client.events.DirtyWidgetEvent;
 import com.briceducardonnoy.sewgui.client.events.DirtyWidgetEvent.DirtyWidgetHandler;
 import com.google.inject.Inject;
@@ -40,8 +40,12 @@ public class DataModel {
 
 	private static Logger logger = Logger.getLogger("SewGui");
 //	HashMap<Integer, Object> globalData;
+	/** Map of ID <-> value */
 	private HashMap<Integer, Object> registeredData;
+	/** Map between attribute name and int ID */
+	private HashMap<String, Integer> attrIds;
 	private List<Integer> subscribedIds;
+	/** List of widget with a current value different from the one got from the remote unit */
 	private List<IFormManaged<?>> dirtyWidget;
 	
 	@Inject EventBus eventBus;
@@ -51,8 +55,14 @@ public class DataModel {
 //		globalData = new HashMap<>(10);
 		this.eventBus = eventBus;
 		registeredData = new HashMap<>();
+		attrIds = new HashMap<>();
 		subscribedIds = new ArrayList<>();
 		dirtyWidget = new ArrayList<>();
+		
+		initAttrIdMapping();
+		/*
+		 * Handlers
+		 */
 		// The model is never free instead of leaving the application => no need to register the handlers
 		eventBus.addHandler(DataModelEvent.getRawType(), new DataModelHandler() {
 			@Override
@@ -73,6 +83,10 @@ public class DataModel {
 				}
 			}
 		});
+	}
+	
+	public Integer getIdFromAttributeModelName(String modelName) {
+		return attrIds.get(modelName);
 	}
 	
 	/*
@@ -158,6 +172,7 @@ public class DataModel {
 		if(!subscribedIds.contains(id)) {
 			subscribedIds.add(id);
 		}
+		// TODO BDY: get values from remote then
 	}
 	
 	/**
@@ -311,7 +326,6 @@ public class DataModel {
 		eventBus.fireEvent(new DataModelEvent(subscribedIds));
 	}
 	
-	// TODO BDY: Load it from json file?
 	/*
 	 * IDs
 	 */
@@ -325,6 +339,18 @@ public class DataModel {
 	public final static int WiFi_ESSID;
 	public final static int WiFi_PWD;
 	public final static int IS_DHCP;
+	
+	// Do the ID and Attribute name loading from a json reading in the future
+	private void initAttrIdMapping() {
+		attrIds.put("ip", IP);
+		attrIds.put("netmask", NM);
+		attrIds.put("gateway", GW);
+		attrIds.put("primaryDns", PDNS);
+		attrIds.put("secondaryDns", SDNS);
+		attrIds.put("networkConfigMethod", IS_DHCP);
+		attrIds.put("essid", WiFi_ESSID);
+		attrIds.put("wifiPwd", WiFi_PWD);
+	}
 	
 	static {
 		int i = 0;

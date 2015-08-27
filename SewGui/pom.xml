@@ -21,6 +21,8 @@
         <!-- Dependencies -->
         <gwtphonegap.version>3.5.0.1</gwtphonegap.version>
 		<gwtbootstrap.version>0.9.1</gwtbootstrap.version>
+		<log.version>3.3.2</log.version>
+		<guava.version>18.0</guava.version>
         
         <!-- testing -->
         <junit.version>4.11</junit.version>
@@ -189,7 +191,13 @@
         <dependency>
 			<groupId>com.allen-sauer.gwt.log</groupId>
 			<artifactId>gwt-log</artifactId>
-			<version>3.3.2</version>
+			<version>${log.version}</version>
+		</dependency>
+		<!-- Guava -->
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava-gwt</artifactId>
+			<version>${guava.version}</version>
 		</dependency>
 
         <!-- DI -->

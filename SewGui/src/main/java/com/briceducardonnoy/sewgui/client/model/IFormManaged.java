@@ -63,4 +63,14 @@ public interface IFormManaged<A extends Comparable<A>> extends IsWidget {
 	 * @return The name of the group
 	 */
 	public String getFormGroup();
+	/**
+	 * Get the id of the attribute it's bound to
+	 * @return The ID mapped in {@link DataModel} or -1 if unbound
+	 */
+	public int getModelId();
+	/**
+	 * Get the name of the attribute it's bound to
+	 * @return The attribute name mapped in {@link DataModel}
+	 */
+	public String getModelName();
 }

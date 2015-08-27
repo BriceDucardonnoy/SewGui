@@ -18,22 +18,28 @@
  * arising from, out of or in connection with the software or the use or other 
  * dealings in the Software.
  */
-package com.briceducardonnoy.sewgui.client.model;
+package com.briceducardonnoy.sewgui.client.widgets;
 
-import java.util.List;
+import org.gwtbootstrap3.client.ui.Button;
+import org.gwtbootstrap3.client.ui.constants.IconType;
 
-public interface IFormManager {
-	/**
-	 * Register new form-widgets (eg. bound on a model) in the FormManager
-	 * @param widgets The widgets to bind
-	 */
-	public void register(List<IFormManaged<?>> widgets);
-	public void submit();
-	public void cancel();
-	/**
-	 * Get the group name of the form.<br/>
-	 * This is used in pair with the widgets inside of the current form
-	 * @return The name of the group
-	 */
-	public String getFormGroup();
+import com.google.gwt.event.dom.client.ClickHandler;
+
+public class SubmitButton extends Button {
+
+	public SubmitButton() {
+	}
+
+	public SubmitButton(String text) {
+		super(text);
+	}
+
+	public SubmitButton(String text, ClickHandler handler) {
+		super(text, handler);
+	}
+
+	public SubmitButton(String text, IconType iconType, ClickHandler clickHandler) {
+		super(text, iconType, clickHandler);
+	}
+
 }

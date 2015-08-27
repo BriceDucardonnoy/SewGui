@@ -20,8 +20,16 @@
  */
 package com.briceducardonnoy.sewgui.client.context;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.logging.Logger;
+
 import com.briceducardonnoy.sewgui.client.application.protocol.RequestHelper;
+import com.briceducardonnoy.sewgui.client.events.BelongToThisFormManagerEvent;
+import com.briceducardonnoy.sewgui.client.events.BelongToThisFormManagerEvent.BelongToThisFormManagerHandler;
 import com.briceducardonnoy.sewgui.client.model.DataModel;
+import com.briceducardonnoy.sewgui.client.model.IFormManaged;
 import com.briceducardonnoy.sewgui.client.wrappers.BluetoothSerialImpl;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -30,22 +38,33 @@ import com.googlecode.gwtphonegap.client.PhoneGap;
 
 @Singleton
 public class ApplicationContext {
+	
+	private static Logger logger = Logger.getLogger("SewGui");
+	private static DataModel model;
+	private static EventBus eventBus;
 
 	private PhoneGap phoneGap;
-	private DataModel model;
 	private BluetoothSerialImpl bluetoothSerial;
-	private int deviceProtocol = 0;	
-	
-	@Inject static EventBus eventBus;
+	private int deviceProtocol = 0;
+	/**
+	 * Mapping between a {@link IFormManager} and its list of registered IDs to populate
+	 */
+	private HashMap<String, List<IFormManaged<?>>> formRegisteredIds;
 	
 	@Inject
 	ApplicationContext(final PhoneGap pg, final DataModel model, final EventBus eventBus) {
+		logger.info("CREATE ApplicationContext");
 		phoneGap = pg;// TODO BDY: if network LAN ok, color the LAN icon (green if ping www.google.com, orange if only 8.8.8.8). Same for WiFi (need ping in embed).
-		this.model = model;
+		ApplicationContext.model = model;
 		ApplicationContext.eventBus = eventBus;
+		
+		formRegisteredIds = new HashMap<>();
+		
 		phoneGap.getLog().setRemoteLogServiceUrl("http://192.168.1.46:8080/gwt-log");
 		model.updateValue(DataModel.IS_PHONEGAP_AVAILABLE, false, false);
 		model.updateValue(DataModel.IS_BLUETOOTH_CONNECTED, false, false);
+		
+		eventBus.addHandler(BelongToThisFormManagerEvent.getType(), registerWidgetH);
 	}
 	
 //	public static ApplicationContext getInstance() {
@@ -63,6 +82,14 @@ public class ApplicationContext {
 		return phoneGap;
 	}
 	
+	public static Integer getIdFromAttributeModelName(final String modelName) {
+		return model.getIdFromAttributeModelName(modelName);
+	}
+	
+	public List<IFormManaged<?>> getFormManagedWidgetFromFormName(final String formManagerName) {
+		return formRegisteredIds.get(formManagerName);
+	}
+	
 	/**
 	 * Convenient method to allow all classes from the app the get
 	 * access to the eventBus
@@ -71,7 +98,7 @@ public class ApplicationContext {
 	public static EventBus getEventBus() {
 		return eventBus;
 	}
-
+	
 	public boolean isPhoneGapAvailable() {
 		return (boolean) model.getValue(DataModel.IS_PHONEGAP_AVAILABLE);
 	}
@@ -108,4 +135,20 @@ public class ApplicationContext {
 		model.updateValue(DataModel.IS_BLUETOOTH_CONNECTED, isConnected2Device);
 	}
 	
+	/*
+	 * Handlers and callbacks
+	 */
+
+	private BelongToThisFormManagerHandler registerWidgetH = new BelongToThisFormManagerHandler() {
+		@Override
+		public void onBelongToThisFormManager(BelongToThisFormManagerEvent event) {
+			logger.fine("RECEIVE EVENT for form " + event.getFormManagerName() + " widget " + event.getWidget().getName());
+			if(!formRegisteredIds.containsKey(event.getFormManagerName())) {
+				formRegisteredIds.put(event.getFormManagerName(), new ArrayList<IFormManaged<?>>());
+			}
+			if(!formRegisteredIds.get(event.getFormManagerName()).contains(event.getWidget())) {
+				formRegisteredIds.get(event.getFormManagerName()).add(event.getWidget());
+			}
+		}
+	};
 }
