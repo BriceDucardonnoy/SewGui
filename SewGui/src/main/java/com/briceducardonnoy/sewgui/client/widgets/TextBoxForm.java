@@ -54,22 +54,6 @@ public class TextBoxForm extends TextBox implements IFormManaged<String> {
 		name = "Unknown";
 		modelName = "";
 		handlers = new ArrayList<>();
-//		handlers.add(addAttachHandler(new AttachEvent.Handler() {
-//			@Override
-//			public void onAttachOrDetach(AttachEvent event) {
-//				if(ApplicationContext.getEventBus() != null) {
-//					ApplicationContext.getEventBus().addHandler(SearchWidgetForGroupEvent.getType(), new SearchWidgetForGroupHandler() {
-//						@Override
-//						public void onSearchWidgetForGroup(SearchWidgetForGroupEvent event) {
-//							if(event.getFormName().equals(getFormGroup())) {
-//								logger.info("YEAH " + getName() + " sees you");
-//								ApplicationContext.getEventBus().fireEvent(new BelongToThisFormManagerEvent(TextBoxForm.this, getFormGroup()));
-//							}
-//						}
-//					});
-//				}
-//			}
-//		}));
 		handlers.add(addValueChangeHandler(new ValueChangeHandler<String>() {
 			@Override
 			public void onValueChange(ValueChangeEvent<String> event) {
@@ -107,9 +91,10 @@ public class TextBoxForm extends TextBox implements IFormManaged<String> {
 	}
 
 	@Override
-	public void setOriginalValue(final String originalValue) {
-		originalText = originalValue;
-		setValue(originalValue);
+	public void setOriginalValue(final Object originalValue) {
+		if(originalValue == null) return;
+		originalText = originalValue.toString();
+		setValue(originalText);
 	}
 
 	@Override
@@ -130,20 +115,21 @@ public class TextBoxForm extends TextBox implements IFormManaged<String> {
 	
 	public void setFormGroup(final String formGroup) {
 		this.formGroup = formGroup;
-		logger.info("SEND EVENT WIDGET");
-//		if(ApplicationContext.getEventBus() != null) {// Can append if the widget is disposed on the 1st page
-//			ApplicationContext.getEventBus().fireEvent(new BelongToThisFormManagerEvent(this, getFormGroup()));
-//		}
 		ApplicationContext.registerFormManagedWidgetFromFormName(this);
 	}
 	
 	@Override
 	public int getModelId() {
+		if(modelId == -1) {
+			setModelId(ApplicationContext.getIdFromAttributeModelName(modelName));
+		}
 		return modelId;
 	}
 	
-	public void setModelId(final int modelId) {
-		this.modelId = modelId;
+	public void setModelId(final Integer modelId) {
+		if(modelId != null) {
+			this.modelId = modelId;
+		}
 	}
 
 	@Override
@@ -151,9 +137,9 @@ public class TextBoxForm extends TextBox implements IFormManaged<String> {
 		return modelName;
 	}
 	
+	@Override
 	public void setModelName(final String modelName) {
 		this.modelName = modelName;
-//		setModelId(ApplicationContext.getIdFromAttributeModelName(modelName));
 	}
 	
 }

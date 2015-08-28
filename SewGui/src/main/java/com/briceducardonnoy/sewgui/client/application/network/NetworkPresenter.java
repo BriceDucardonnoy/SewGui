@@ -64,12 +64,6 @@ public class NetworkPresenter extends Presenter<NetworkPresenter.MyView, Network
 	interface MyView extends View  {
 		void setDhcp(final boolean isDhcp);
 		void setWifi(final boolean isWifi);
-		void setIp(final String ip);
-		void setNetmask(final String netmask);
-		void setGateway(final String gateway);
-		void setPrimaryDNS(final String dns1);
-		void setSecondaryDNS(final String dns2);
-		void setEssid(String value);
 		void setPwd(String value);
 		void setWidgetEnabled(boolean enableb);
 		void setFormActionEnabled(boolean enabled);
@@ -92,7 +86,6 @@ public class NetworkPresenter extends Presenter<NetworkPresenter.MyView, Network
 	@Inject
 	NetworkPresenter(EventBus eventBus, MyView view, MyProxy proxy, ApplicationContext context) {
 		super(eventBus, view, proxy, ApplicationPresenter.SLOT_SetMainContent);
-		logger.info("CREATE");
 		this.context = context;
 		handlers = new ArrayList<>();
 		formWidgets = new ArrayList<>();
@@ -101,7 +94,6 @@ public class NetworkPresenter extends Presenter<NetworkPresenter.MyView, Network
 	@Override
 	protected void onBind() {
 		super.onBind();
-		logger.info("BIND");
 		registerHandler(getView().getDiscoverWiFiBtn().addClickHandler(discoverH));
 		registerHandler(getEventBus().addHandler(WiFiDiscoverEvent.getType(), wifiFoundH));
 		registerHandler(getEventBus().addHandler(DirtyModelEvent.getType(), dirtyModelH));
@@ -195,13 +187,12 @@ public class NetworkPresenter extends Presenter<NetworkPresenter.MyView, Network
 			getView().setDhcp((Boolean) context.getModel().getValue(DataModel.IS_DHCP));
 			String essid = (String) context.getModel().getValue(DataModel.WiFi_ESSID);
 			getView().setWifi(essid != null && !essid.isEmpty());
-			getView().setIp((String) context.getModel().getValue(DataModel.IP));
-			getView().setNetmask((String) context.getModel().getValue(DataModel.NM));
-			getView().setGateway((String) context.getModel().getValue(DataModel.GW));
-			getView().setPrimaryDNS((String) context.getModel().getValue(DataModel.PDNS));
-			getView().setSecondaryDNS((String) context.getModel().getValue(DataModel.SDNS));
-			getView().setEssid((String) context.getModel().getValue(DataModel.WiFi_ESSID));
 			getView().setPwd((String) context.getModel().getValue(DataModel.WiFi_PWD));
+			for(IFormManaged<?> formWidget : formWidgets) {
+				logger.fine("Update original value for " + formWidget.getName() + " (" + formWidget.getModelId() + ") with " + 
+					context.getModel().getValue(formWidget.getModelId()));
+				formWidget.setOriginalValue(context.getModel().getValue(formWidget.getModelId()));
+			}
 		}
 	};
 	

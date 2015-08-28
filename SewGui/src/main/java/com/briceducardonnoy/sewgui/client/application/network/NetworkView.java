@@ -107,36 +107,6 @@ class NetworkView extends ViewImpl implements NetworkPresenter.MyView {
 	}
 
 	@Override
-	public void setIp(final String ip) {
-		ipText.setOriginalValue(ip);
-	}
-
-	@Override
-	public void setNetmask(final String netmask) {
-		nmText.setOriginalValue(netmask);
-	}
-
-	@Override
-	public void setGateway(final String gateway) {
-		gwText.setOriginalValue(gateway);
-	}
-
-	@Override
-	public void setPrimaryDNS(final String dns1) {
-		dns1Text.setOriginalValue(dns1);
-	}
-
-	@Override
-	public void setSecondaryDNS(final String dns2) {
-		dns2Text.setOriginalValue(dns2);
-	}
-
-	@Override
-	public void setEssid(String essid) {
-		wifiText.setOriginalValue(essid);//wifiText.record();
-	}
-
-	@Override
 	public void setPwd(String pwd) {
 		pwdText.setText(pwd);
 	}

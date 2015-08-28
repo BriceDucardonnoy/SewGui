@@ -49,10 +49,11 @@ public interface IFormManaged<A extends Comparable<A>> extends IsWidget {
 	 */
 	public A getOriginalValue();
 	/**
-	 * Set the original value to compare with to get the dirty status
-	 * @param originalValue
+	 * Set the original value used to get the dirty status.<br/>
+	 * The value is casted in the good type
+	 * @param originalValue The original value in raw format (eg. not casted)
 	 */
-	public void setOriginalValue(final A originalValue);
+	public void setOriginalValue(final Object originalValue);
 	/**
 	 * Get a name to identify the object in the form
 	 * @return The name of the widget
@@ -73,4 +74,9 @@ public interface IFormManaged<A extends Comparable<A>> extends IsWidget {
 	 * @return The attribute name mapped in {@link DataModel}
 	 */
 	public String getModelName();
+	/**
+	 * Set the name of the attribute it's bound to
+	 * @param modelName The attribute name to map in {@link DataModel}
+	 */
+	public void setModelName(final String modelName);
 }
