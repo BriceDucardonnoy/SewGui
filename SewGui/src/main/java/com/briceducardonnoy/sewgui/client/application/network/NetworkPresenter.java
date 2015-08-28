@@ -34,7 +34,6 @@ import com.briceducardonnoy.sewgui.client.application.protocol.models.WifiNetwor
 import com.briceducardonnoy.sewgui.client.application.windows.entitylistpopup.EntityListPopupPresenter;
 import com.briceducardonnoy.sewgui.client.context.ApplicationContext;
 import com.briceducardonnoy.sewgui.client.events.DataModelEvent;
-import com.briceducardonnoy.sewgui.client.events.SearchWidgetForGroupEvent;
 import com.briceducardonnoy.sewgui.client.events.DataModelEvent.DataModelHandler;
 import com.briceducardonnoy.sewgui.client.events.DirtyModelEvent;
 import com.briceducardonnoy.sewgui.client.events.DirtyModelEvent.DirtyModelHandler;
@@ -134,8 +133,6 @@ public class NetworkPresenter extends Presenter<NetworkPresenter.MyView, Network
 	public void register(List<IFormManaged<?>> widgets) {
 		if(widgets == null) {
 			// Not normal as we are a IFormManager
-			logger.info(getFormGroup() + ": No form widget found, ask for them");
-			getEventBus().fireEvent(new SearchWidgetForGroupEvent(getFormGroup()));
 			return;
 		}
 		for(IFormManaged<? extends Comparable<?>> widget : widgets) {

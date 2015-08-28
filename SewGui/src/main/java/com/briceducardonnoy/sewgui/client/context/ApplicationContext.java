@@ -26,10 +26,9 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import com.briceducardonnoy.sewgui.client.application.protocol.RequestHelper;
-import com.briceducardonnoy.sewgui.client.events.BelongToThisFormManagerEvent;
-import com.briceducardonnoy.sewgui.client.events.BelongToThisFormManagerEvent.BelongToThisFormManagerHandler;
 import com.briceducardonnoy.sewgui.client.model.DataModel;
 import com.briceducardonnoy.sewgui.client.model.IFormManaged;
+import com.briceducardonnoy.sewgui.client.model.IFormManager;
 import com.briceducardonnoy.sewgui.client.wrappers.BluetoothSerialImpl;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -61,8 +60,6 @@ public class ApplicationContext {
 		phoneGap.getLog().setRemoteLogServiceUrl("http://192.168.1.46:8080/gwt-log");
 		model.updateValue(DataModel.IS_PHONEGAP_AVAILABLE, false, false);
 		model.updateValue(DataModel.IS_BLUETOOTH_CONNECTED, false, false);
-		
-		eventBus.addHandler(BelongToThisFormManagerEvent.getType(), registerWidgetH);
 	}
 	
 //	public static ApplicationContext getInstance() {
@@ -146,16 +143,4 @@ public class ApplicationContext {
 	 * Handlers and callbacks
 	 */
 
-	private BelongToThisFormManagerHandler registerWidgetH = new BelongToThisFormManagerHandler() {
-		@Override
-		public void onBelongToThisFormManager(BelongToThisFormManagerEvent event) {
-			logger.fine("RECEIVE EVENT for form " + event.getFormManagerName() + " widget " + event.getWidget().getName());
-			if(!formRegisteredIds.containsKey(event.getFormManagerName())) {
-				formRegisteredIds.put(event.getFormManagerName(), new ArrayList<IFormManaged<?>>());
-			}
-			if(!formRegisteredIds.get(event.getFormManagerName()).contains(event.getWidget())) {
-				formRegisteredIds.get(event.getFormManagerName()).add(event.getWidget());
-			}
-		}
-	};
 }
