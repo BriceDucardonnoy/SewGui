@@ -61,7 +61,6 @@ import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 public class NetworkPresenter extends Presenter<NetworkPresenter.MyView, NetworkPresenter.MyProxy> implements IFormManager {
 	
 	interface MyView extends View  {
-		void setDhcp(final boolean isDhcp);
 		void setWifi(final boolean isWifi);
 		void setPwd(String value);
 		void setWidgetEnabled(boolean enableb);
@@ -181,7 +180,6 @@ public class NetworkPresenter extends Presenter<NetworkPresenter.MyView, Network
 			}
 			// TODO BDY: Store local password
 			// TODO BDY: Create a system similar of activatePage which (dis)abled the widget depending of the status instead of write manually a "setWidgetEnabled"
-//			getView().setDhcp((Boolean) context.getModel().getValue(DataModel.IS_DHCP));
 			String essid = (String) context.getModel().getValue(DataModel.WiFi_ESSID);
 			getView().setWifi(essid != null && !essid.isEmpty());
 			getView().setPwd((String) context.getModel().getValue(DataModel.WiFi_PWD));

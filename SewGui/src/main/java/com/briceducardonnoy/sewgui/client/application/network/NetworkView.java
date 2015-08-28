@@ -86,15 +86,6 @@ class NetworkView extends ViewImpl implements NetworkPresenter.MyView {
 		}
 	}
 // TODO BDY: remove all these methods. All will be done in presenter thanks to the registered widgets or by datamodel handler in widget itself
-	@Override
-	public void setDhcp(final boolean isDhcp) {
-		if(isDhcp) {
-			dhcp.setValue(true);
-		}
-		else {
-			staticConf.setValue(true);
-		}
-	}
 
 	@Override
 	public void setWifi(final boolean isWifi) {
