@@ -27,12 +27,8 @@ import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
 import com.briceducardonnoy.sewgui.client.context.ApplicationContext;
-import com.briceducardonnoy.sewgui.client.events.BelongToThisFormManagerEvent;
 import com.briceducardonnoy.sewgui.client.events.DirtyWidgetEvent;
-import com.briceducardonnoy.sewgui.client.events.SearchWidgetForGroupEvent;
-import com.briceducardonnoy.sewgui.client.events.SearchWidgetForGroupEvent.SearchWidgetForGroupHandler;
 import com.briceducardonnoy.sewgui.client.model.IFormManaged;
-import com.google.gwt.event.logical.shared.AttachEvent;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.ui.TextBox;
@@ -58,22 +54,22 @@ public class TextBoxForm extends TextBox implements IFormManaged<String> {
 		name = "Unknown";
 		modelName = "";
 		handlers = new ArrayList<>();
-		handlers.add(addAttachHandler(new AttachEvent.Handler() {
-			@Override
-			public void onAttachOrDetach(AttachEvent event) {
-				if(ApplicationContext.getEventBus() != null) {
-					ApplicationContext.getEventBus().addHandler(SearchWidgetForGroupEvent.getType(), new SearchWidgetForGroupHandler() {
-						@Override
-						public void onSearchWidgetForGroup(SearchWidgetForGroupEvent event) {
-							if(event.getFormName().equals(getFormGroup())) {
-								logger.info("YEAH " + getName() + " sees you");
-								ApplicationContext.getEventBus().fireEvent(new BelongToThisFormManagerEvent(TextBoxForm.this, getFormGroup()));
-							}
-						}
-					});
-				}
-			}
-		}));
+//		handlers.add(addAttachHandler(new AttachEvent.Handler() {
+//			@Override
+//			public void onAttachOrDetach(AttachEvent event) {
+//				if(ApplicationContext.getEventBus() != null) {
+//					ApplicationContext.getEventBus().addHandler(SearchWidgetForGroupEvent.getType(), new SearchWidgetForGroupHandler() {
+//						@Override
+//						public void onSearchWidgetForGroup(SearchWidgetForGroupEvent event) {
+//							if(event.getFormName().equals(getFormGroup())) {
+//								logger.info("YEAH " + getName() + " sees you");
+//								ApplicationContext.getEventBus().fireEvent(new BelongToThisFormManagerEvent(TextBoxForm.this, getFormGroup()));
+//							}
+//						}
+//					});
+//				}
+//			}
+//		}));
 		handlers.add(addValueChangeHandler(new ValueChangeHandler<String>() {
 			@Override
 			public void onValueChange(ValueChangeEvent<String> event) {
@@ -135,9 +131,10 @@ public class TextBoxForm extends TextBox implements IFormManaged<String> {
 	public void setFormGroup(final String formGroup) {
 		this.formGroup = formGroup;
 		logger.info("SEND EVENT WIDGET");
-		if(ApplicationContext.getEventBus() != null) {// Can append if the widget is disposed on the 1st page
-			ApplicationContext.getEventBus().fireEvent(new BelongToThisFormManagerEvent(this, getFormGroup()));
-		}
+//		if(ApplicationContext.getEventBus() != null) {// Can append if the widget is disposed on the 1st page
+//			ApplicationContext.getEventBus().fireEvent(new BelongToThisFormManagerEvent(this, getFormGroup()));
+//		}
+		ApplicationContext.registerFormManagedWidgetFromFormName(this);
 	}
 	
 	@Override

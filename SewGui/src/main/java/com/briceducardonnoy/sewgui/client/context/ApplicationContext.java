@@ -49,7 +49,7 @@ public class ApplicationContext {
 	/**
 	 * Mapping between a {@link IFormManager} and its list of registered IDs to populate
 	 */
-	private HashMap<String, List<IFormManaged<?>>> formRegisteredIds;
+	private static HashMap<String, List<IFormManaged<?>>> formRegisteredIds = new HashMap<>();
 	
 	@Inject
 	ApplicationContext(final PhoneGap pg, final DataModel model, final EventBus eventBus) {
@@ -57,8 +57,6 @@ public class ApplicationContext {
 		phoneGap = pg;// TODO BDY: if network LAN ok, color the LAN icon (green if ping www.google.com, orange if only 8.8.8.8). Same for WiFi (need ping in embed).
 		ApplicationContext.model = model;
 		ApplicationContext.eventBus = eventBus;
-		
-		formRegisteredIds = new HashMap<>();
 		
 		phoneGap.getLog().setRemoteLogServiceUrl("http://192.168.1.46:8080/gwt-log");
 		model.updateValue(DataModel.IS_PHONEGAP_AVAILABLE, false, false);
@@ -86,7 +84,16 @@ public class ApplicationContext {
 		return model.getIdFromAttributeModelName(modelName);
 	}
 	
-	public List<IFormManaged<?>> getFormManagedWidgetFromFormName(final String formManagerName) {
+	public static void registerFormManagedWidgetFromFormName(final IFormManaged<?> widget) {
+		if(!formRegisteredIds.containsKey(widget.getFormGroup())) {
+			formRegisteredIds.put(widget.getFormGroup(), new ArrayList<IFormManaged<?>>());
+		}
+		if(!formRegisteredIds.get(widget.getFormGroup()).contains(widget)) {
+			formRegisteredIds.get(widget.getFormGroup()).add(widget);
+		}
+	}
+	
+	public static List<IFormManaged<?>> getFormManagedWidgetFromFormName(final String formManagerName) {
 		return formRegisteredIds.get(formManagerName);
 	}
 	

@@ -105,15 +105,11 @@ public class NetworkPresenter extends Presenter<NetworkPresenter.MyView, Network
 		registerHandler(getView().getDiscoverWiFiBtn().addClickHandler(discoverH));
 		registerHandler(getEventBus().addHandler(WiFiDiscoverEvent.getType(), wifiFoundH));
 		registerHandler(getEventBus().addHandler(DirtyModelEvent.getType(), dirtyModelH));
-		register(context.getFormManagedWidgetFromFormName(getFormGroup()));
+		register(ApplicationContext.getFormManagedWidgetFromFormName(getFormGroup()));
 	}
 
 	protected void onReveal() {
 		super.onReveal();
-		logger.info("REVEAL");
-		if(formWidgets.isEmpty()) {
-			register(context.getFormManagedWidgetFromFormName(getFormGroup()));
-		}
 		// Subscribe IDs to DataModel and add handlers
 		context.getModel().subscribe(Group.NETWORK);// Won't be present in the future as widget themselves will ask their value through events
 		handlers.add(getEventBus().addHandler(DataModelEvent.getSerializedType(), dmHandler));
