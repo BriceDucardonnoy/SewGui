@@ -58,7 +58,7 @@ public interface IFormManaged<A extends Comparable<A>> extends IsWidget {
 	 * Get a name to identify the object in the form
 	 * @return The name of the widget
 	 */
-	public String getName();
+	public String getDisplayName();
 	/**
 	 * Get the form group the widget belongs to.
 	 * @return The name of the group

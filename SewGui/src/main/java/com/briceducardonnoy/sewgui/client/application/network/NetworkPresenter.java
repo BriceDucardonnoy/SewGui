@@ -137,8 +137,8 @@ public class NetworkPresenter extends Presenter<NetworkPresenter.MyView, Network
 		}
 		for(IFormManaged<? extends Comparable<?>> widget : widgets) {
 			if(!formWidgets.contains(widget)) {
-				Log.info("Register " + widget.getName() + " in form " + getFormGroup());
-				logger.info("Register " + widget.getName() + " in form " + getFormGroup());
+				Log.info("Register " + widget.getDisplayName() + " in form " + getFormGroup());
+				logger.info("Register " + widget.getDisplayName() + " in form " + getFormGroup());
 				formWidgets.add(widget);
 			}
 		}
@@ -181,12 +181,12 @@ public class NetworkPresenter extends Presenter<NetworkPresenter.MyView, Network
 			}
 			// TODO BDY: Store local password
 			// TODO BDY: Create a system similar of activatePage which (dis)abled the widget depending of the status instead of write manually a "setWidgetEnabled"
-			getView().setDhcp((Boolean) context.getModel().getValue(DataModel.IS_DHCP));
+//			getView().setDhcp((Boolean) context.getModel().getValue(DataModel.IS_DHCP));
 			String essid = (String) context.getModel().getValue(DataModel.WiFi_ESSID);
 			getView().setWifi(essid != null && !essid.isEmpty());
 			getView().setPwd((String) context.getModel().getValue(DataModel.WiFi_PWD));
 			for(IFormManaged<?> formWidget : formWidgets) {
-				logger.fine("Update original value for " + formWidget.getName() + " (" + formWidget.getModelId() + ") with " + 
+				logger.fine("Update original value for " + formWidget.getDisplayName() + " (" + formWidget.getModelId() + ") with " + 
 					context.getModel().getValue(formWidget.getModelId()));
 				formWidget.setOriginalValue(context.getModel().getValue(formWidget.getModelId()));
 			}

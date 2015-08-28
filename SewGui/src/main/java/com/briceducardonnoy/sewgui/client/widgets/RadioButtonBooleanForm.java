@@ -32,79 +32,72 @@ import com.briceducardonnoy.sewgui.client.model.IFormManaged;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.uibinder.client.UiConstructor;
-import com.google.gwt.user.client.ui.TextBox;
+import com.google.gwt.user.client.ui.RadioButton;
 import com.google.web.bindery.event.shared.HandlerRegistration;
 
-public class TextBoxForm extends TextBox implements IFormManaged<String> {
+public class RadioButtonBooleanForm extends RadioButton implements IFormManaged<Boolean> {
 	private static Logger logger = LogManager.getLogManager().getLogger("SewGui");
 	
-	private String originalText;
-	private String displayName;
+	private Boolean originalValue;
 	private String formGroup;
 	private String modelName;
+	private String displayName;
+	/** Value from the schema that should turn the radio button ON */
+	private boolean trueValue;
 	private int modelId = -1;
 	private List<HandlerRegistration> handlers;
 
 	@UiConstructor
-	public TextBoxForm(final String modelName, final String formGroup) {
-		super();
-		logger.info("Create form widget");
-		originalText = "";
-		displayName = "Unknown";
+	public RadioButtonBooleanForm(final String name, final String modelName, final String formGroup, final boolean trueValue) {
+		super(name);
 		this.modelName = modelName;
 		this.formGroup = formGroup;
+		this.trueValue = trueValue;
 		ApplicationContext.registerFormManagedWidgetFromFormName(this);
 		handlers = new ArrayList<>();
-		handlers.add(addValueChangeHandler(new ValueChangeHandler<String>() {
+		handlers.add(addValueChangeHandler(new ValueChangeHandler<Boolean>() {
 			@Override
-			public void onValueChange(ValueChangeEvent<String> event) {
+			public void onValueChange(ValueChangeEvent<Boolean> event) {
 				if(isDirty()) {
 					logger.log(Level.FINE, getName() + " is dirty");
-					ApplicationContext.getEventBus().fireEvent(new DirtyWidgetEvent(TextBoxForm.this, true));
+					ApplicationContext.getEventBus().fireEvent(new DirtyWidgetEvent(RadioButtonBooleanForm.this, true));
 				}
 				else {
 					logger.log(Level.FINE, getName() + " is no more dirty");
-					ApplicationContext.getEventBus().fireEvent(new DirtyWidgetEvent(TextBoxForm.this, false));
+					ApplicationContext.getEventBus().fireEvent(new DirtyWidgetEvent(RadioButtonBooleanForm.this, false));
 				}
 			}
 		}));
-		// TODO BDY: add datamodel handler on its own attribute or id? but need to disable it if view is hidden
 	}
 	
+	/*
+	 * IFormManaged methods
+	 */
 	@Override
 	public boolean isDirty() {
-		return !originalText.equals(getText());
+		return !getValue().equals(originalValue);
 	}
 
 	@Override
 	public void submit() {
-		setOriginalValue(getText());
+		setOriginalValue(getValue());
 	}
 
 	@Override
 	public void cancel() {
-		setValue(originalText);
+		setValue(originalValue);
 	}
 
 	@Override
-	public String getOriginalValue() {
-		return originalText;
+	public Boolean getOriginalValue() {
+		return originalValue;
 	}
 
 	@Override
-	public void setOriginalValue(final Object originalValue) {
+	public void setOriginalValue(Object originalValue) {
 		if(originalValue == null) return;
-		originalText = originalValue.toString();
-		setValue(originalText);
-	}
-
-	@Override
-	public String getDisplayName() {
-		return displayName;
-	}
-
-	public void setDisplayName(final String name) {
-		this.displayName = name;
+		this.originalValue = ((Boolean) originalValue == trueValue);
+		setValue(this.originalValue);
 	}
 
 	@Override
@@ -136,4 +129,13 @@ public class TextBoxForm extends TextBox implements IFormManaged<String> {
 		this.modelName = modelName;
 	}
 	
+	@Override
+	public String getDisplayName() {
+		return displayName;
+	}
+
+	public void setDisplayName(final String name) {
+		this.displayName = name;
+	}
+
 }

@@ -43,8 +43,14 @@
 		    		<g:RadioButton ui:field="wifi" name="connectionType">WiFi</g:RadioButton>
 		    	</g:HTMLPanel>
 		    	<g:HTMLPanel ui:field="configType" styleName="networkRadioBox">
-		    		<g:RadioButton ui:field="dhcp" name="configType" value="true">DHCP</g:RadioButton><br/>
-		    		<g:RadioButton ui:field="staticConf" name="configType">Static</g:RadioButton>
+		    		<brice:RadioButtonBooleanForm ui:field="dhcp" name="configType" displayName="Is DHCP" formGroup="NETWORK" 
+		    			modelName="networkConfigMethod" trueValue="true">
+		    			DHCP
+		    		</brice:RadioButtonBooleanForm><br/>
+		    		<brice:RadioButtonBooleanForm ui:field="staticConf" name="configType" displayName="Is Static" formGroup="NETWORK" 
+		    			modelName="networkConfigMethod" trueValue="false">
+		    			Static
+		    		</brice:RadioButtonBooleanForm>
 		    	</g:HTMLPanel>
 	    	</g:HTMLPanel>
 	    	<!-- Settings: IP, NM, GW... -->
@@ -52,7 +58,7 @@
 	    		<!-- WiFi ESSID and selection -->
 	    		<g:HTMLPanel styleName="formRow">
 	    			<g:Label ui:field="wifiLabel" styleName="labelForm">WiFi</g:Label>
-	    			<brice:TextBoxForm ui:field="wifiText" name="ESSID" formGroup="NETWORK" modelName="essid" />
+	    			<brice:TextBoxForm ui:field="wifiText" displayName="ESSID" formGroup="NETWORK" modelName="essid" />
 	    			<b:Button ui:field="searchWifiBtn" icon="SEARCH" addStyleNames="{style.roundBtn}" />
 	    		</g:HTMLPanel>
 	    		<!-- WiFi password with a remember and possibility to see password -->
@@ -65,37 +71,37 @@
 	    		<!-- IP -->
 	    		<g:HTMLPanel styleName="formRow">
 	    			<g:Label ui:field="ipLabel" styleName="labelForm">IP Address</g:Label>
-	    			<brice:TextBoxForm ui:field="ipText" name="IP" formGroup="NETWORK" modelName="ip" />
+	    			<brice:TextBoxForm ui:field="ipText" displayName="IP" formGroup="NETWORK" modelName="ip" />
 	    		</g:HTMLPanel>
 	    		<!-- Netmask -->
 	    		<g:HTMLPanel styleName="formRow">
 	    			<g:Label ui:field="nmLabel" styleName="labelForm">Netmask</g:Label>
-	    			<brice:TextBoxForm ui:field="nmText" name="Netmask" formGroup="NETWORK" modelName="netmask" />
+	    			<brice:TextBoxForm ui:field="nmText" displayName="Netmask" formGroup="NETWORK" modelName="netmask" />
 	    		</g:HTMLPanel>
 	    		<!-- Gateway -->
 	    		<g:HTMLPanel styleName="formRow">
 	    			<g:Label ui:field="gwLabel" styleName="labelForm">Gateway</g:Label>
-	    			<brice:TextBoxForm ui:field="gwText" name="Gateway" formGroup="NETWORK" modelName="gateway" />
+	    			<brice:TextBoxForm ui:field="gwText" displayName="Gateway" formGroup="NETWORK" modelName="gateway" />
 	    		</g:HTMLPanel>
 	    		<!-- Primary DNS -->
 	    		<g:HTMLPanel styleName="formRow">
 	    			<g:Label ui:field="dns1Label" styleName="labelForm">Primary DNS</g:Label>
-	    			<brice:TextBoxForm ui:field="dns1Text" name="Primary DNS" formGroup="NETWORK" modelName="primaryDns" />
+	    			<brice:TextBoxForm ui:field="dns1Text" displayName="Primary DNS" formGroup="NETWORK" modelName="primaryDns" />
 	    		</g:HTMLPanel>
 	    		<!-- Secondary DNS -->
 	    		<g:HTMLPanel styleName="formRow">
 	    			<g:Label ui:field="dns2Label" styleName="labelForm">Secondary DNS</g:Label>
-	    			<brice:TextBoxForm ui:field="dns2Text" name="Secondary DNS" formGroup="NETWORK" modelName="secondaryDns" />
+	    			<brice:TextBoxForm ui:field="dns2Text" displayName="Secondary DNS" formGroup="NETWORK" modelName="secondaryDns" />
 	    		</g:HTMLPanel>
 	    	</g:HTMLPanel>
     	</g:HTMLPanel><!-- allSettings -->
     	<!-- Buttons -->
     	<g:LayoutPanel addStyleNames="{style.btnPane}">
     		<g:layer left="25%" width="100px">
-    			<brice:CancelButton ui:field="cancelBtn" icon="TIMES" addStyleNames="btn-inverse">Cancel</brice:CancelButton>
+    			<brice:CancelButton ui:field="cancelBtn" icon="TIMES" addStyleNames="btn-inverse" enabled="false">Cancel</brice:CancelButton>
     		</g:layer>
     		<g:layer right="25%" width="100px">
-    			<brice:SubmitButton ui:field="submitBtn" icon="CHECK" addStyleNames="btn-inverse">Apply</brice:SubmitButton>
+    			<brice:SubmitButton ui:field="submitBtn" icon="CHECK" addStyleNames="btn-inverse" enabled="false">Apply</brice:SubmitButton>
     		</g:layer>
     	</g:LayoutPanel>
     </g:HTMLPanel>
