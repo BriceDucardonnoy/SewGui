@@ -22,6 +22,7 @@ package com.briceducardonnoy.sewgui.client.application.protocol.models;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +35,8 @@ import org.junit.Test;
 
 public class GetNetworkTest {
 	
-	private static List<Byte> messageFromDevice;
+	private static List<Byte> messageFromDeviceLan;
+	private static List<Byte> messageFromDeviceWiFi;
 	/*
 	 *  Static/DHCP: Static => isDhcp = 0
 	 *  WiFi/LAN: LAN => isWifi = 0
@@ -47,7 +49,7 @@ public class GetNetworkTest {
 	 *  192 = C0
 	 *  (byte) 0x31, (byte) 0x39, (byte) 0x32, (byte) 0x2e, (byte) 0x31, (byte) 0x36, (byte) 0x38 == ASCII for 192.168
 	 */
-	private static byte []messageFromDeviceRaw = {
+	private static byte []messageFromDeviceRawLAN = {
 		(byte) 0xfe, (byte) 0x01, (byte) 0x59, (byte) 0x02, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, 
 		// 192.168...
 		(byte) 0x31, (byte) 0x39, (byte) 0x32, (byte) 0x2e, (byte) 0x31, (byte) 0x36, (byte) 0x38, (byte) 0x2e, (byte) 0x31, (byte) 0x2e, (byte) 0x34, (byte) 0x34, 
@@ -59,11 +61,41 @@ public class GetNetworkTest {
 		(byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x65, (byte) 0xf2, (byte) 0xff
 	};
 	
+	/*
+	 *  Static/DHCP: Static => isDhcp = 0
+	 *  WiFi/LAN: WiFi => isWifi = 1
+	 *  IP: 192.168.2.44
+	 *  NM: 255.255.255.0
+	 *  GW: 
+	 *  DNS1: 192.168.1.254
+	 *  DNS2: 
+	 *  
+	 *  192 = C0
+	 *  (byte) 0x31, (byte) 0x39, (byte) 0x32, (byte) 0x2e, (byte) 0x31, (byte) 0x36, (byte) 0x38 == ASCII for 192.168
+	 */
+	private static byte []messageFromDeviceRawWiFi = {
+		(byte) 0xFE, (byte) 0x01, (byte) 0x59, (byte) 0x02, (byte) 0x00, (byte) 0x00, (byte) 0x00,
+		(byte) 0x00, (byte) 0x01, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x31, (byte) 0x39, (byte) 0x32, (byte) 0x2E, (byte) 0x31,
+		(byte) 0x36, (byte) 0x38, (byte) 0x2E, (byte) 0x32, (byte) 0x2E, (byte) 0x34, (byte) 0x34, (byte) 0x00, (byte) 0x00, (byte) 0x00,
+		(byte) 0x00, (byte) 0x32, (byte) 0x35, (byte) 0x35, (byte) 0x2E, (byte) 0x32, (byte) 0x35, (byte) 0x35, (byte) 0x2E, (byte) 0x32,
+		(byte) 0x35, (byte) 0x35, (byte) 0x2E, (byte) 0x30, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00,
+		(byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00,
+		(byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x31, (byte) 0x39, (byte) 0x32, (byte) 0x2E, (byte) 0x31, (byte) 0x36, (byte) 0x38,
+		(byte) 0x2E, (byte) 0x31, (byte) 0x2E, (byte) 0x32, (byte) 0x35, (byte) 0x34, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00,
+		(byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00,
+			(byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x62, (byte) 0x86, (byte) 0xFF
+	};
+	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		messageFromDevice = new ArrayList<>(messageFromDeviceRaw.length);
-		for(int i = 0 ; i < messageFromDeviceRaw.length ; i++) {
-			messageFromDevice.add(messageFromDeviceRaw[i]);
+		messageFromDeviceLan = new ArrayList<>(messageFromDeviceRawLAN.length);
+		for(int i = 0 ; i < messageFromDeviceRawLAN.length ; i++) {
+			messageFromDeviceLan.add(messageFromDeviceRawLAN[i]);
+		}
+		
+		messageFromDeviceWiFi = new ArrayList<>(messageFromDeviceRawWiFi.length);
+		for(int i = 0 ; i < messageFromDeviceRawWiFi.length ; i++) {
+			messageFromDeviceWiFi.add(messageFromDeviceRawWiFi[i]);
 		}
 	}
 
@@ -80,14 +112,27 @@ public class GetNetworkTest {
 	}
 
 	@Test
-	public final void test() {
-		System.out.println("Size of frame is " + messageFromDevice.size());
-		NetworkInfos info = new NetworkInfos(messageFromDevice, 1);
+	public final void testLan() {
+		System.out.println("Size of frame is " + messageFromDeviceLan.size());
+		NetworkInfos info = new NetworkInfos(messageFromDeviceLan, 1);
 		assertFalse("DHCP", info.isDhcp());
 		assertFalse("WiFi", info.isWifi());
 		assertEquals("IP address", "192.168.1.44", info.getIp());
 		assertEquals("Netmask", "255.255.0.0", info.getNm());
 		assertEquals("Gateway", "192.168.1.254", info.getGw());
+		assertEquals("Primary DNS", "192.168.1.254", info.getDns1());
+		assertEquals("Secondary DNS", "", info.getDns2());
+	}
+	
+	@Test
+	public final void testWiFi() {
+		System.out.println("Size of frame is " + messageFromDeviceWiFi.size());
+		NetworkInfos info = new NetworkInfos(messageFromDeviceWiFi, 1);
+		assertFalse("DHCP", info.isDhcp());
+		assertTrue("WiFi", info.isWifi());
+		assertEquals("IP address", "192.168.2.44", info.getIp());
+		assertEquals("Netmask", "255.255.255.0", info.getNm());
+		assertEquals("Gateway", "", info.getGw());
 		assertEquals("Primary DNS", "192.168.1.254", info.getDns1());
 		assertEquals("Secondary DNS", "", info.getDns2());
 	}

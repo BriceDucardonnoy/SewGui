@@ -39,8 +39,10 @@
 	    	<g:HTMLPanel ui:field="config" styleName="mainConfig">
 		    	<!-- <g:HTMLPanel ui:field="connectionType" addStyleNames="{style.networkRadioBox}"> -->
 		    	<g:HTMLPanel ui:field="connectionType" styleName="networkRadioBox">
-		    		<g:RadioButton ui:field="ethernet" name="connectionType" value="true">Ethernet</g:RadioButton><br/>
-		    		<g:RadioButton ui:field="wifi" name="connectionType">WiFi</g:RadioButton>
+		    		<brice:RadioButtonBooleanForm ui:field="ethernet" name="connectionType" displayName="Is LAN" formGroup="NETWORK"
+		    			modelName="networkType" trueValue="false">Ethernet</brice:RadioButtonBooleanForm><br/>
+		    		<brice:RadioButtonBooleanForm ui:field="wifi" name="connectionType" displayName="Is WiFi" formGroup="NETWORK"
+		    			modelName="networkType" trueValue="true">WiFi</brice:RadioButtonBooleanForm>
 		    	</g:HTMLPanel>
 		    	<g:HTMLPanel ui:field="configType" styleName="networkRadioBox">
 		    		<brice:RadioButtonBooleanForm ui:field="dhcp" name="configType" displayName="Is DHCP" formGroup="NETWORK" 

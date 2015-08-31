@@ -46,7 +46,7 @@ public class DataModel {
 	private HashMap<String, Integer> attrIds;
 	private List<Integer> subscribedIds;
 	/** List of widget with a current value different from the one got from the remote unit */
-	private List<IFormManaged<?>> dirtyWidget;
+	private List<IFormManaged<?>> dirtyWidgets;
 	
 	@Inject EventBus eventBus;
 	
@@ -57,7 +57,7 @@ public class DataModel {
 		registeredData = new HashMap<>();
 		attrIds = new HashMap<>();
 		subscribedIds = new ArrayList<>();
-		dirtyWidget = new ArrayList<>();
+		dirtyWidgets = new ArrayList<>();
 		
 		initAttrIdMapping();
 		/*
@@ -74,7 +74,7 @@ public class DataModel {
 		eventBus.addHandler(DirtyWidgetEvent.getType(), new DirtyWidgetHandler() {
 			@Override
 			public void onDirtyWidget(DirtyWidgetEvent event) {
-				logger.info("DIRTY EVENT SEEN");
+				logger.info("DIRTY EVENT SEEN: " + event.isDirty());
 				if(event.isDirty()) {
 					markWidgetAsDirty(event.getDirtyWidget());
 				}
@@ -97,7 +97,7 @@ public class DataModel {
 	 * @return True if at least one data needs to be saved on remote unit
 	 */
 	public boolean isDirtyModel() {
-		return dirtyWidget.size() > 0;
+		return dirtyWidgets.size() > 0;
 	}
 	
 	/**
@@ -106,7 +106,7 @@ public class DataModel {
 	 */
 	public void resetDirtyState() {
 		boolean sendIt = isDirtyModel();
-		dirtyWidget.clear();
+		dirtyWidgets.clear();
 		if(sendIt) {
 			eventBus.fireEvent(new DirtyModelEvent(false));
 		}
@@ -117,7 +117,7 @@ public class DataModel {
 	 * @return A list of dirty {@link IFormManaged}
 	 */
 	public List<IFormManaged<?>> getDirtyWidget() {
-		return dirtyWidget;
+		return dirtyWidgets;
 	}
 	
 	/**
@@ -126,9 +126,9 @@ public class DataModel {
 	 * @param widget The {@link IFormManaged} object to mark as dirty
 	 */
 	public void markWidgetAsDirty(IFormManaged<?> widget) {
-		if(!dirtyWidget.contains(widget)) {
-			dirtyWidget.add(widget);
-			if(dirtyWidget.size() == 1) {
+		if(!dirtyWidgets.contains(widget)) {
+			dirtyWidgets.add(widget);
+			if(dirtyWidgets.size() == 1) {
 				eventBus.fireEvent(new DirtyModelEvent(true));
 			}
 		}
@@ -140,12 +140,31 @@ public class DataModel {
 	 * @param widget The element to be removed from this list, if present
 	 */
 	public void markWidgetAsClean(IFormManaged<?> widget) {
-		boolean sendIt = isDirtyModel();
-		if(dirtyWidget.contains(widget)) {
-			dirtyWidget.remove(widget);
-			if(sendIt && !isDirtyModel()) {
-				eventBus.fireEvent(new DirtyModelEvent(false));
+		boolean dirtyBefore = isDirtyModel();
+		if(!dirtyBefore) return;// List of dirty widget already empty
+		logger.info("Model dirty before: " + dirtyBefore);
+		if(dirtyWidgets.contains(widget)) {// Don't work with radio button because other widget pushed => store ids?
+			logger.info("Contains!");
+			dirtyWidgets.remove(widget);
+		}
+		else {
+			// In case of RadioBtn, 1 widget per possible value exist. So its pair can be present but not itself
+			// => check by using the model ID
+			IFormManaged<?> dirty2remove = null;
+			for(IFormManaged<?> dirty : dirtyWidgets) {
+				if(dirty.getModelId() == widget.getModelId()) {
+					logger.info("Found in 2nd pass");
+					dirty2remove = dirty;
+					break;
+				}
 			}
+			if(dirty2remove != null) {
+				dirtyWidgets.remove(dirty2remove);
+			}
+		}
+		logger.info("Model dirty after: " + isDirtyModel());
+		if(dirtyBefore && !isDirtyModel()) {
+			eventBus.fireEvent(new DirtyModelEvent(false));
 		}
 	}
 	
@@ -339,6 +358,7 @@ public class DataModel {
 	public final static int WiFi_ESSID;
 	public final static int WiFi_PWD;
 	public final static int IS_DHCP;
+	public final static int IS_WIFI;
 	
 	// Do the ID and Attribute name loading from a json reading in the future
 	private void initAttrIdMapping() {
@@ -348,6 +368,7 @@ public class DataModel {
 		attrIds.put("primaryDns", PDNS);
 		attrIds.put("secondaryDns", SDNS);
 		attrIds.put("networkConfigMethod", IS_DHCP);
+		attrIds.put("networkType", IS_WIFI);
 		attrIds.put("essid", WiFi_ESSID);
 		attrIds.put("wifiPwd", WiFi_PWD);
 	}
@@ -362,6 +383,7 @@ public class DataModel {
 		PDNS = i++;
 		SDNS = i++;
 		IS_DHCP = i++;
+		IS_WIFI = i++;
 		WiFi_ESSID = i++;
 		WiFi_PWD = i++;
 	}

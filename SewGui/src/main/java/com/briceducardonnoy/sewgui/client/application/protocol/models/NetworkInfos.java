@@ -149,6 +149,7 @@ public class NetworkInfos implements IsPartOfDataModel, Serializable {
 		serialized.put(DataModel.PDNS, dns1);
 		serialized.put(DataModel.SDNS, dns2);
 		serialized.put(DataModel.IS_DHCP, isDhcp);
+		serialized.put(DataModel.IS_WIFI, isWifi);
 		if(isWifi) {
 			serialized.put(DataModel.WiFi_ESSID, essid);
 			serialized.put(DataModel.WiFi_PWD, pwd);
