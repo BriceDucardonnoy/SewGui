@@ -110,7 +110,7 @@ class NetworkView extends ViewImpl implements NetworkPresenter.MyView {
 		ethernet.setEnabled(enabled);
 		wifi.setEnabled(enabled);
 
-		wifiText.setEnabled(enabled);
+		wifiText.setEnabled(false);// RO field
 		pwdText.setEnabled(enabled);
 		clearPwd.setEnabled(enabled);
 		rememberPwd.setEnabled(enabled);

@@ -64,6 +64,8 @@ public class NetworkInfos implements IsPartOfDataModel, Serializable {
 			idx += 16;
 			dns2 = Utils.getStringFromByteList(array, idx, 16);// 16 = IFNAMSIZ
 			idx += 16;
+			essid = Utils.getStringFromByteList(array, idx, 32);// 32 = IW_ESSID_MAX_SIZE
+			idx += 32;
 		}
 	}
 
