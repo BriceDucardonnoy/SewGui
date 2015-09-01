@@ -100,22 +100,26 @@ public class RequestHelper {
 
 	public final static byte VERSION = 1;
 	
-	public final static byte QUESTION_LENGTH = 1;// Number of bytes of a question request
+	public final static byte BASIC_QUESTION_LENGTH 	= 1;// Number of bytes of a question request
+	public final static byte EXT_QUESTION_LENGTH 	= 2;
 	// Function codes <=> CMD
 	public final static byte DISCOVER 		= 0;
 	public final static byte STOPPAIRING 	= 1;
 	public final static byte GETNETWORK 	= 2;
 	
 	private static Logger logger = Logger.getLogger("SewGui");
-	private static final byte []version = {(byte) 0xFE, 0, 0, 0, 0, (byte) 0xFF};// Special request to ask for version number (version is 0). No CRC needed.
-	private static final byte []discover = {(byte) 0xFE, VERSION, QUESTION_LENGTH, DISCOVER, 0, 0, (byte) 0xFF};
-	private static final byte []stopPairing = {(byte) 0xFE, VERSION, QUESTION_LENGTH, STOPPAIRING, 0, 0, (byte) 0xFF};
-	private static final byte []getNetwork = {(byte) 0xFE, VERSION, QUESTION_LENGTH, GETNETWORK, 0, 0, (byte) 0xFF};
+	private static final byte []version = 		{(byte) 0xFE, 0, 0, 0, 0, (byte) 0xFF};// Special request to ask for version number (version is 0). No CRC needed.
+	private static final byte []discover = 		{(byte) 0xFE, VERSION, BASIC_QUESTION_LENGTH, DISCOVER, 0, 0, (byte) 0xFF};
+	private static final byte []stopPairing = 	{(byte) 0xFE, VERSION, BASIC_QUESTION_LENGTH, STOPPAIRING, 0, 0, (byte) 0xFF};
+//	private static final byte []getNetwork = 	{(byte) 0xFE, VERSION, QUESTION_LENGTH, GETNETWORK, 0, 0, (byte) 0xFF};
+	private static final byte []getNetworkLan = {(byte) 0xFE, VERSION, EXT_QUESTION_LENGTH, GETNETWORK, 0, 0, 0, (byte) 0xFF};
+	private static final byte []getNetworkWifi ={(byte) 0xFE, VERSION, EXT_QUESTION_LENGTH, GETNETWORK, 1, 0, 0, (byte) 0xFF};
 
 	static {
 		setCrcIntoByteArray(discover, getCrc16(discover));
 		setCrcIntoByteArray(stopPairing, getCrc16(stopPairing));
-		setCrcIntoByteArray(getNetwork, getCrc16(getNetwork));
+		setCrcIntoByteArray(getNetworkLan, getCrc16(getNetworkLan));
+		setCrcIntoByteArray(getNetworkWifi, getCrc16(getNetworkWifi));
 	}
 	
 	/*
@@ -236,9 +240,16 @@ public class RequestHelper {
 		}
 	}
 	
-	public static byte[] getNetwork(int protocol) {
+	public static byte[] getNetworkLan(int protocol) {
 		switch (protocol) {
-			case 1: return getNetwork;
+			case 1: return getNetworkLan;
+			default: return new byte[0];
+		}
+	}
+	
+	public static byte[] getNetworkWifi(int protocol) {
+		switch (protocol) {
+			case 1: return getNetworkWifi;
 			default: return new byte[0];
 		}
 	}
@@ -250,7 +261,8 @@ public class RequestHelper {
 		logger.info("Stop pairing");
 		setCrcIntoByteArray(stopPairing, getCrc16(stopPairing));
 		logger.info("Get network");
-		setCrcIntoByteArray(getNetwork, getCrc16(getNetwork));
+		setCrcIntoByteArray(getNetworkLan, getCrc16(getNetworkLan));
+		setCrcIntoByteArray(getNetworkWifi, getCrc16(getNetworkWifi));
 	}
 
 }

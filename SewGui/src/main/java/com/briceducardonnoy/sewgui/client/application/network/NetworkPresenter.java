@@ -48,6 +48,7 @@ import com.google.gwt.core.client.Callback;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.RadioButton;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.HandlerRegistration;
@@ -61,11 +62,12 @@ import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 public class NetworkPresenter extends Presenter<NetworkPresenter.MyView, NetworkPresenter.MyProxy> implements IFormManager {
 	
 	interface MyView extends View  {
-		void setWifi(final boolean isWifi);
 		void setPwd(String value);
 		void setWidgetEnabled(boolean enableb);
 		void setFormActionEnabled(boolean enabled);
 		Button getDiscoverWiFiBtn();
+		RadioButton getWifiMode();
+		RadioButton getEthernetMode();
 	}
 	
 	public static final NestedSlot SLOT_Network = new NestedSlot();
@@ -95,6 +97,22 @@ public class NetworkPresenter extends Presenter<NetworkPresenter.MyView, Network
 		registerHandler(getView().getDiscoverWiFiBtn().addClickHandler(discoverH));
 		registerHandler(getEventBus().addHandler(WiFiDiscoverEvent.getType(), wifiFoundH));
 		registerHandler(getEventBus().addHandler(DirtyModelEvent.getType(), dirtyModelH));
+		registerHandler(getView().getWifiMode().addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				context.getBluetoothPlugin().write(
+					RequestHelper.getNetworkWifi(context.getCurrentProtocol()), 
+					getNetworkCB);
+			}
+		}));
+		registerHandler(getView().getEthernetMode().addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				context.getBluetoothPlugin().write(
+					RequestHelper.getNetworkLan(context.getCurrentProtocol()), 
+					getNetworkCB);
+			}
+		}));
 		register(ApplicationContext.getFormManagedWidgetFromFormName(getFormGroup()));
 	}
 
@@ -110,7 +128,7 @@ public class NetworkPresenter extends Presenter<NetworkPresenter.MyView, Network
 			return;
 		}
 		// Ask network data to remote unit
-		byte []request = RequestHelper.getNetwork(context.getCurrentProtocol());
+		byte []request = RequestHelper.getNetworkLan(context.getCurrentProtocol());
 		context.getBluetoothPlugin().write(request, getNetworkCB);
 		getView().setFormActionEnabled(false);
 	}
@@ -170,7 +188,7 @@ public class NetworkPresenter extends Presenter<NetworkPresenter.MyView, Network
 			if(event.getUpdatedIds().contains(DataModel.IS_BLUETOOTH_CONNECTED)) {
 				logger.info("Update bluetooth state to " + context.isConnected2Device());
 				if(context.isConnected2Device()) {
-					byte []request = RequestHelper.getNetwork(context.getCurrentProtocol());
+					byte []request = RequestHelper.getNetworkLan(context.getCurrentProtocol());
 					context.getBluetoothPlugin().write(request, getNetworkCB);
 				}
 				else {

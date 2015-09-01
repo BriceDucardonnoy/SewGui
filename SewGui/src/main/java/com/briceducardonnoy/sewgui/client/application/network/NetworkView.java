@@ -25,6 +25,7 @@ import javax.inject.Inject;
 import org.gwtbootstrap3.client.ui.Button;
 
 import com.briceducardonnoy.sewgui.client.context.ApplicationContext;
+import com.briceducardonnoy.sewgui.client.widgets.RadioButtonBooleanForm;
 import com.briceducardonnoy.sewgui.client.widgets.TextBoxForm;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -43,8 +44,8 @@ class NetworkView extends ViewImpl implements NetworkPresenter.MyView {
     }
 	@UiField HTMLPanel main;
 
-	@UiField RadioButton dhcp;
-	@UiField RadioButton staticConf;
+	@UiField RadioButtonBooleanForm dhcp;
+	@UiField RadioButtonBooleanForm staticConf;
 	@UiField RadioButton ethernet;
 	@UiField RadioButton wifi;
 
@@ -85,18 +86,10 @@ class NetworkView extends ViewImpl implements NetworkPresenter.MyView {
 			pwdText.getElement().setAttribute("type", "password");
 		}
 	}
-// TODO BDY: remove all these methods. All will be done in presenter thanks to the registered widgets or by datamodel handler in widget itself
 
-	@Override
-	public void setWifi(final boolean isWifi) {
-		if(isWifi) {
-			wifi.setValue(true);
-		}
-		else {
-			ethernet.setValue(true);
-		}
-	}
-
+	@Override public RadioButton getWifiMode() { return wifi; }
+	@Override public RadioButton getEthernetMode() { return ethernet; }
+	
 	@Override
 	public void setPwd(String pwd) {
 		pwdText.setText(pwd);
