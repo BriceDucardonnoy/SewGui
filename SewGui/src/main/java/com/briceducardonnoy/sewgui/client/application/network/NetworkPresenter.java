@@ -196,7 +196,6 @@ public class NetworkPresenter extends Presenter<NetworkPresenter.MyView, Network
 				}
 				return;
 			}
-			// TODO BDY: Store local password
 			// TODO BDY: Create a system similar of activatePage which (dis)abled the widget depending of the status instead of write manually a "setWidgetEnabled"
 			getView().setPwd((String) context.getModel().getValue(DataModel.WiFi_PWD));
 			for(IFormManaged<?> formWidget : formWidgets) {

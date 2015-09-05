@@ -68,7 +68,7 @@ public class TextBoxForm extends TextBox implements IFormManaged<String> {
 				}
 			}
 		}));
-		// TODO BDY: add datamodel handler on its own attribute or id? but need to disable it if view is hidden
+		// BDY: add datamodel handler on its own attribute or id? but need to disable it if view is hidden. No, managed by the presenter in its own datamodel handler
 	}
 	
 	@Override
