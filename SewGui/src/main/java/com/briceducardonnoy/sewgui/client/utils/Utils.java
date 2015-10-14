@@ -20,12 +20,26 @@
  */
 package com.briceducardonnoy.sewgui.client.utils;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+
+import com.briceducardonnoy.sewgui.client.application.exceptions.IncorrectFrameException;
+import com.briceducardonnoy.sewgui.client.application.protocol.RequestHelper;
+import com.briceducardonnoy.sewgui.client.events.DataModelEvent;
+import com.briceducardonnoy.sewgui.client.model.DataModel;
+import com.google.gwt.typedarrays.client.Int8ArrayNative;
 
 public class Utils {
 	
 //	private static Logger logger = LogManager.getLogManager().getLogger("SewGui");
 
+	/**
+	 * Get an int type from a byte list
+	 * @param array The array of byte
+	 * @param idx The index of the 1st of the 4 bytes to convert into integer
+	 * @return The int from byte[<code>idx</code>]<<24 | byte[<code>idx</code>+1]<<16 | byte[<code>idx</code>+2]<<8 | byte[<code>idx</code>+3]
+	 */
 	public static int getIntFromByteList(List<Byte> array, int idx) {
 		if(idx + 4 > array.size()) {
 			throw new ArrayIndexOutOfBoundsException("Byte array doesn't contain enough space: " + array.size() + " present but " + (idx+4) + " required");
@@ -74,5 +88,59 @@ public class Utils {
 //			}
 //		}
 //	};
+	
+	/**
+	 * Convert the List<Byte> packet received from remote unit with {@link RequestHelper#CONNSTATUS} tag as a HashMap ready
+	 * to send through a {@link DataModelEvent#DataModelEvent(HashMap)}
+	 * @param packet The byte-UNstuffed packet received from unit
+	 * @return A HashMap<Integer, Object> with the good IDs from {@link DataModel}
+	 * @throws IncorrectFrameException If the packet isn't valid
+	 */
+	public static HashMap<Integer, Object> getDataModelHashMapFromNetworkConnectivityPacket(List<Byte> packet) throws IncorrectFrameException {
+		if(packet == null) throw new IncorrectFrameException("Network connectivity packet is null");
+		if(packet.isEmpty() || packet.size() < 2) throw new IncorrectFrameException("Network connectivity packet is empty or 1 byte");
+		
+		HashMap<Integer, Object> values2update = new HashMap<>();
+		
+		switch(packet.get(1)) {// Protocol
+			case 1:
+				if(packet.get(3) != RequestHelper.CONNSTATUS) throw new IncorrectFrameException("Network connectivity packet hasn't the good command tag");
+				int wlan0state = packet.get(4);
+				int eth0state = packet.get(5);
+				values2update.put(DataModel.LAN_CONN, eth0state);
+				values2update.put(DataModel.WAN_CONN, wlan0state);
+				break;
+			default:
+				throw new IncorrectFrameException("Network connectivity unknown protocol version: " + packet.get(1));
+		};
+		
+		return values2update;
+	}
+	
+	/**
+	 * Convert a <code>Int8ArrayNative</code> object to a list of bytes
+	 * @param response The <code>Int8ArrayNative</code> packet received from remote unit
+	 * @param unstuffPacket True if <code>response</code> needs to be unstuffed (eg. FD00 -> FD, FD01 -> FE and FD02 -> FF)
+	 * @return A list of bytes
+	 */
+	public static List<Byte> convertInt8Array2ListByte(Int8ArrayNative response, boolean unstuffPacket) {
+		List<Byte> message = new ArrayList<>(response.length());
+		for(int i = 0 ; i < response.length() ; i++) {
+			if(unstuffPacket && response.get(i) == (byte) 0xFD) {// Byte stuffing
+				switch(response.get(i+1)) {
+					case 0x00: message.add((byte) 0xFD);
+					break;
+					case 0x01: message.add((byte) 0xFE);
+					break;
+					case 0x02: message.add((byte) 0xFF);
+					break;
+				}
+				i++;// Take care, here we increment 'i' inside the loop
+				continue;
+			}
+			message.add(response.get(i));
+		}
+		return message;
+	}
 	
 }

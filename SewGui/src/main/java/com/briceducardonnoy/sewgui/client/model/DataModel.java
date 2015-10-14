@@ -359,6 +359,8 @@ public class DataModel {
 	public final static int WiFi_PWD;
 	public final static int IS_DHCP;
 	public final static int IS_WIFI;
+	public final static int LAN_CONN;
+	public final static int WAN_CONN;
 	
 	// Do the ID and Attribute name loading from a json reading in the future
 	private void initAttrIdMapping() {
@@ -386,6 +388,8 @@ public class DataModel {
 		IS_WIFI = i++;
 		WiFi_ESSID = i++;
 		WiFi_PWD = i++;
+		LAN_CONN = i++;
+		WAN_CONN = i++;
 	}
 	
 	/*

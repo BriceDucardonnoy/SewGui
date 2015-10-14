@@ -20,7 +20,6 @@
  */
 package com.briceducardonnoy.sewgui.client.application.protocol;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -28,6 +27,7 @@ import com.briceducardonnoy.sewgui.client.application.exceptions.IncorrectFrameE
 import com.briceducardonnoy.sewgui.client.application.protocol.models.NetworkInfos;
 import com.briceducardonnoy.sewgui.client.events.DataModelEvent;
 import com.briceducardonnoy.sewgui.client.events.WiFiDiscoverEvent;
+import com.briceducardonnoy.sewgui.client.utils.Utils;
 import com.google.gwt.typedarrays.client.Int8ArrayNative;
 import com.google.web.bindery.event.shared.EventBus;
 
@@ -106,20 +106,23 @@ public class RequestHelper {
 	public final static byte DISCOVER 		= 0;
 	public final static byte STOPPAIRING 	= 1;
 	public final static byte GETNETWORK 	= 2;
+	public final static byte CONNSTATUS		= 3;
 	
 	private static Logger logger = Logger.getLogger("SewGui");
-	private static final byte []version = 		{(byte) 0xFE, 0, 0, 0, 0, (byte) 0xFF};// Special request to ask for version number (version is 0). No CRC needed.
-	private static final byte []discover = 		{(byte) 0xFE, VERSION, BASIC_QUESTION_LENGTH, DISCOVER, 0, 0, (byte) 0xFF};
-	private static final byte []stopPairing = 	{(byte) 0xFE, VERSION, BASIC_QUESTION_LENGTH, STOPPAIRING, 0, 0, (byte) 0xFF};
-//	private static final byte []getNetwork = 	{(byte) 0xFE, VERSION, QUESTION_LENGTH, GETNETWORK, 0, 0, (byte) 0xFF};
-	private static final byte []getNetworkLan = {(byte) 0xFE, VERSION, EXT_QUESTION_LENGTH, GETNETWORK, 0, 0, 0, (byte) 0xFF};
-	private static final byte []getNetworkWifi ={(byte) 0xFE, VERSION, EXT_QUESTION_LENGTH, GETNETWORK, 1, 0, 0, (byte) 0xFF};
+	private static final byte []version 		= {(byte) 0xFE, 0, 0, 0, 0, (byte) 0xFF};// Special request to ask for version number (version is 0). No CRC needed.
+	private static final byte []discover 		= {(byte) 0xFE, VERSION, BASIC_QUESTION_LENGTH, DISCOVER, 0, 0, (byte) 0xFF};
+	private static final byte []stopPairing 	= {(byte) 0xFE, VERSION, BASIC_QUESTION_LENGTH, STOPPAIRING, 0, 0, (byte) 0xFF};
+//	private static final byte []getNetwork 		= {(byte) 0xFE, VERSION, QUESTION_LENGTH, GETNETWORK, 0, 0, (byte) 0xFF};
+	private static final byte []getNetworkLan 	= {(byte) 0xFE, VERSION, EXT_QUESTION_LENGTH, GETNETWORK, 0, 0, 0, (byte) 0xFF};
+	private static final byte []getNetworkWifi 	= {(byte) 0xFE, VERSION, EXT_QUESTION_LENGTH, GETNETWORK, 1, 0, 0, (byte) 0xFF};
+	private static final byte []getConnStatus	= {(byte) 0xFE, VERSION, BASIC_QUESTION_LENGTH, CONNSTATUS, 0, 0, (byte) 0xFF};
 
 	static {
 		setCrcIntoByteArray(discover, getCrc16(discover));
 		setCrcIntoByteArray(stopPairing, getCrc16(stopPairing));
 		setCrcIntoByteArray(getNetworkLan, getCrc16(getNetworkLan));
 		setCrcIntoByteArray(getNetworkWifi, getCrc16(getNetworkWifi));
+		setCrcIntoByteArray(getConnStatus, getCrc16(getConnStatus));
 	}
 	
 	/*
@@ -200,10 +203,7 @@ public class RequestHelper {
 				Integer.toHexString(crcCalculated & 0xFFFF));
 		}
 		// All is fine, get an array of byte.
-		List<Byte> message = new ArrayList<>(response.length());
-		for(int i = 0 ; i < response.length() ; i++) {
-			message.add(response.get(i));
-		}
+		List<Byte> message = Utils.convertInt8Array2ListByte(response, true);
 		
 		int cmd = -1;
 		if(response.get(1) == 1) {// Version
@@ -217,6 +217,9 @@ public class RequestHelper {
 			break;
 		case GETNETWORK:
 			eventBus.fireEvent(new DataModelEvent(new NetworkInfos(message, response.get(1)).toHashMap()));
+			break;
+		case CONNSTATUS:
+			eventBus.fireEvent(new DataModelEvent(Utils.getDataModelHashMapFromNetworkConnectivityPacket(message)));
 			break;
 		default: logger.warning("Code function unrecognized: " + cmd + " => do nothing");
 		}
@@ -253,6 +256,13 @@ public class RequestHelper {
 			default: return new byte[0];
 		}
 	}
+	
+	public static byte[] getConnectivity(int protocol) {
+		switch (protocol) {
+			case 1: return getConnStatus;
+			default: return new byte[0];
+		}
+	}
 
 	public static void main(String[] args) {
 		System.out.println("FF = " + String.valueOf(Character.toChars(255)));
@@ -263,6 +273,8 @@ public class RequestHelper {
 		logger.info("Get network");
 		setCrcIntoByteArray(getNetworkLan, getCrc16(getNetworkLan));
 		setCrcIntoByteArray(getNetworkWifi, getCrc16(getNetworkWifi));
+		logger.info("Connectivity");
+		setCrcIntoByteArray(getConnStatus, getCrc16(getConnStatus));
 	}
 
 }

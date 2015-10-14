@@ -30,6 +30,8 @@ import com.briceducardonnoy.sewgui.client.model.DataModel;
 import com.briceducardonnoy.sewgui.client.model.IFormManaged;
 import com.briceducardonnoy.sewgui.client.model.IFormManager;
 import com.briceducardonnoy.sewgui.client.wrappers.BluetoothSerialImpl;
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.RepeatingCommand;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
@@ -53,7 +55,7 @@ public class ApplicationContext {
 	@Inject
 	ApplicationContext(final PhoneGap pg, final DataModel model, final EventBus eventBus) {
 		logger.info("CREATE ApplicationContext");
-		phoneGap = pg;// TODO BDY: if network LAN ok, color the LAN icon (green if ping www.google.com, orange if only 8.8.8.8). Same for WiFi (need ping in embed).
+		phoneGap = pg;
 		ApplicationContext.model = model;
 		ApplicationContext.eventBus = eventBus;
 		
@@ -136,7 +138,15 @@ public class ApplicationContext {
 	}
 
 	public final void setConnected2Device(final boolean isConnected2Device) {
+		if(((Boolean) model.getValue(DataModel.IS_BLUETOOTH_CONNECTED)) == isConnected2Device) return;
 		model.updateValue(DataModel.IS_BLUETOOTH_CONNECTED, isConnected2Device);
+		Scheduler.get().scheduleFixedDelay(new RepeatingCommand() {
+			@Override
+			public boolean execute() {
+				// TODO BDY: NYI connectivity request and submit to ids
+				return isConnected2Device();
+			}
+		}, 5000);
 	}
 	
 	/*
