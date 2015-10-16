@@ -109,7 +109,7 @@ public class RequestHelper {
 		// Controls CRC
 		short crcCalculated = (short) (Utils.getCrc16(message) & 0xFFFF);
 		short crcGot = (short) ((response.get(length - 3) << 8) | (response.get(length - 2) & 0xFF));
-		if(crcGot != crcCalculated) {// FIXME BDY: unByte-stuff the packet before
+		if(crcGot != crcCalculated) {
 			throw new IncorrectFrameException("CRC error. Received : 0x" + Integer.toHexString(crcGot & 0xFFFF) + " and calculated " +
 				Integer.toHexString(crcCalculated & 0xFFFF));
 		}

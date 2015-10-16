@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import org.gwtbootstrap3.client.ui.Button;
+import org.gwtbootstrap3.client.ui.Icon;
 
 import com.allen_sauer.gwt.log.client.Log;
 import com.briceducardonnoy.sewgui.client.application.exceptions.IncorrectFrameException;
@@ -69,7 +70,9 @@ public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView,
 		Button getDiscoverWiFi();
 		Button getConnect2device();
 		Button getTestBtn();
-		public Image getBluetoothStatus();
+		Image getBluetoothStatus();
+		Icon getWiredStatus();
+		Icon getWifiStatus();
 	}
 
 	private static Logger logger = Logger.getLogger("SewGui");
@@ -135,12 +138,16 @@ public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView,
 					logger.info("Update bluetooth state to " + context.isConnected2Device());
 					getView().getBluetoothStatus().setResource(
 							context.isConnected2Device() ? SewImagesResources.INSTANCE.bluetoothOn() : SewImagesResources.INSTANCE.bluetoothOff());
+					if(!context.isConnected2Device()) {
+						getView().getWiredStatus().setColor(getColorFromStatus(-1));
+						getView().getWifiStatus().setColor(getColorFromStatus(-1));
+					}
 				}
 				else if(event.getUpdatedIds().contains(DataModel.LAN_CONN)) {
-					
+					getView().getWiredStatus().setColor(getColorFromStatus((Integer) model.getValue(DataModel.LAN_CONN)));
 				}
 				else if(event.getUpdatedIds().contains(DataModel.WAN_CONN)) {
-
+					getView().getWifiStatus().setColor(getColorFromStatus((Integer) model.getValue(DataModel.WAN_CONN)));
 				}
 			}
 		}));
@@ -172,6 +179,25 @@ public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView,
 				addToPopupSlot(wifiListPres, true);
 			}
 		}));
+	}
+	
+	private String getColorFromStatus(Integer status) {
+		String color;
+		switch(status) {
+			case 0:// Green
+				color = "#00FF00";
+				break;
+			case 1:// Orange
+				color = "#FF8C00";
+				break;
+			case 2:// Blue
+				color = "#0000FF";
+				break;
+			case -1:// Red
+			default:
+				color = "#FF0000";
+		}
+		return color;
 	}
 	
 	/*

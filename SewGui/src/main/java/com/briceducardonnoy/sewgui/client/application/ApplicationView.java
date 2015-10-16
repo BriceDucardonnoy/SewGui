@@ -204,4 +204,14 @@ class ApplicationView extends ViewImpl implements ApplicationPresenter.MyView {
 		return bluetoothStatus;
 	}
 	
+	@Override
+	public Icon getWiredStatus() {
+		return wiredStatus;
+	}
+	
+	@Override
+	public Icon getWifiStatus() {
+		return wifiStatus;
+	}
+	
 }
