@@ -25,7 +25,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Logger;
 
-import com.briceducardonnoy.sewgui.client.application.protocol.RequestHelper;
 import com.briceducardonnoy.sewgui.client.model.DataModel;
 import com.briceducardonnoy.sewgui.client.utils.Utils;
 
@@ -46,7 +45,7 @@ public class NetworkInfos implements IsPartOfDataModel, Serializable {
 
 	public NetworkInfos(List<Byte> array, int protocolVersion) {
 		logger.info("Create a network information object");
-		int idx = RequestHelper.getIndexOf1stDataInArray(protocolVersion);
+		int idx = Utils.getIndexOf1stDataInArray(protocolVersion);
 		if(protocolVersion == 1) {
 			isDhcp = Utils.getIntFromByteList(array, idx) != 0;
 			idx += 4;// Size of int

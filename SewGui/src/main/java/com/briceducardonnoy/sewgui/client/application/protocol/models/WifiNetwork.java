@@ -27,11 +27,11 @@ import java.util.logging.Logger;
 
 import org.gwtbootstrap3.client.ui.constants.IconType;
 
-import com.briceducardonnoy.sewgui.client.application.protocol.RequestHelper;
 import com.briceducardonnoy.sewgui.client.application.windows.SewEntity;
 import com.briceducardonnoy.sewgui.client.events.SewEntitySelectedEvent;
 import com.briceducardonnoy.sewgui.client.events.SewEntitySelectedEvent.SewEntitySelectedHandler;
 import com.briceducardonnoy.sewgui.client.images.SewImagesResources;
+import com.briceducardonnoy.sewgui.client.utils.Utils;
 import com.briceducardonnoy.sewgui.client.widgets.ImageButton;
 import com.briceducardonnoy.sewgui.client.widgets.ImageButton.Position;
 import com.google.gwt.event.shared.GwtEvent.Type;
@@ -104,7 +104,7 @@ public class WifiNetwork implements SewEntity, Serializable {
 		List<WifiNetwork> wifis = new ArrayList<>();
 		int sz = getSizeOfFrame(protocolVersion);
 
-		for(int i = RequestHelper.getIndexOf1stDataInArray(protocolVersion) ; i < array.size() - sz ; i += sz) {
+		for(int i = Utils.getIndexOf1stDataInArray(protocolVersion) ; i < array.size() - sz ; i += sz) {
 			wifis.add(new WifiNetwork(array.subList(i, i + sz), protocolVersion));
 		}
 		

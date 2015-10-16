@@ -30,6 +30,7 @@ import com.briceducardonnoy.sewgui.client.model.DataModel;
 import com.briceducardonnoy.sewgui.client.model.IFormManaged;
 import com.briceducardonnoy.sewgui.client.model.IFormManager;
 import com.briceducardonnoy.sewgui.client.wrappers.BluetoothSerialImpl;
+import com.google.gwt.core.client.Callback;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.RepeatingCommand;
 import com.google.inject.Inject;
@@ -140,10 +141,18 @@ public class ApplicationContext {
 	public final void setConnected2Device(final boolean isConnected2Device) {
 		if(((Boolean) model.getValue(DataModel.IS_BLUETOOTH_CONNECTED)) == isConnected2Device) return;
 		model.updateValue(DataModel.IS_BLUETOOTH_CONNECTED, isConnected2Device);
+		if(isConnected2Device) {
+			logger.info("Start network refresh");
+			model.subscribe(DataModel.LAN_CONN, DataModel.WAN_CONN);
+		}
+		else {
+			logger.info("Stop network refresh");
+			model.unsubscribe(DataModel.LAN_CONN, DataModel.WAN_CONN);
+		}
 		Scheduler.get().scheduleFixedDelay(new RepeatingCommand() {
 			@Override
 			public boolean execute() {
-				// TODO BDY: NYI connectivity request and submit to ids
+				getBluetoothPlugin().write(RequestHelper.getConnectivity(getCurrentProtocol()), nothingCB);
 				return isConnected2Device();
 			}
 		}, 5000);
@@ -152,5 +161,15 @@ public class ApplicationContext {
 	/*
 	 * Handlers and callbacks
 	 */
+	private Callback<Object, String> nothingCB = new Callback<Object, String>() {
+		@Override
+		public void onFailure(String reason) {
+			logger.warning("Failed " + reason);
+		}
+		@Override
+		public void onSuccess(Object result) {
+			logger.info("Succeed");
+		}
+	};
 
 }

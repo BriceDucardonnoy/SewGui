@@ -185,13 +185,14 @@ public class DataModel {
 	/**
 	 * ID that we wish to receive a {@link DataModelEvent} where an update appear.<br />
 	 * As it's a single user project, no need to know who the requester is
-	 * @param id The ID to listen
+	 * @param id The list of IDs to listen
 	 */
-	public void subscribe(Integer id) {
-		if(!subscribedIds.contains(id)) {
-			subscribedIds.add(id);
+	public void subscribe(Integer... ids) {
+		for(int i = 0 ; i < ids.length ; i++) {
+			if(!subscribedIds.contains(ids[i])) {
+				subscribedIds.add(ids[i]);
+			}
 		}
-		// TESTME: BDY: get values from remote then?
 	}
 	
 	/**
@@ -229,10 +230,12 @@ public class DataModel {
 	/**
 	 * ID that we wish to stop receiving a {@link DataModelEvent} where an update appear.<br />
 	 * As it's a single user project, no need to know who the requester is
-	 * @param id The ID to listen
+	 * @param id The list of IDs to not listen
 	 */
-	public void unsubscribe(Integer id) {
-		subscribedIds.remove(id);
+	public void unsubscribe(Integer... ids) {
+		for(int i = 0 ; i < ids.length ; i++) {
+			subscribedIds.remove(ids[i]);
+		}
 	}
 	
 	/**

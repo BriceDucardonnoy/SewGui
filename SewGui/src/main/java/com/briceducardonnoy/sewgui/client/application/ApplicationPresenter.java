@@ -136,6 +136,12 @@ public class ApplicationPresenter extends Presenter<ApplicationPresenter.MyView,
 					getView().getBluetoothStatus().setResource(
 							context.isConnected2Device() ? SewImagesResources.INSTANCE.bluetoothOn() : SewImagesResources.INSTANCE.bluetoothOff());
 				}
+				else if(event.getUpdatedIds().contains(DataModel.LAN_CONN)) {
+					
+				}
+				else if(event.getUpdatedIds().contains(DataModel.WAN_CONN)) {
+
+				}
 			}
 		}));
 		// Connect to device
