@@ -68,6 +68,7 @@ public class NetworkPresenter extends Presenter<NetworkPresenter.MyView, Network
 		Button getDiscoverWiFiBtn();
 		RadioButton getWifiMode();
 		RadioButton getEthernetMode();
+		Button getCancelBtn();
 	}
 	
 	public static final NestedSlot SLOT_Network = new NestedSlot();
@@ -113,6 +114,7 @@ public class NetworkPresenter extends Presenter<NetworkPresenter.MyView, Network
 					getNetworkCB);
 			}
 		}));
+		registerHandler(getView().getCancelBtn().addClickHandler(cancelH));
 		register(ApplicationContext.getFormManagedWidgetFromFormName(getFormGroup()));
 	}
 
@@ -168,7 +170,13 @@ public class NetworkPresenter extends Presenter<NetworkPresenter.MyView, Network
 	
 	@Override
 	public void cancel() {
-		// TODO BDY: NYI cancel
+		for(IFormManaged<? extends Comparable<?>> widget : formWidgets) {
+			if(widget.isDirty()) {
+				logger.info("Will cancel widget " + widget.getDisplayName());
+				widget.cancel();
+			}
+		}
+		getView().setFormActionEnabled(false);
 	}
 	
 	@Override
@@ -193,15 +201,18 @@ public class NetworkPresenter extends Presenter<NetworkPresenter.MyView, Network
 				}
 				else {
 					getView().setWidgetEnabled(false);
+					getView().setFormActionEnabled(false);
 				}
 				return;
 			}
 			// TODO BDY: Create a system similar of activatePage which (dis)abled the widget depending of the status instead of write manually a "setWidgetEnabled"
 			getView().setPwd((String) context.getModel().getValue(DataModel.WiFi_PWD));
 			for(IFormManaged<?> formWidget : formWidgets) {
-				logger.fine("Update original value for " + formWidget.getDisplayName() + " (" + formWidget.getModelId() + ") with " + 
-					context.getModel().getValue(formWidget.getModelId()));
-				formWidget.setOriginalValue(context.getModel().getValue(formWidget.getModelId()));
+				if(event.getUpdatedIds().contains(formWidget.getModelId())) {
+					logger.fine("Update original value for " + formWidget.getDisplayName() + " (" + formWidget.getModelId() + ") with " + 
+						context.getModel().getValue(formWidget.getModelId()));
+					formWidget.setOriginalValue(context.getModel().getValue(formWidget.getModelId()));
+				}
 			}
 		}
 	};
@@ -212,11 +223,19 @@ public class NetworkPresenter extends Presenter<NetworkPresenter.MyView, Network
 			logger.warning("Get nework failed " + reason);
 			Window.alert("Get network failed " + reason);
 			getView().setWidgetEnabled(false);
+			getView().setFormActionEnabled(false);
 		}
 		@Override
 		public void onSuccess(Object result) {
 			logger.info("Get network succeed");
 			getView().setWidgetEnabled(true);
+		}
+	};
+	
+	private ClickHandler cancelH = new ClickHandler() {
+		@Override
+		public void onClick(ClickEvent event) {
+			cancel();
 		}
 	};
 	// WiFi

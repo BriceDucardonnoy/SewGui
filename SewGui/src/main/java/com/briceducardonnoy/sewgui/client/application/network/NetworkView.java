@@ -78,6 +78,11 @@ class NetworkView extends ViewImpl implements NetworkPresenter.MyView {
 		return searchWifiBtn;
 	}
 
+	@Override
+	public Button getCancelBtn() {
+		return cancelBtn;
+	} 
+
 	@UiHandler("clearPwd")
 	public void onShowPassword(ClickEvent event) {
 		if (clearPwd.getValue()) {

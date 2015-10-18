@@ -149,18 +149,20 @@ public class ApplicationContext {
 			logger.info("Stop network refresh");
 			model.unsubscribe(DataModel.LAN_CONN, DataModel.WAN_CONN);
 		}
-		Scheduler.get().scheduleFixedDelay(new RepeatingCommand() {
-			@Override
-			public boolean execute() {
-				getBluetoothPlugin().write(RequestHelper.getConnectivity(getCurrentProtocol()), nothingCB);
-				return isConnected2Device();
-			}
-		}, 5000);
+		Scheduler.get().scheduleFixedDelay(refreshConnectivity, 5000);
 	}
 	
 	/*
-	 * Handlers and callbacks
+	 * Handlers and callbacks etc.
 	 */
+	private RepeatingCommand refreshConnectivity = new RepeatingCommand() {
+		@Override
+		public boolean execute() {
+			getBluetoothPlugin().write(RequestHelper.getConnectivity(getCurrentProtocol()), nothingCB);
+			return isConnected2Device();
+		}
+	};
+	
 	private Callback<Object, String> nothingCB = new Callback<Object, String>() {
 		@Override
 		public void onFailure(String reason) {
