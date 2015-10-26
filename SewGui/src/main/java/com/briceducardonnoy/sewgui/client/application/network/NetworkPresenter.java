@@ -165,7 +165,7 @@ public class NetworkPresenter extends Presenter<NetworkPresenter.MyView, Network
 	
 	@Override
 	public void submit() {
-		// TODO BDY: NYI submit
+		// TODO BDY: NYI submit. After sending set request, send a get request to check status
 	}
 	
 	@Override

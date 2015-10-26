@@ -61,10 +61,11 @@ public class TextBoxForm extends TextBox implements IFormManaged<String> {
 				if(isDirty()) {
 					logger.log(Level.FINE, getName() + " is dirty");
 					ApplicationContext.getEventBus().fireEvent(new DirtyWidgetEvent(TextBoxForm.this, true));
+					TextBoxForm.this.getElement().getStyle().setBackgroundColor("#E3DD7D");
 				}
 				else {
 					logger.log(Level.FINE, getName() + " is no more dirty");
-					ApplicationContext.getEventBus().fireEvent(new DirtyWidgetEvent(TextBoxForm.this, false));
+					setNotDirty();
 				}
 			}
 		}));
@@ -79,11 +80,18 @@ public class TextBoxForm extends TextBox implements IFormManaged<String> {
 	@Override
 	public void submit() {
 		setOriginalValue(getText());
+		TextBoxForm.this.getElement().getStyle().setBackgroundColor("#FFFFFF");
 	}
 
 	@Override
 	public void cancel() {
 		setValue(originalText);
+		setNotDirty();
+	}
+	
+	private void setNotDirty() {
+		getElement().getStyle().setBackgroundColor("#FFFFFF");
+		ApplicationContext.getEventBus().fireEvent(new DirtyWidgetEvent(TextBoxForm.this, false));
 	}
 
 	@Override
