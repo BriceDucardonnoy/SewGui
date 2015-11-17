@@ -72,6 +72,8 @@ public class RequestHelper {
 	public final static byte GETNETWORK 	= 2;
 	public final static byte CONNSTATUS		= 3;
 	
+	public final static byte SETNETWORKLAN	= 10;
+	
 	private static Logger logger = Logger.getLogger("SewGui");
 	private static final byte []version 		= {(byte) 0xFE, 0, 0, 0, 0, (byte) 0xFF};// Special request to ask for version number (version is 0). No CRC needed.
 	private static final byte []discover 		= {(byte) 0xFE, VERSION, BASIC_QUESTION_LENGTH, DISCOVER, 0, 0, (byte) 0xFF};
@@ -80,6 +82,7 @@ public class RequestHelper {
 	private static final byte []getNetworkLan 	= {(byte) 0xFE, VERSION, EXT_QUESTION_LENGTH, GETNETWORK, 0, 0, 0, (byte) 0xFF};
 	private static final byte []getNetworkWifi 	= {(byte) 0xFE, VERSION, EXT_QUESTION_LENGTH, GETNETWORK, 1, 0, 0, (byte) 0xFF};
 	private static final byte []getConnStatus	= {(byte) 0xFE, VERSION, BASIC_QUESTION_LENGTH, CONNSTATUS, 0, 0, (byte) 0xFF};
+//	private static final byte []UpdateNetworkLan= {(byte) 0xFE, VERSION, , SETNETWORK, , , , , 0, 0, (byte) 0xFF};
 
 	static {
 		Utils.setCrcIntoByteArray(discover, Utils.getCrc16(discover));
@@ -176,6 +179,23 @@ public class RequestHelper {
 			case 1: return getConnStatus;
 			default: return new byte[0];
 		}
+	}
+	
+	public static byte[] getSerializedRequest(int protocol, byte cmd, Byte []serializedParameters) {
+		byte []request = new byte[1 + 1 + 1 + 1 + serializedParameters.length + 2 + 1];// FE, protocol, size, command, parameters, CRC1, CRC2, FF
+		int i, j;
+		request[0] = (byte) 0xFE;
+		request[1] = (byte) protocol;
+		request[2] = (byte) (1 + serializedParameters.length);// Size
+		request[3] = cmd;
+		// Data
+		for(i = 4, j = 0 ; j < serializedParameters.length ; i++, j++) {
+			request[i] = serializedParameters[j];
+		}
+		Utils.setCrcIntoByteArray(request, Utils.getCrc16(request));
+		request[i] = (byte) 0xFF;
+		
+		return request;
 	}
 
 	public static void main(String[] args) {

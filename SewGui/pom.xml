@@ -96,7 +96,7 @@
                 <configuration>
                     <!-- With multiple tests use GwtTestSuite.java for speed -->
                     <includes>**/*GwtTest.java</includes>
-                    <extraJvmArgs>-Xss1024K -Xmx1024M -XX:MaxPermSize=256M</extraJvmArgs>
+                    <extraJvmArgs>-Xss1024K -Xmx1024M</extraJvmArgs>
                     <copyWebapp>true</copyWebapp>
                     <hostedWebapp>${webappDirectory}</hostedWebapp>
                     <bindAddress>0.0.0.0</bindAddress>
@@ -138,7 +138,7 @@
                         <configuration>
                             <outputDirectory>${project.build.directory}/apidoc</outputDirectory>
                             <!-- Necessary to valid javadoc in JDK 1.8 -->
-                            <!-- <additionalparam>-Xdoclint:none</additionalparam> -->
+                            <additionalparam>-Xdoclint:none</additionalparam>
                             <failOnError>false</failOnError>
                         </configuration>
                     </execution>

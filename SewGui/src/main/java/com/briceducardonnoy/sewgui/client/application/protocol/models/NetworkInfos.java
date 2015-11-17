@@ -21,6 +21,7 @@
 package com.briceducardonnoy.sewgui.client.application.protocol.models;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Logger;
@@ -30,6 +31,8 @@ import com.briceducardonnoy.sewgui.client.utils.Utils;
 
 public class NetworkInfos implements IsPartOfDataModel, Serializable {
 
+	public static final int IFNAMSZ = 16;
+	
 	private static final long serialVersionUID = -4171111589426819693L;
 	private static Logger logger = Logger.getLogger("SewGui");
 	
@@ -39,7 +42,6 @@ public class NetworkInfos implements IsPartOfDataModel, Serializable {
 	private String dns1;
 	private String dns2;
 	private String essid;
-	private String pwd;
 	private boolean isDhcp;
 	private boolean isWifi;
 
@@ -53,19 +55,97 @@ public class NetworkInfos implements IsPartOfDataModel, Serializable {
 			idx += 4;// Size of int
 //			ip = Utils.getIpFromByteList(array, idx);
 //			idx += 4;// Size of IP
-			ip = Utils.getStringFromByteList(array, idx, 16);// 16 = IFNAMSIZ
-			idx += 16;
-			nm = Utils.getStringFromByteList(array, idx, 16);// 16 = IFNAMSIZ
-			idx += 16;
-			gw = Utils.getStringFromByteList(array, idx, 16);// 16 = IFNAMSIZ
-			idx += 16;
-			dns1 = Utils.getStringFromByteList(array, idx, 16);// 16 = IFNAMSIZ
-			idx += 16;
-			dns2 = Utils.getStringFromByteList(array, idx, 16);// 16 = IFNAMSIZ
-			idx += 16;
+			ip = Utils.getStringFromByteList(array, idx, IFNAMSZ);
+			idx += IFNAMSZ;
+			nm = Utils.getStringFromByteList(array, idx, IFNAMSZ);
+			idx += IFNAMSZ;
+			gw = Utils.getStringFromByteList(array, idx, IFNAMSZ);
+			idx += IFNAMSZ;
+			dns1 = Utils.getStringFromByteList(array, idx, IFNAMSZ);
+			idx += IFNAMSZ;
+			dns2 = Utils.getStringFromByteList(array, idx, IFNAMSZ);
+			idx += IFNAMSZ;
 			essid = Utils.getStringFromByteList(array, idx, 32);// 32 = IW_ESSID_MAX_SIZE
 			idx += 32;
 		}
+	}
+	
+	/**
+	 * Serialize the current POJO in an array of bytes
+	 * @param protocolVersion The current protocol
+	 * @return An array of byte representing this POJO
+	 */
+	public Byte[] serializeLan(int protocolVersion) {
+		List<Byte> message = new ArrayList<>();
+//		if(protocolVersion == 1) {// Always true for now
+//		}
+		message.add(isDhcp == true ? (byte) 1 : (byte) 0);
+//		message.add(isWifi == true ? (byte) 1 : (byte) 0);
+		// IP
+		byte []raw = ip.getBytes();
+		for(int i = 0 ; i < IFNAMSZ ; i++) {// Watch out the charset || Format 192.168.1.26\0\0\0\0 => trim at the end
+			message.add(i < raw.length ? raw[i] : (byte) 0);
+		}
+		// Netmask
+		raw = nm.getBytes();
+		for(int i = 0 ; i < 16 ; i++) {
+			message.add(i < raw.length ? raw[i] : (byte) 0);
+		}
+		// Gateway
+		raw = gw.getBytes();
+		for(int i = 0 ; i < IFNAMSZ ; i++) {
+			message.add(i < raw.length ? raw[i] : (byte) 0);
+		}
+		// DNS1
+		raw = dns1.getBytes();
+		for(int i = 0 ; i < IFNAMSZ ; i++) {
+			message.add(i < raw.length ? raw[i] : (byte) 0);
+		}
+		// DNS2
+		raw = dns2.getBytes();
+		for(int i = 0 ; i < IFNAMSZ ; i++) {
+			message.add(i < raw.length ? raw[i] : (byte) 0);
+		}
+		
+		return (Byte[]) message.toArray();
+	}
+	
+	/**
+	 * Constructor for NetworkInfo LAN type
+	 * @param ip The IP address, ignored if <code>isDhcp</code> is true
+	 * @param nm The netmask, ignored if <code>isDhcp</code> is true
+	 * @param gw The gateway, ignored if <code>isDhcp</code> is true
+	 * @param dns1 The 1st DNS, ignored if <code>isDhcp</code> is true
+	 * @param dns2 The 2nd DNS, ignored if <code>isDhcp</code> is true
+	 * @param isDhcp Is DHCP config or static. If DHCP, previous fields are ignored
+	 */
+	public NetworkInfos(String ip, String nm, String gw, String dns1, String dns2, boolean isDhcp) {
+		this.ip = ip;
+		this.nm = nm;
+		this.gw = gw;
+		this.dns1 = dns1;
+		this.dns2 = dns2;
+		this.isDhcp = isDhcp;
+	}
+
+	/**
+	 * Constructor for NetworkInfos WAN type
+	 * @param ip The IP address, ignored if <code>isDhcp</code> is true
+	 * @param nm The netmask, ignored if <code>isDhcp</code> is true
+	 * @param gw The gateway, ignored if <code>isDhcp</code> is true
+	 * @param dns1 The 1st DNS, ignored if <code>isDhcp</code> is true
+	 * @param dns2 The 2nd DNS, ignored if <code>isDhcp</code> is true
+	 * @param isDhcp Is DHCP config or static. If DHCP, previous fields are ignored
+	 * @param essid The ESSID of the WiFi network
+	 */
+	public NetworkInfos(String ip, String nm, String gw, String dns1, String dns2, boolean isDhcp, String essid) {
+		this.ip = ip;
+		this.nm = nm;
+		this.gw = gw;
+		this.dns1 = dns1;
+		this.dns2 = dns2;
+		this.essid = essid;
+		this.isDhcp = isDhcp;
 	}
 
 	public final String getIp() {
@@ -116,14 +196,6 @@ public class NetworkInfos implements IsPartOfDataModel, Serializable {
 		this.essid = essid;
 	}
 
-	public final String getPwd() {
-		return pwd;
-	}
-
-	public final void setPwd(final String pwd) {
-		this.pwd = pwd;
-	}
-
 	public final boolean isDhcp() {
 		return isDhcp;
 	}
@@ -153,11 +225,9 @@ public class NetworkInfos implements IsPartOfDataModel, Serializable {
 		serialized.put(DataModel.IS_WIFI, isWifi);
 		if(isWifi) {
 			serialized.put(DataModel.WiFi_ESSID, essid);
-			serialized.put(DataModel.WiFi_PWD, pwd);
 		}
 		else {
 			serialized.put(DataModel.WiFi_ESSID, "");
-			serialized.put(DataModel.WiFi_PWD, "");
 		}
 		
 		return serialized;

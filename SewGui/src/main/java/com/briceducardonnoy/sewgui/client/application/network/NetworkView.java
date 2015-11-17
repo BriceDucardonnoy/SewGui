@@ -81,7 +81,12 @@ class NetworkView extends ViewImpl implements NetworkPresenter.MyView {
 	@Override
 	public Button getCancelBtn() {
 		return cancelBtn;
-	} 
+	}
+	
+	@Override
+	public Button getSubmitBtn() {
+		return submitBtn;
+	}
 
 	@UiHandler("clearPwd")
 	public void onShowPassword(ClickEvent event) {
@@ -125,6 +130,41 @@ class NetworkView extends ViewImpl implements NetworkPresenter.MyView {
 	public void setFormActionEnabled(boolean enabled) {
 		submitBtn.setEnabled(enabled);
 		cancelBtn.setEnabled(enabled);
+	}
+
+	@Override
+	public String getIp() {
+		return ipText.getValue();
+	}
+
+	@Override
+	public String getNm() {
+		return nmText.getValue();
+	}
+
+	@Override
+	public String getGw() {
+		return gwText.getValue();
+	}
+
+	@Override
+	public String getDns1() {
+		return dns1Text.getValue();
+	}
+
+	@Override
+	public String getDns2() {
+		return dns2Text.getValue();
+	}
+	
+	@Override
+	public boolean isDhcp() {
+		return dhcp.getValue();
+	}
+
+	@Override
+	public String getEssid() {
+		return wifiText.getValue();
 	}
 	
 }

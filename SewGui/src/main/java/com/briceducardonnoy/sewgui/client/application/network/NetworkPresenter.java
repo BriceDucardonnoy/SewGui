@@ -30,6 +30,7 @@ import org.gwtbootstrap3.client.ui.Button;
 import com.allen_sauer.gwt.log.client.Log;
 import com.briceducardonnoy.sewgui.client.application.ApplicationPresenter;
 import com.briceducardonnoy.sewgui.client.application.protocol.RequestHelper;
+import com.briceducardonnoy.sewgui.client.application.protocol.models.NetworkInfos;
 import com.briceducardonnoy.sewgui.client.application.protocol.models.WifiNetwork;
 import com.briceducardonnoy.sewgui.client.application.windows.entitylistpopup.EntityListPopupPresenter;
 import com.briceducardonnoy.sewgui.client.context.ApplicationContext;
@@ -69,6 +70,14 @@ public class NetworkPresenter extends Presenter<NetworkPresenter.MyView, Network
 		RadioButton getWifiMode();
 		RadioButton getEthernetMode();
 		Button getCancelBtn();
+		Button getSubmitBtn();
+		String getIp();
+		String getNm();
+		String getGw();
+		String getDns1();
+		String getDns2();
+		String getEssid();
+		boolean isDhcp();
 	}
 	
 	public static final NestedSlot SLOT_Network = new NestedSlot();
@@ -115,6 +124,7 @@ public class NetworkPresenter extends Presenter<NetworkPresenter.MyView, Network
 			}
 		}));
 		registerHandler(getView().getCancelBtn().addClickHandler(cancelH));
+		registerHandler(getView().getSubmitBtn().addClickHandler(submitH));
 		register(ApplicationContext.getFormManagedWidgetFromFormName(getFormGroup()));
 	}
 
@@ -165,7 +175,25 @@ public class NetworkPresenter extends Presenter<NetworkPresenter.MyView, Network
 	
 	@Override
 	public void submit() {
-		// TODO BDY: NYI submit. After sending set request, send a get request to check status
+		if(getView().getEthernetMode().getValue().equals(true)) {
+			logger.info("Send ETHERNET update");
+		}
+		else if(getView().getWifiMode().getValue().equals(true)) {
+			logger.info("Send WIFI update");
+			NetworkInfos eth = new NetworkInfos(getView().getIp(), getView().getNm(), getView().getGw(), getView().getDns1(), getView().getDns2(), getView().isDhcp());
+			// Send request then relaunch get request
+			if(eth.isWifi()) {
+				// TODO BDY: Update network WiFi
+			}
+			else {
+				byte []request = RequestHelper.getSerializedRequest(context.getCurrentProtocol(), RequestHelper.SETNETWORKLAN, 
+						eth.serializeLan(context.getCurrentProtocol()));
+				context.getBluetoothPlugin().write(request, setNetworkLan);
+			}
+		}
+		else {
+			logger.warning("Nothing to update :(");
+		}
 	}
 	
 	@Override
@@ -232,10 +260,32 @@ public class NetworkPresenter extends Presenter<NetworkPresenter.MyView, Network
 		}
 	};
 	
+	private Callback<Object, String> setNetworkLan = new Callback<Object, String>() {
+		@Override
+		public void onFailure(String reason) {
+			logger.warning("Set nework failed " + reason);
+			Window.alert("Set network failed " + reason);
+		}
+		@Override
+		public void onSuccess(Object result) {
+			logger.info("Set network succeed");
+			// Ask network data to remote unit
+			byte []request = RequestHelper.getNetworkLan(context.getCurrentProtocol());
+			context.getBluetoothPlugin().write(request, getNetworkCB);
+		}
+	};
+	
 	private ClickHandler cancelH = new ClickHandler() {
 		@Override
 		public void onClick(ClickEvent event) {
 			cancel();
+		}
+	};
+	
+	private ClickHandler submitH = new ClickHandler() {
+		@Override
+		public void onClick(ClickEvent event) {
+			submit();
 		}
 	};
 	// WiFi
