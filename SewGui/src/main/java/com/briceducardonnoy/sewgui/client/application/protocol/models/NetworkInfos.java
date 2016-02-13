@@ -21,7 +21,6 @@
 package com.briceducardonnoy.sewgui.client.application.protocol.models;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Logger;
@@ -76,38 +75,39 @@ public class NetworkInfos implements IsPartOfDataModel, Serializable {
 	 * @return An array of byte representing this POJO
 	 */
 	public Byte[] serializeLan(int protocolVersion) {
-		List<Byte> message = new ArrayList<>();
+		Byte []message = new Byte[1 + IFNAMSZ * 5];
+		int idx = 0;
 //		if(protocolVersion == 1) {// Always true for now
 //		}
-		message.add(isDhcp == true ? (byte) 1 : (byte) 0);
+		message[idx++] = isDhcp == true ? (byte) 1 : (byte) 0;
 //		message.add(isWifi == true ? (byte) 1 : (byte) 0);
 		// IP
 		byte []raw = ip.getBytes();
 		for(int i = 0 ; i < IFNAMSZ ; i++) {// Watch out the charset || Format 192.168.1.26\0\0\0\0 => trim at the end
-			message.add(i < raw.length ? raw[i] : (byte) 0);
+			message[idx++] = i < raw.length ? raw[i] : (byte) 0;
 		}
 		// Netmask
 		raw = nm.getBytes();
-		for(int i = 0 ; i < 16 ; i++) {
-			message.add(i < raw.length ? raw[i] : (byte) 0);
+		for(int i = 0 ; i < IFNAMSZ ; i++) {
+			message[idx++] = i < raw.length ? raw[i] : (byte) 0;
 		}
 		// Gateway
 		raw = gw.getBytes();
 		for(int i = 0 ; i < IFNAMSZ ; i++) {
-			message.add(i < raw.length ? raw[i] : (byte) 0);
+			message[idx++] = i < raw.length ? raw[i] : (byte) 0;
 		}
 		// DNS1
 		raw = dns1.getBytes();
 		for(int i = 0 ; i < IFNAMSZ ; i++) {
-			message.add(i < raw.length ? raw[i] : (byte) 0);
+			message[idx++] = i < raw.length ? raw[i] : (byte) 0;
 		}
 		// DNS2
 		raw = dns2.getBytes();
 		for(int i = 0 ; i < IFNAMSZ ; i++) {
-			message.add(i < raw.length ? raw[i] : (byte) 0);
+			message[idx++] = i < raw.length ? raw[i] : (byte) 0;
 		}
 		
-		return (Byte[]) message.toArray();
+		return message;
 	}
 	
 	/**

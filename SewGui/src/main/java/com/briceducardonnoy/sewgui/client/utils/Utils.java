@@ -116,9 +116,11 @@ public class Utils {
 		datas[datas.length - 2] = (byte) (crc & 0x000000FF);
 
 		String output = "Frame = ";
+		String sb;
 		for(byte b : datas) {
 //			output += String.format("0x%02X ", b) + " ";
-			output += "0x" + Integer.toHexString(b & 0xFF) + " ";
+			sb = Integer.toHexString(b & 0xFF).toUpperCase();
+			output += "0x" + (sb.length() == 1 ? "0" + sb : sb ) + " ";
 		}
 		logger.info(output);
 	}

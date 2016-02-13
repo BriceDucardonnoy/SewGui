@@ -177,19 +177,16 @@ public class NetworkPresenter extends Presenter<NetworkPresenter.MyView, Network
 	public void submit() {
 		if(getView().getEthernetMode().getValue().equals(true)) {
 			logger.info("Send ETHERNET update");
+			// TODO BDY: Send request then relaunch get request and check the yellow fields are white then
+			NetworkInfos eth = new NetworkInfos(getView().getIp(), getView().getNm(), getView().getGw(), getView().getDns1(), getView().getDns2(), getView().isDhcp());
+			if(!eth.isWifi()) {
+				byte []request = RequestHelper.getSerializedRequest(context.getCurrentProtocol(), RequestHelper.SETNETWORKLAN, eth.serializeLan(context.getCurrentProtocol()));
+				context.getBluetoothPlugin().write(request, setNetworkLan);
+			}
 		}
 		else if(getView().getWifiMode().getValue().equals(true)) {
 			logger.info("Send WIFI update");
-			NetworkInfos eth = new NetworkInfos(getView().getIp(), getView().getNm(), getView().getGw(), getView().getDns1(), getView().getDns2(), getView().isDhcp());
-			// Send request then relaunch get request
-			if(eth.isWifi()) {
-				// TODO BDY: Update network WiFi
-			}
-			else {
-				byte []request = RequestHelper.getSerializedRequest(context.getCurrentProtocol(), RequestHelper.SETNETWORKLAN, 
-						eth.serializeLan(context.getCurrentProtocol()));
-				context.getBluetoothPlugin().write(request, setNetworkLan);
-			}
+			// TODO BDY: Update network WiFi
 		}
 		else {
 			logger.warning("Nothing to update :(");

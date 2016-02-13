@@ -72,7 +72,7 @@ public class RequestHelper {
 	public final static byte GETNETWORK 	= 2;
 	public final static byte CONNSTATUS		= 3;
 	
-	public final static byte SETNETWORKLAN	= 10;
+	public final static byte SETNETWORKLAN	= 4;
 	
 	private static Logger logger = Logger.getLogger("SewGui");
 	private static final byte []version 		= {(byte) 0xFE, 0, 0, 0, 0, (byte) 0xFF};// Special request to ask for version number (version is 0). No CRC needed.
