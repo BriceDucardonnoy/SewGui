@@ -22,6 +22,11 @@ package com.briceducardonnoy.sewgui.client.model;
 
 import java.util.List;
 
+/**
+ * Interface to implement for presenters which manage {@link IFormManaged} widgets
+ * @author Brice DUCARDONNOY
+ * @see IFormManaged
+ */
 public interface IFormManager {
 	/**
 	 * Register new form-widgets (eg. bound on a model) in the FormManager
